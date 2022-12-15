@@ -1,0 +1,103 @@
+
+<template>
+    <style>
+        #btnRelat{
+            display: none;
+        }
+
+    </style>
+
+    <div class="form-base">
+        <h1>Compras</h1>
+
+        <fieldset>
+            <legend>Busca</legend>
+
+            <div class="inline">
+                <label for="edtBusca">por:</label>
+                <select id="cmbBusca">
+                    <option value="CLI.fantasia" signal="LIKE" selected>Cliente</option>
+                    <option value="CLI.tipo" signal="=" val="FIS">Pessoa Física</option>
+                    <option value="CLI.tipo" signal="=" val="JUR">Pessoa Jurídica</option>
+                    <option value="CLI.cnpj_cpf" signal="LIKE" >CNPJ/CPF</option>
+                    <option value="CLI.ie" signal="=">Insc. Estadual</option>
+                    <option value="COMP.id" signal="IN">Código</option>
+                </select>
+                <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
+                <button id="btnBusca">Busca</button>
+                <button id="btnNovo" class="btnAdd" >+</button>
+
+            </div>
+            <div class="inline center-itens">
+                <div class="ckBOX">
+                    <label for="ckbData">Início/Final</label>
+                    <input type="checkbox" id="ckbData" checked>
+                </div>
+                <input type="date" id="edtIni">
+                <input type="date" id="edtFin">
+            </div>  
+
+
+            <table id="tblComp"></table>
+        </fieldset>
+    
+    </div>
+
+
+</template>
+<script>
+  
+    document.querySelector('#edtIni').value =  today.iniMonth()
+    document.querySelector('#edtFin').value =  today.finMonth()
+
+    document.querySelector('#btnBusca').addEventListener('click',()=>{
+        const sel = document.querySelector('#cmbBusca')
+        const field = sel.value
+        const signal = sel.options[sel.selectedIndex].getAttribute('signal')
+        const ckb = document.querySelector('#ckbData').checked
+        let value = sel.options[sel.selectedIndex].hasAttribute('val') ? sel.options[sel.selectedIndex].getAttribute('val') : document.querySelector('#edtBusca').value.trim()
+        value = signal=='LIKE' ? `"%${value}%"` : signal=='IN' ? `(${value})` : sel.value=='true'? sel.value : `"${value}"`
+
+        const tbl = document.getElementById('tblComp')
+        const params = new Object;
+            params.field = field
+            params.signal = signal
+            params.value = value
+            params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
+            params.fin = ckb ? document.querySelector('#edtFin').value : '2100-12-31';        
+
+        const myPromisse = queryDB(params,10);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);
+console.log(json)                
+                let total = 0
+                tbl.innerHTML=''
+//                    document.querySelector('#lblTotal').style.display = json.length > 0 ? 'block' : 'none'
+                json.length > 0 ? tbl.head('Cod.|mobHide,Cliente,Data,Status|mobHide,Valor R$|mobHide') : 0
+                for(let i=0; i<json.length;i++){                                       
+                    total +=  parseFloat(json[i].venda)
+                    tbl.plot(json[i],'id|mobHide,fantasia,data,status|mobHide,valor|mobHide','int,Upp,date,Upp,R$.',true)                    
+                }                
+//                    document.querySelector('#lblTotal').innerHTML =  'Total '+ viewMoneyBR(total.toFixed(2))
+            }        
+        })
+    })
+   
+
+    document.querySelector('#tblComp').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('viewComp.html','pop-up',data.id+"-"+data.nome,data)
+    })
+
+    document.querySelector('#btnNovo').addEventListener('click',()=>{
+        data = new Object
+        data.mode = 'new'
+        openHTML('newComp.html','pop-up',"Gerar Nova Compra",data)
+    })
+
+
+
+</script>

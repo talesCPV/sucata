@@ -1,0 +1,281 @@
+<template>
+    <style>
+        .frm{
+            padding: 10px;
+        }
+
+        .frm button{
+            display: none;
+        }
+
+        @media all and (max-width : 768px) {
+            .frm input, .frm select{
+                width: 98% !important;
+            }
+        }
+
+    </style>
+  
+    <fieldset class="frm" >
+        <legend>Empresa</legend>
+
+        <div class="inline">
+            <label for="edtNome">Nome *</label>
+            <input type="text" id="edtNome" maxlength="50" >
+            <label for="cmbTipo">Tipo</label>
+            <select id="cmbTipo" style="width: 150px;" >
+                <option value="FIS">Física</option>
+                <option value="JUR" selected>Jurídica</option>
+            </select>
+        </div>
+        <div class="inline" id="divFANT">
+            <label for="edtFant">Fantasia</label>
+            <input type="text" id="edtFant" maxlength="40" >
+        </div>
+        <div class="inline" id="divJUR">
+            <label for="edtCNPJ">CNPJ</label>
+            <input type="text" id="edtCNPJ" maxlength="18" onkeyup="valCNPJ(this)" >
+            <label for="edtIncEst">Insc.Est.</label>
+            <input type="text" id="edtIncEst" maxlength="15" onkeyup="valIE(this)" >            
+            <label for="edtInscMun">Insc.Mun.</label>
+            <input type="text" id="edtInscMun" maxlength="14" >     
+        </div>
+        <div class="inline" id="divFIS">
+            <label for="edtCPF">CPF</label>
+            <input type="text" id="edtCPF" maxlength="14" onkeyup="valCPF(this)" >
+        </div>
+
+        <div class="inline">
+            <label for="edtEnd">Endereço</label>
+            <input type="text" id="edtEnd" maxlength="60" >
+            <label for="edtNum">Num.</label>
+            <input type="text" id="edtNum" maxlength="6" style="width: 150px;" >    
+        </div>
+        <div class="inline">
+            <label for="edtCidade">Cidade</label>
+            <input type="text" id="edtCidade" maxlength="30" >
+            <label for="cmbEstado">Estado</label> 
+            <select id="cmbEstado" style="width: 200px;">
+                <option value="AC">Acre</option>
+                <option value="AL">Alagoas</option>
+                <option value="AP">Amapa</option>
+                <option value="AM">Amazonas</option>
+                <option value="BA">Bahia</option>
+                <option value="CE">Ceará</option>
+                <option value="ES">Espirito Santo</option>
+                <option value="DF">Distrito Federal</option>
+                <option value="MA">Maranhão</option>
+                <option value="MT">Mato Grosso</option>
+                <option value="MS">Mato Grosso do Sul</option>
+                <option value="MG">Minas Gerais</option>
+                <option value="PA">Para</option>
+                <option value="PB">Paraiba</option>
+                <option value="PR">Parana</option>
+                <option value="PE">Pernambuco</option>
+                <option value="PI">Piauí</option>
+                <option value="RJ">Rio de Janeiro</option>
+                <option value="RN">Rio Grande do Norte</option>
+                <option value="RS">Rio Grande do Sul</option>
+                <option value="RO">Rondonia</option>
+                <option value="RR">Roraima</option>
+                <option value="SC">Santa Catarina</option>
+                <option selected="selected" value="SP">São Paulo</option>
+                <option value="SE">Sergipe</option>
+                <option value="TO">Tocantins</option>                    
+            </select>   
+        </div>
+        <div class="inline">            
+            <label for="edtBairro">Bairro</label>
+            <input type="text" id="edtBairro" maxlength="50" >
+            <label for="edtCEP">CEP</label>
+            <input type="text" id="edtCEP" maxlength="10" onkeyup="valCEP(this)" style="width: 180px;" >
+            <label for="edtTel">Tel</label>
+            <input type="text" id="edtTel" onkeyup="phone(this)" maxlength="15" style="width: 220px;" >            
+        </div>
+        <div class="inline">            
+            <label for="edtBanco">Banco</label>
+            <input type="text" id="edtBanco" maxlength="15" >
+            <label for="edtAG">Ag.</label>
+            <input type="text" id="edtAG" maxlength="6" style="width: 150px;" >
+            <label for="edtCC">C.C.</label>
+            <input type="text" id="edtCC" maxlength="15" style="width: 250px;" >            
+        </div>
+        <div class="inline">            
+            <label for="edtPix">Chave Pix</label>
+            <input type="text" id="edtPix" maxlength="40" >
+        </div>
+
+        <button id="btnSave">Salvar</button>
+        <button id="btnDel">Deletar</button>
+        <button id="btnEdit">Editar</button>
+        <button id="btnCNPJ">Cartão CNPJ</button>
+    </fieldset>
+
+
+</template>
+<script>
+    
+    pageBegin()
+
+    function ableFields(status){
+        const inputs = document.querySelector('.frm').querySelectorAll('input,select')
+            for(let i=0; i<inputs.length; i++){
+                inputs[i].disabled = !status
+            }
+
+    }
+
+    function juridica(status){
+
+        if(status){
+            document.querySelector('#divJUR').style.display  = 'flex'
+            document.querySelector('#divFANT').style.display = 'flex'
+            document.querySelector('#divFIS').style.display  = 'none'
+        }else{
+            document.querySelector('#divJUR').style.display  = 'none'
+            document.querySelector('#divFANT').style.display = 'none'
+            document.querySelector('#divFIS').style.display  = 'flex'
+        }
+
+    }
+
+    document.querySelector('#cmbTipo').addEventListener('change',()=>{
+
+        document.querySelector('#cmbTipo').value == 'JUR' ? juridica(true) : juridica(false)
+
+    })
+
+
+    function pageBegin(){
+
+        juridica(true)
+
+        if (main_data.viewCliente.data.mode == 'edit'){
+            document.querySelector('#edtNome').value = main_data.viewCliente.data.nome == null ? '' : main_data.viewCliente.data.nome.toUpperCase()
+            document.querySelector('#cmbTipo').value = main_data.viewCliente.data.tipo == null ? '' : main_data.viewCliente.data.tipo                        
+            document.querySelector('#edtCNPJ').value = main_data.viewCliente.data.cnpj_cpf
+            document.querySelector('#edtIncEst').value = main_data.viewCliente.data.ie
+            document.querySelector('#edtInscMun').value = main_data.viewCliente.data.im == null ? '' : main_data.viewCliente.data.im
+            document.querySelector('#edtEnd').value = main_data.viewCliente.data.endereco == null ? '' : main_data.viewCliente.data.endereco.toUpperCase()
+            document.querySelector('#edtNum').value = main_data.viewCliente.data.num == null ? '' : main_data.viewCliente.data.num
+            document.querySelector('#edtCidade').value = main_data.viewCliente.data.cidade == null ? '' : main_data.viewCliente.data.cidade.toUpperCase()
+            document.querySelector('#cmbEstado').value = main_data.viewCliente.data.estado == null ? '' : main_data.viewCliente.data.estado
+            document.querySelector('#edtBairro').value = main_data.viewCliente.data.bairro == null ? '' : main_data.viewCliente.data.bairro.toUpperCase()
+            document.querySelector('#edtCEP').value = main_data.viewCliente.data.cep == null ? '' : main_data.viewCliente.data.cep
+            document.querySelector('#edtTel').value = main_data.viewCliente.data.tel == null ? '' : main_data.viewCliente.data.tel
+            document.querySelector('#edtBanco').value = main_data.viewCliente.data.bco_nome == null ? '' : main_data.viewCliente.data.bco_nome
+            document.querySelector('#edtAG').value = main_data.viewCliente.data.bco_ag == null ? '' : main_data.viewCliente.data.bco_ag
+            document.querySelector('#edtCC').value = main_data.viewCliente.data.bco_cc == null ? '' : main_data.viewCliente.data.bco_cc
+            document.querySelector('#edtPix').value = main_data.viewCliente.data.bco_pix == null ? '' : main_data.viewCliente.data.bco_pix
+            document.querySelector('#btnEdit').style.display = 'block'
+            ableFields(false)
+
+            if(document.querySelector('#cmbTipo').value == 'JUR'){
+                document.querySelector('#edtFant').value = main_data.viewCliente.data.fantasia == null ? '' : main_data.viewCliente.data.fantasia.toUpperCase() 
+                document.querySelector('#edtCNPJ').value = main_data.viewCliente.data.cnpj_cpf
+                document.querySelector('#edtIncEst').value = main_data.viewCliente.data.ie
+                document.querySelector('#edtInscMun').value = main_data.viewCliente.data.im == null ? '' : main_data.viewCliente.data.im
+                document.querySelector('#edtCPF').value = ''
+            }else{
+                document.querySelector('#edtFant').value = '' 
+                document.querySelector('#edtCNPJ').value = ''
+                document.querySelector('#edtIncEst').value = ''
+                document.querySelector('#edtInscMun').value = ''
+                document.querySelector('#edtCPF').value = main_data.viewCliente.data.cnpj_cpf
+                juridica(false)
+            }
+
+
+        }else{
+            document.querySelector('#btnSave').style.display = 'block'
+            ableFields(true)
+        }
+
+        }
+        const params = new Object;
+            params.hash = localStorage.getItem('hash');
+/*
+        const myPromisse = queryDB(params,10);
+        myPromisse.then((resolve)=>{
+            const perm = JSON.parse(resolve)
+            if(perm[0].access == '1'){
+                if (main_data.viewEmp.data != 'new'){
+                    document.querySelector('#btnEdit').style.display = 'block'                
+                    document.querySelector('#btnCNPJ').style.display = 'block'
+                }else{
+                    document.querySelector('#btnEdit').click()
+                    document.querySelector('#btnDel').style.display = 'none'
+                }
+            }
+        })
+*/
+    
+
+    document.querySelector('#btnEdit').addEventListener('click',()=>{
+        ableFields(true)
+   
+        document.querySelector('#btnEdit').style.display = 'none'
+        document.querySelector('#btnSave').style.display = 'block'
+        document.querySelector('#btnDel').style.display = 'block'
+    })
+
+    document.querySelector('#btnSave').addEventListener('click',()=>{
+        if(checkField(['edtNome'])){
+            const fant = document.querySelector('#edtFant').value.trim() == '' ? document.querySelector('#edtNome').value.trim() : document.querySelector('#edtFant').value.trim()
+            const params = new Object;
+            params.id = main_data.viewCliente.mode == 'edit' ? main_data.viewCliente.data.id : 'DEFAULT'
+            params.nome = document.querySelector('#edtNome').value.trim().toUpperCase()
+            params.fantasia = fant.toUpperCase()
+            params.tipo = document.querySelector('#cmbTipo').value
+            if(document.querySelector('#cmbTipo').value == 'JUR'){
+                params.cnpj = document.querySelector('#edtCNPJ').value
+                params.ie = document.querySelector('#edtIncEst').value
+                params.im = document.querySelector('#edtInscMun').value
+            }else{
+                params.cnpj = document.querySelector('#edtCPF').value
+                params.ie = ''
+                params.im = ''
+            }
+            params.endereco = document.querySelector('#edtEnd').value.trim().toUpperCase()
+            params.num = document.querySelector('#edtNum').value.trim()
+            params.bairro = document.querySelector('#edtBairro').value.trim().toUpperCase()
+            params.cep = document.querySelector('#edtCEP').value
+            params.cidade = document.querySelector('#edtCidade').value.trim().toUpperCase()
+            params.estado = document.querySelector('#cmbEstado').value
+            params.tel = document.querySelector('#edtTel').value.trim().toUpperCase()
+            params.bco_nome = document.querySelector('#edtBanco').value.trim().toUpperCase()
+            params.bco_ag = getNum(document.querySelector('#edtAG').value)
+            params.bco_cc = getNum(document.querySelector('#edtCC').value)
+            params.bco_pix = document.querySelector('#edtPix').value.trim()
+            
+console.log(params)
+        const myPromisse = queryDB(params,2);
+        myPromisse.then((resolve)=>{
+            main_data.viewCliente.data.mode == 'edit' ? document.querySelector('#btnBusca').click() : 0            
+            closeModal('viewCliente')
+        })
+        }
+    })
+
+
+    document.querySelector('#btnDel').addEventListener('click',()=>{
+        if (confirm('Deseja realmente deletar este cliente?')) {
+            const params = new Object;
+                params.id = main_data.viewCliente.data.id
+                params.hash = localStorage.getItem('hash');
+
+            const myPromisse = queryDB(params,3);
+            myPromisse.then((resolve)=>{
+                document.querySelector('#btnBusca').click()
+                closeModal('viewCliente')                
+            })
+        }
+    })
+
+    document.querySelector('#btnCNPJ').addEventListener('click',()=>{
+        window.open('https://servicos.receita.fazenda.gov.br/servicos/cnpjreva/Cnpjreva_Solicitacao.asp?cnpj='+main_data.viewCliente.data.cnpj,'_blank')
+    })
+
+
+
+</script>

@@ -1,0 +1,84 @@
+
+<template>
+    <style>
+
+        #btnDel{
+            display: none;
+        }
+
+    </style>
+  
+    <fieldset>
+        <legend>Dados da Compra</legend>
+        <div class="inline">
+            <label for="cmbCli">Cliente</label>
+            <select id="cmbCli"></select>                      
+        </div>        
+        <div class="inline">
+            <label for="edtData">Data *</label>
+            <input type="date" id="edtData">  
+            <label for="cmbStatus">Status</label>
+            <select id="cmbStatus" disabled>
+                <option value="ABERTO" selected>Aberto</option>
+                <option value="FECHADO">Fechada</option>
+                <option value="QUITADO">Quitada</option>
+            </select>
+        </div>
+        <div class="inline">
+            <label for="edtObs">Obs</label>
+            <textarea id="edtObs" cols="30" rows="10"></textarea>
+        </div>
+  
+        <button id="btnCad">Gerar Compra</button>
+
+    </fieldset>
+
+
+</template>
+<script>
+
+    document.querySelector('#edtData').value = today.getFormatDate()
+
+    const params = new Object;
+        params.field = 'nome'
+        params.signal = 'LIKE'
+        params.value = '"%%"'     
+
+    fillCombo('cmbCli',params,1,['id','fantasia'], main_data.newComp.data.mode == 'edit' ? main_data.newComp.data.id_cliente :'' )
+
+    if(main_data.newComp.data.mode == 'edit'){       
+        document.querySelector('#edtData').value = main_data.newComp.data.data.substr(0,10)
+        document.querySelector('#edtObs').value = main_data.newComp.data.obs
+        document.querySelector('#cmbStatus').value = main_data.newComp.data.status
+        document.querySelector('#cmbStatus').disabled = false
+        document.querySelector('#btnCad').innerHTML = 'Salvar'
+    }
+
+    document.querySelector('#btnCad').addEventListener('click',()=>{
+
+        if(checkField(['edtData','cmbCli'])){
+            const params = new Object;
+                params.id = main_data.newComp.data.mode == 'new' ? 'DEFAULT' : main_data.newComp.data.id 
+                params.id_cliente = document.querySelector('#cmbCli').value
+                params.id_resp = localStorage.getItem('id_user')
+                params.data = document.querySelector('#edtData').value
+                params.status = document.querySelector('#cmbStatus').value
+                params.obs = document.querySelector('#edtObs').value.trim()
+
+            const myPromisse = queryDB(params,11);
+            myPromisse.then((resolve)=>{
+                if(main_data.newComp.data.mode == 'new'){                    
+                    main_data.newComp.data.fantasia = document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text
+                    main_data.newComp.data.data = document.querySelector('#edtData').value
+                    openHTML('viewComp.html','pop-up',dataBR(main_data.newComp.data.data)+" - "+data.nome,main_data.newComp.data)
+                }else{
+
+                }
+                closeModal('newComp')
+            })
+        }
+        
+    })
+
+
+</script>

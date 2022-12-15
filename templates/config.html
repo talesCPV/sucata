@@ -1,0 +1,121 @@
+
+<template>
+    <style>
+        button{
+            width: 98%;
+        }
+
+        #scroll{
+            max-height: 200px;
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+
+    </style>
+  
+    <div class="form-base">
+        <h1>Configurações</h1>
+        <fieldset>
+            <legend>Unidades</legend>
+            <div id="scroll">
+                <table id="tblUnd"></table>
+            </div>
+            <button id="btnUnd">Novo</button>
+        </fieldset>          
+        <fieldset>
+            <legend>Produtos</legend>
+            <div id="scroll">
+                <table id="tblProd"></table>
+            </div>
+            <button id="btnProd">Novo</button>
+        </fieldset>          
+ 
+        
+    </div>
+
+</template>
+<script>
+
+    main_data.config.fillUnd =  function (){
+        const tbl = document.getElementById('tblUnd')
+        tbl.innerHTML = ''
+        const params = new Object;
+            params.hash = localStorage.getItem('hash');
+
+        const myPromisse = queryDB(params,4);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);
+                tbl.head('Nome,Sigla')
+                for(let i=0; i<json.length;i++){
+                    tbl.plot(json[i],'nome,sigla')
+                }                
+            } 
+        })
+    }
+
+    main_data.config.fillProd =  function (){
+        const tbl = document.getElementById('tblProd')
+        tbl.innerHTML = ''
+        const params = new Object;
+            params.hash = localStorage.getItem('hash');
+
+        const myPromisse = queryDB(params,7);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);
+               
+                tbl.head('Nome,Und.,Compra,Venda')
+                for(let i=0; i<json.length;i++){
+                    tbl.plot(json[i],'nome,und,preco,venda','str,UPP,R$.,R$.')
+                }                
+            } 
+        })
+    }
+
+
+    main_data.config.fillUnd()
+    main_data.config.fillProd()
+
+
+
+    getConfig('config').then((txt)=>{    
+        const json =  JSON.parse(txt)
+console.log(json)        
+//        document.querySelector('#edtCusto').value = parseFloat(json.centro_custo).toFixed(2)
+//        document.querySelector('#edtCondPgto').value = json.cond_pgto
+//        document.querySelector('#edtAnaFrota').value = json.ana_frota
+    })
+
+
+    document.querySelector('#tblUnd').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('viewUnd.html','pop-up','Editar Unidades',data)
+    })
+
+    document.querySelector('#btnUnd').addEventListener('click',()=>{
+        const data = new Object
+        data.mode = 'new'
+        openHTML('viewUnd.html','pop-up','Nova Unidade',data)
+
+    })
+
+    document.querySelector('#tblProd').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('viewProd.html','pop-up','Editar Produto',data)
+    })
+
+    document.querySelector('#btnProd').addEventListener('click',()=>{
+        const data = new Object
+        data.mode = 'new'
+        openHTML('viewProd.html','pop-up','Novo Produto',data)
+
+    })
+
+
+
+</script>

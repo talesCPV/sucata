@@ -1,0 +1,29 @@
+{
+	"menu": [
+		{
+			"modulo" : "Clientes",
+			"script" : "javascript:openHTML('clientes.html','content-screen')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},
+		{
+			"modulo" : "Compras",
+			"script" : "javascript:openHTML('compras.html','content-screen')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},
+		{
+			"modulo" : "Preferências",
+			"script" : "javascript:openHTML('config.html','content-screen')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		}							
+
+	]
+}

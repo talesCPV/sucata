@@ -1,0 +1,63 @@
+
+<template>
+    <style>
+
+
+    </style>
+
+<fieldset>
+    <legend id="lgdItem"></legend>
+
+    <div class="inline">
+        <label for="edtQtd">Qtd</label>
+        <input type="text" id="edtQtd" onkeyup="return valFloat(this,0)">
+        <label for="edtPreco">Preço</label>
+        <input type="text" id="edtPreco" onkeyup="return valFloat(this)">
+    </div>
+    <div class="inline">
+        <button id="btnSaveItem">Salvar</button>
+        <button id="btnDelItem">Deletar</button>
+    </div>
+</fieldset>
+
+
+</template>
+<script>
+
+    document.querySelector('#lgdItem').innerHTML = main_data.edtProd.data.nome
+    document.querySelector('#edtQtd').value = main_data.edtProd.data.qtd
+    document.querySelector('#edtPreco').value = parseFloat(main_data.edtProd.data.val_unit).toFixed(2)
+
+
+    document.querySelector('#btnSaveItem').addEventListener('click',()=>{
+
+console.log(main_data.edtProd.data)
+
+        const params = new Object;
+            params.id = main_data.edtProd.data.id
+            params.id_prod = main_data.edtProd.data.id_prod
+            params.id_comp = main_data.edtProd.data.id_compra
+            params.qtd = document.querySelector('#edtQtd').value
+            params.und = main_data.edtProd.data.und
+            params.preco = document.querySelector('#edtPreco').value
+        const myPromisse = queryDB(params,14);
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                main_data.viewComp.fillItens()
+                closeModal('edtProd')
+            }  
+        }) 
+
+
+    })
+
+    document.querySelector('#btnDelItem').addEventListener('click',()=>{
+
+        if (confirm('Deseja realmente deletar este ítem?')) {
+            main_data.edtProd.data.del(main_data.edtProd.data.id)
+        }    
+    
+    })
+
+
+</script>
