@@ -76,6 +76,12 @@ function fillTime(edt){
     edt.value = getTime(getNum(edt.value)+'0000')
 }
 
+function valPlaca(edt){
+    edt.value = getPlaca(edt.value)
+}
+
+
+
 function getFloat(text,dec=2){
     const ok_chr = ['1','2','3','4','5','6','7','8','9','0']
     let before_dot = '0';
@@ -264,6 +270,35 @@ function getFone(V){
     }
     return out
 }
+
+function getPlaca(V){
+    const ok_num = ['1','2','3','4','5','6','7','8','9','0'];
+    const ok_chr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','X','Y','W','Z',
+                    'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','x','y','w','z'];
+    let out = ''
+    let into = ''
+
+    for(let i=0; i< V.length; i++){
+        if(ok_chr.includes(V[i]) || ok_num.includes(V[i])){
+            into += V[i].toUpperCase()
+        }
+    }
+
+    for(let i=0; i< into.length; i++){
+            if(i==3){
+                out+='-'
+            }
+
+            if(i<3 && ok_chr.includes(into[i])){
+                out+=into[i]                
+            }else if( i>=3 && ok_num.includes(into[i]) || i==4 ){
+                out+=into[i]                
+            }
+    }
+    return out
+}
+
+
 
 function dataBR(V){
     return V.substring(8,10)+'/'+V.substring(5,7)+'/'+V.substring(0,4)

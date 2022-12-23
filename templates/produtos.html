@@ -1,0 +1,71 @@
+
+<template>
+    <style>
+        button{
+            width: 98%;
+        }
+
+        #scroll{
+            max-height: 70%;
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+
+    </style>
+  
+    <div class="form-base">
+        <h1>Produtos</h1>
+        <fieldset>
+            <legend>Modelos</legend>
+            <div id="scroll">
+                <table id="tblProd"></table>
+            </div>
+            <button id="btnProd">Novo</button>
+        </fieldset>          
+ 
+        
+    </div>
+
+</template>
+<script>
+
+
+    main_data.produtos.fillProd =  function (){
+        const tbl = document.getElementById('tblProd')
+        tbl.innerHTML = ''
+        const params = new Object;
+            params.hash = localStorage.getItem('hash');
+
+        const myPromisse = queryDB(params,7);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);
+               
+                tbl.head('Nome,Und.,Compra,Venda')
+                for(let i=0; i<json.length;i++){
+                    tbl.plot(json[i],'nome,und,preco,venda','str,UPP,R$.,R$.')
+                }                
+            } 
+        })
+    }
+
+
+    main_data.produtos.fillProd()
+
+    document.querySelector('#tblProd').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('viewProd.html','pop-up','Editar Produto',data)
+    })
+
+    document.querySelector('#btnProd').addEventListener('click',()=>{
+        const data = new Object
+        data.mode = 'new'
+        openHTML('viewProd.html','pop-up','Novo Produto',data)
+
+    })
+
+
+
+</script>

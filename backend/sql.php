@@ -36,7 +36,34 @@ $query_db = array(
         AND ITEM.id_compra="x00";',
     "14" => 'INSERT INTO tb_item_compra (id, id_prod, id_compra, qtd, und, val_unit) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE  id_prod="x01", id_compra="x02", qtd="x03", und="x04", val_unit="x05";',
+    "15" => 'DELETE FROM tb_item_compra WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+    "16" => 'INSERT INTO tb_usuario (id, user, hash, class, nome, email, cel) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06") 
+        ON DUPLICATE KEY UPDATE user="x01", hash="x02", class="x03", nome="x04", email="x05", cel="x06";',
+    "17" => 'DELETE FROM tb_usuario WHERE id="x00";',
+    "18" => 'INSERT INTO tb_veiculo (id, ano, modelo, placa, tipo, tara) VALUES (x00, "x01", "x02", "x03", "x04", "x05") 
+        ON DUPLICATE KEY UPDATE ano="x01", modelo="x02", placa="x03", tipo="x04", tara="x05";',
+    "19" => 'DELETE FROM tb_veiculo WHERE id="x00"',
+    "20" => 'SELECT * FROM tb_veiculo WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY modelo;' ,
+    "21" => 'INSERT INTO tb_motorista (id, nome, cpf, rg, cnh, tipo, validade, id_usuario) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06", "x07") 
+        ON DUPLICATE KEY UPDATE nome="x01", cpf="x02", rg="x03", cnh="x04", tipo="x05", validade="x06", id_usuario="x07";',
+    "22" => 'DELETE FROM tb_motorista WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+    "23" => 'SELECT * FROM tb_motorista WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;' ,
+    "24" => 'INSERT INTO tb_viagem (id, id_motorista, id_veiculo, data, aberta, obs) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
+        ON DUPLICATE KEY UPDATE id_motorista="x01", id_veiculo="x02", data="x03", aberta="x04", obs="x05";',
+    "25" => 'SELECT VIA.*, MOT.nome, VEI.modelo, VEI.placa 
+        FROM tb_viagem AS VIA
+        INNER JOIN tb_motorista AS MOT
+        INNER JOIN tb_veiculo AS VEI 
+        ON x00 x01 x02 
+        AND MOT.id = VIA.id_motorista
+        AND VEI.id = VIA.id_veiculo
+        AND data >= "x03"
+        AND data <= "x04"
+        ORDER BY data DESC;' ,
+    "26" => 'SELECT * FROM tb_usuario WHERE (SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;',
+    "27" => 'DELETE FROM tb_usuario WHERE id=x00 ;',
 
- );
+
+    );
 
 ?>

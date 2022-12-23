@@ -60,7 +60,7 @@
             const myPromisse = queryDB(params,8);
 
             myPromisse.then((resolve)=>{
-                main_data.config.fillProd()
+                main_data.produtos.fillProd()
                 closeModal('viewProd')
             })
         }        
@@ -75,7 +75,7 @@
 
             const myPromisse = queryDB(params,9);
             myPromisse.then((resolve)=>{
-                main_data.config.fillProd()
+                main_data.produtos.fillProd()
                 closeModal('viewProd')                
             })
         }

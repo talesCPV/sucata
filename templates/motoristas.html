@@ -1,0 +1,70 @@
+
+<template>
+    <style>
+        button{
+            width: 98%;
+        }
+
+        #scroll{
+            max-height: 70%;
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+
+    </style>
+  
+    <div class="form-base">
+        <h1>Motoristas</h1>
+        <fieldset>
+            <legend>Nomes</legend>
+            <div id="scroll">
+                <table id="tblMotor"></table>
+            </div>
+            <button id="btnMotor">Novo</button>
+        </fieldset>          
+         
+    </div>
+
+</template>
+<script>
+
+    main_data.motoristas.fillMotor =  function (){
+        const tbl = document.getElementById('tblMotor')
+        tbl.innerHTML = ''
+        const params = new Object;
+            params.hash = localStorage.getItem('hash');
+
+        const myPromisse = queryDB(params,23);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);
+                tbl.head('Nome,CPF,CNH Tipo')
+                for(let i=0; i<json.length;i++){
+                    tbl.plot(json[i],'nome,cpf,tipo')
+                }                
+            } 
+        })
+    }
+
+
+
+
+    main_data.motoristas.fillMotor()
+
+    document.querySelector('#tblMotor').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('viewMotorista.html','pop-up','Editar Dados do Motoristas',data)
+    })
+
+    document.querySelector('#btnMotor').addEventListener('click',()=>{
+        const data = new Object
+        data.mode = 'new'
+        openHTML('viewMotorista.html','pop-up','Novo Motorista',data)
+
+    })
+
+
+
+</script>

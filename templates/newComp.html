@@ -67,10 +67,11 @@
 
             const myPromisse = queryDB(params,11);
             myPromisse.then((resolve)=>{
-                if(main_data.newComp.data.mode == 'new'){                    
-                    main_data.newComp.data.fantasia = document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text
-                    main_data.newComp.data.data = document.querySelector('#edtData').value
-                    openHTML('viewComp.html','pop-up',dataBR(main_data.newComp.data.data)+" - "+data.nome,main_data.newComp.data)
+                if(main_data.newComp.data.mode == 'new'){
+                    const sel = document.querySelector('#cmbCli')
+                    params.fantasia = sel.options[sel.selectedIndex].text
+console.log(params)
+                    openHTML('viewComp.html','pop-up',dataBR(params.data)+" - "+params.fantasia,params)
                 }else{
 
                 }

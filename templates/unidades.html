@@ -1,0 +1,70 @@
+
+<template>
+    <style>
+        button{
+            width: 98%;
+        }
+
+        #scroll{
+            max-height: 200px;
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+
+    </style>
+  
+    <div class="form-base">
+        <h1>Unidades</h1>
+        <fieldset>
+            <legend>Tipos</legend>
+            <div id="scroll">
+                <table id="tblUnd"></table>
+            </div>
+            <button id="btnUnd">Novo</button>
+        </fieldset>          
+         
+    </div>
+
+</template>
+<script>
+
+    main_data.unidades.fillUnd =  function (){
+        const tbl = document.getElementById('tblUnd')
+        tbl.innerHTML = ''
+        const params = new Object;
+            params.hash = localStorage.getItem('hash');
+
+        const myPromisse = queryDB(params,4);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);
+                tbl.head('Nome,Sigla')
+                for(let i=0; i<json.length;i++){
+                    tbl.plot(json[i],'nome,sigla')
+                }                
+            } 
+        })
+    }
+
+
+
+
+    main_data.unidades.fillUnd()
+
+    document.querySelector('#tblUnd').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('viewUnd.html','pop-up','Editar Unidades',data)
+    })
+
+    document.querySelector('#btnUnd').addEventListener('click',()=>{
+        const data = new Object
+        data.mode = 'new'
+        openHTML('viewUnd.html','pop-up','Nova Unidade',data)
+
+    })
+
+
+
+</script>

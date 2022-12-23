@@ -31,9 +31,7 @@
                 
                 tbl.head('Cod.|mobHide,Descrição,Preço')
                 for(let i=0; i<json.length;i++){
-console.log(json[i])                    
-
-                    tbl.plot(json[i],'id|mobHide,nome,venda','int,Upp,R$.')
+                    tbl.plot(json[i],'id|mobHide,nome,preco','int,Upp,R$.')
                   
                 }                
             }        

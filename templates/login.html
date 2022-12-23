@@ -79,7 +79,6 @@
 
             myPromisse.then((resolve)=>{
                 const json = JSON.parse(resolve);
-console.log(json)              
                 if(json.length > 0){
 
                     localStorage.setItem("id_user",json[0].id);

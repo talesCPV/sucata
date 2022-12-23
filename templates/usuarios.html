@@ -14,7 +14,7 @@
     </style>
 
     <div class="form-base">
-
+        <h1>Usuários</h1>
         <fieldset id="fdsUser">
             <legend>Usuários</legend>
             <table id="tblUser"></table>
@@ -27,14 +27,12 @@
 </template>
 <script>
   
-    viewUser()
-
-    function viewUser(){      
+    main_data.usuarios.fillUser = function(){      
         const tbl = document.getElementById('tblUser')
         tbl.innerHTML = ''
         const params = new Object;
             params.hash = localStorage.getItem('hash');
-        const myPromisse = queryDB(params,1);
+        const myPromisse = queryDB(params,26);
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);
@@ -46,6 +44,8 @@
             }        
         });
     }
+
+    main_data.usuarios.fillUser()
 
     document.querySelector('#tblUser').addEventListener('click',(e)=>{
         data = e.target.parentNode.data

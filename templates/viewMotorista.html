@@ -1,0 +1,98 @@
+<template>
+    <style>
+
+        .frm{
+            display: flex;
+            flex-direction: column;
+        }
+     
+    </style>
+  
+    <fieldset class="frm">
+        <legend>Motoristas</legend>
+        <div class="inline">
+            <label for="edtNome">Nome:*</label>
+            <input type="text" id="edtNome" placeholder="Nome" maxlength="40">
+        </div>
+        <div class="inline">
+            <label for="edtCPF">CPF</label>
+            <input type="text" id="edtCPF" placeholder="CPF" maxlength="14" onkeyup="return valCPF(this)">
+            <label for="edtRG">RG</label>
+            <input type="text" id="edtRG" placeholder="RG" maxlength="12" onkeyup="return valRG(this)" >
+            <label for="cmbUser">Usuário</label>
+            <select id="cmbUser"></select>
+        </div>
+        <div class="inline">
+            <label for="edtCNH">CNH</label>
+            <input type="text" id="edtCNH" placeholder="CNH" maxlength="12" onkeyup="return valInt(this)">
+            <label for="edtTipo">Tipo</label>
+            <input type="text" id="edtTipo" placeholder="ex: A, AB, D, E" maxlength="2">
+            <label for="edtVal">Validade</label>
+            <input type="date" id="edtVal"  >
+        </div>
+
+        <div class="inline">
+            <button id="btnSave">Salvar</button>
+            <button id="btnDel">Deletar</button>    
+        </div>
+    </fieldset>
+
+</template>
+<script>
+
+    const params = new Object;
+        params.hash = localStorage.getItem('hash')
+
+    fillCombo('cmbUser',params,26,['id','nome'], main_data.viewMotorista.data.mode == 'edit' ? main_data.viewMotorista.data.id_usuario :'' )
+
+
+    if(main_data.viewMotorista.data.mode == 'edit'){
+        document.querySelector('#edtNome').value = main_data.viewMotorista.data.nome
+        document.querySelector('#edtCPF').value = main_data.viewMotorista.data.cpf
+        document.querySelector('#edtRG').value = main_data.viewMotorista.data.rg
+        document.querySelector('#edtCNH').value = main_data.viewMotorista.data.cnh
+        document.querySelector('#edtTipo').value = main_data.viewMotorista.data.tipo
+        document.querySelector('#edtVal').value = main_data.viewMotorista.data.validade
+    }else{
+        document.querySelector('#btnDel').style.display = 'none'
+    }
+
+    document.querySelector('#btnSave').addEventListener('click',()=>{
+        if(checkField(['edtNome']) ){
+
+            const params = new Object;
+                params.id = main_data.viewMotorista.data.mode == 'new' ? 'DEFAULT' : main_data.viewMotorista.data.id
+                params.nome = document.querySelector('#edtNome').value.trim().toUpperCase()
+                params.cpf = document.querySelector('#edtCPF').value
+                params.rg = document.querySelector('#edtRG').value
+                params.cnh = document.querySelector('#edtCNH').value
+                params.tipo = document.querySelector('#edtTipo').value.trim().toUpperCase()
+                params.validade = document.querySelector('#edtVal').value
+                params.id_usuario = document.querySelector('#cmbUser').value
+
+            const myPromisse = queryDB(params,21);
+
+            myPromisse.then((resolve)=>{
+                main_data.motoristas.fillMotor()
+                closeModal('viewMotorista')
+            })
+        }        
+    })
+
+    document.querySelector('#btnDel').addEventListener('click',()=>{
+
+        if (confirm('Deseja realmente deletar este Motorista?')) {
+            const params = new Object;
+                params.id = main_data.viewMotorista.data.id
+                params.hash = localStorage.getItem('hash')
+
+            const myPromisse = queryDB(params,22);
+            myPromisse.then((resolve)=>{
+                main_data.motoristas.fillMotor()
+                closeModal('viewMotorista')                
+            })
+        }
+    })
+
+
+</script>

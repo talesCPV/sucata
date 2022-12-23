@@ -1,0 +1,74 @@
+
+<template>
+    <style>
+
+        #btnDel{
+            display: none;
+        }
+
+    </style>
+  
+    <fieldset>
+        <legend>Viagem</legend>
+        <div class="inline">
+            <label for="cmbMotor">Motorista</label>
+            <select id="cmbMotor"></select>                      
+        </div>        
+        <div class="inline">
+            <label for="cmbVeic">Veículo</label>
+            <select id="cmbVeic"></select>                      
+        </div>        
+
+        <div class="inline">
+            <label for="edtObs">Obs</label>
+            <textarea id="edtObs" cols="30" rows="10"></textarea>
+        </div>
+  
+        <button id="btnCad">Gerar Viagem</button>
+
+    </fieldset>
+
+
+</template>
+<script>
+
+
+    const params = new Object;
+        params.hash = localStorage.getItem('hash')
+ 
+    fillCombo('cmbMotor',params,23,['id','nome'], main_data.newViagem.data.mode == 'edit' ? main_data.newViagem.data.id_motorista :'' )
+    fillCombo('cmbVeic',params,20,['id','modelo'], main_data.newViagem.data.mode == 'edit' ? main_data.newViagem.data.id_veiculo :'' )
+
+    if(main_data.newViagem.data.mode == 'edit'){       
+        document.querySelector('#edtObs').value = main_data.newViagem.data.obs
+        document.querySelector('#btnCad').innerHTML = 'Salvar'
+    }
+
+    document.querySelector('#btnCad').addEventListener('click',()=>{
+
+        const now = new Date()
+
+        if(checkField(['cmbMotor','cmbVeic'])){
+            const params = new Object;
+                params.id = main_data.newViagem.data.mode == 'new' ? 'DEFAULT' : main_data.newViagem.data.id 
+                params.id_motorista = document.querySelector('#cmbMotor').value
+                params.id_veiculo= document.querySelector('#cmbVeic').value
+                params.data = now.getFullDateTime()
+                params.aberta = main_data.newViagem.data.mode == 'new' ? true : main_data.newViagem.data.aberta 
+                params.obs = document.querySelector('#edtObs').value.trim()
+
+            const myPromisse = queryDB(params,24);
+            myPromisse.then((resolve)=>{
+                if(main_data.newViagem.data.mode == 'new'){
+                    const sel = document.querySelector('#cmbMotor')
+                    params.motorista = sel.options[sel.selectedIndex].text
+                    alert('Viagem criada com sucesso!')
+                }
+                closeModal('newViagem')
+            })
+        }
+        
+    })
+
+
+</script>

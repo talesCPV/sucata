@@ -32,7 +32,7 @@
             <input type="password" id="edtRepass" placeholder="Repita a senha" value="" maxlength="12">
         </div>
         <div class="inline">
-            <label for="edtNome">Nome:</label>
+            <label for="edtNome">Nome:*</label>
             <input type="text" id="edtNome" placeholder="Nome" maxlength="40">
         </div>
         <div class="inline">
@@ -46,10 +46,8 @@
         <div class="inline">
             <label for="edtAccess">Tipo:</label>
             <select id="cmbAccess">
-                <option value="1">Contador</option>
-                <option value="3" selected>Comercial</option>
-                <option value="4">Supervisão</option>
-                <option value="10">CEO</option>
+                <option value="1">Motorista</option>
+                <option value="10">Administrador</option>
             </select>
 <!--            <input type="text" id="edtAccess" readonly>   -->
         </div>
@@ -60,23 +58,25 @@
 </template>
 <script>
 
+    document.querySelector('#edtPass').value = ''
+    document.querySelector('#edtRepass').value = ''
+
     if(main_data.viewUser.data.mode == 'edit' || main_data.viewUser.data.mode == 'user'){
+        alert('Caso não queira alterar a senha, mantenha os campos em branco.')
         document.querySelector('#edtUser').value = main_data.viewUser.data.user
-        document.querySelector('#edtNome').value = main_data.viewUser.data.nome
-        document.querySelector('#edtCel').value = main_data.viewUser.data.cel
-        document.querySelector('#edtEmail').value = main_data.viewUser.data.email
+        document.querySelector('#edtNome').value = main_data.viewUser.data.nome == 'null' ? ' ' : main_data.viewUser.data.nome
+        document.querySelector('#edtCel').value = main_data.viewUser.data.cel == 'null' ? ' ' : main_data.viewUser.data.cel
+        document.querySelector('#edtEmail').value = main_data.viewUser.data.email == 'null' ? ' ' : main_data.viewUser.data.email
         document.querySelector('#cmbAccess').value = main_data.viewUser.data.class
         document.querySelector('#btnDel').style.display = main_data.viewUser.data.mode == 'user' ? 'none' : 'block'
         document.querySelector('#cmbAccess').disabled = main_data.viewUser.data.mode == 'user' ? true : false
     }else{
         document.querySelector('#btnDel').style.display = 'none'
     }
-    document.querySelector('#edtPass').value = ''
-    document.querySelector('#edtRepass').value = ''
 
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
-        if(checkField(['edtUser']) && checkRepass(['edtPass','edtRepass'])){
+        if(checkField(['edtUser','edtPass','edtNome']) && checkRepass(['edtPass','edtRepass'])){
 
             const pass = document.querySelector('#edtPass').value.trim()
             const hash =  pass =='' ? main_data.viewUser.data.mode == 'user' ? localStorage.getItem('hash') : main_data.viewUser.data.hash : pass.getHash(30)
@@ -88,17 +88,19 @@
                 params.nome = document.querySelector('#edtNome').value.trim()
                 params.email = document.querySelector('#edtEmail').value.trim()
                 params.cel = document.querySelector('#edtCel').value.trim()
-            
-            const myPromisse = queryDB(params,2);
+            const myPromisse = queryDB(params,16);
 
             myPromisse.then((resolve)=>{
-                closeModal('viewUser')
-                if(main_data.viewUser.data.mode != 'user'){
-                    openHTML('usuarios.html','pop-up','Cadastro de Usuários')
-                }else{
+
+                if(main_data.viewUser.data.mode == 'user'){
+                    alert('Alterações feitas com sucesso, favor logar novamente.')
                     localStorage.clear();
                     window.location.reload(true);
+                }if(main_data.viewUser.data.mode == 'edit'){
+                    main_data.usuarios.fillUser()
                 }
+                
+                closeModal('viewUser')
             })
         }   
              
@@ -108,13 +110,14 @@
 
         if (confirm('Deseja realmente deletar este usuário?')) {
             const params = new Object;
-                params.id = localData.id
+                params.id = main_data.viewUser.data.id
+                params.hash = localStorage.getItem('hash')
 
-            const myPromisse = queryDB(params,3);
+            const myPromisse = queryDB(params,27);
 
             myPromisse.then((resolve)=>{
+                main_data.usuarios.fillUser()
                 closeModal('viewUser')
-                openHTML('usuarios.html','pop-up','Cadastro de Usuários')
             })
         }
     })

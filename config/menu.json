@@ -10,19 +10,77 @@
 		},
 		{
 			"modulo" : "Compras",
-			"script" : "javascript:openHTML('compras.html','content-screen')",
+			"script" : "#",
 			"access" : [10],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
-			"itens"  : []
+			"itens"  : [
+				{
+					"modulo" : "Viagens",
+					"script" : "javascript:openHTML('viagens.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
+				{
+					"modulo" : "Ver Compras",
+					"script" : "javascript:openHTML('compras.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				}
+			]
 		},
 		{
-			"modulo" : "Preferências",
-			"script" : "javascript:openHTML('config.html','content-screen')",
+			"modulo" : "Cadastros",
+			"script" : "#",
 			"access" : [10],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
-			"itens"  : []
+			"itens"  : [
+				{
+					"modulo" : "Unidades",
+					"script" : "javascript:openHTML('unidades.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
+				{
+					"modulo" : "Produtos",
+					"script" : "javascript:openHTML('produtos.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
+				{
+					"modulo" : "Veículos",
+					"script" : "javascript:openHTML('veiculos.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
+				{
+					"modulo" : "Motoristas",
+					"script" : "javascript:openHTML('motoristas.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
+				{
+					"modulo" : "Usuários",
+					"script" : "javascript:openHTML('usuarios.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				}											
+			]
 		}							
 
 	]

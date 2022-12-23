@@ -8,7 +8,7 @@
     </style>
 
     <div class="form-base">
-        <h1>Compras</h1>
+        <h1>Viagens</h1>
 
         <fieldset>
             <legend>Busca</legend>
@@ -16,12 +16,12 @@
             <div class="inline">
                 <label for="edtBusca">por:</label>
                 <select id="cmbBusca">
-                    <option value="CLI.fantasia" signal="LIKE" selected>Cliente</option>
-                    <option value="CLI.tipo" signal="=" val="FIS">Pessoa Física</option>
-                    <option value="CLI.tipo" signal="=" val="JUR">Pessoa Jurídica</option>
-                    <option value="CLI.cnpj_cpf" signal="LIKE" >CNPJ/CPF</option>
-                    <option value="CLI.ie" signal="=">Insc. Estadual</option>
-                    <option value="COMP.id" signal="IN">Código</option>
+                    <option value="VIA.id" signal=">=" val="0" selected>Todos</option>
+                    <option value="VIA.aberta" signal="=" val="1">Aberta</option>
+                    <option value="VIA.aberta" signal="=" val="0">Encerrada</option>
+                    <option value="MOT.nome" signal="LIKE" >Motorista</option>
+                    <option value="VEI.placa" signal="LIKE" >Placa Veículo</option>
+                    <option value="VEI.modelo" signal="LIKE" >Modelo Veículo</option>
                 </select>
                 <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
                 <button id="btnBusca">Busca</button>
@@ -50,7 +50,7 @@
     document.querySelector('#edtIni').value =  today.iniMonth()
     document.querySelector('#edtFin').value =  today.finMonth()
 
-    main_data.compras.busca = function (){
+    main_data.viagens.busca = function (){
         const sel = document.querySelector('#cmbBusca')
         const field = sel.value
         const signal = sel.options[sel.selectedIndex].getAttribute('signal')
@@ -66,17 +66,18 @@
             params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
             params.fin = ckb ? document.querySelector('#edtFin').value : '2100-12-31';        
 
-        const myPromisse = queryDB(params,10);
+        const myPromisse = queryDB(params,25);
 
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);
+console.log(json)                
                 let total = 0
                 tbl.innerHTML=''
-                json.length > 0 ? tbl.head('Cod.|mobHide,Cliente,Data,Status|mobHide,Valor R$|mobHide') : 0
+                json.length > 0 ? tbl.head('Data,Motorista,Placa|mobHide,Modelo|mobHide') : 0
                 for(let i=0; i<json.length;i++){                                       
                     total +=  parseFloat(json[i].valor) // ACUMULA O TOTAL
-                    tbl.plot(json[i],'id|mobHide,fantasia,data,status|mobHide,valor|mobHide','int,Upp,date,Upp,R$.',true)                    
+                    tbl.plot(json[i],'data,nome,placa|mobHide,modelo|mobHide','date,Upp,Upp,Upp',true)                    
                 }                
             }        
         })
@@ -85,20 +86,20 @@
 
 
     document.querySelector('#btnBusca').addEventListener('click',()=>{
-        main_data.compras.busca()
+        main_data.viagens.busca()
     })
    
 
     document.querySelector('#tblComp').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         data.mode = 'edit'
-        openHTML('viewComp.html','pop-up',data.nome+' - '+dataBR(data.data),data)
+        openHTML('viewViagem.html','pop-up',data.nome+' - '+dataBR(data.data),data)
     })
 
     document.querySelector('#btnNovo').addEventListener('click',()=>{
         data = new Object
         data.mode = 'new'
-        openHTML('newComp.html','pop-up',"Gerar Nova Compra",data)
+        openHTML('newViagem.html','pop-up',"Gerar Nova Viagem",data)
     })
 
 

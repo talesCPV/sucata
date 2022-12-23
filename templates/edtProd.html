@@ -31,8 +31,6 @@
 
     document.querySelector('#btnSaveItem').addEventListener('click',()=>{
 
-console.log(main_data.edtProd.data)
-
         const params = new Object;
             params.id = main_data.edtProd.data.id
             params.id_prod = main_data.edtProd.data.id_prod
@@ -54,7 +52,16 @@ console.log(main_data.edtProd.data)
     document.querySelector('#btnDelItem').addEventListener('click',()=>{
 
         if (confirm('Deseja realmente deletar este ítem?')) {
-            main_data.edtProd.data.del(main_data.edtProd.data.id)
+            const params = new Object;
+                params.id = main_data.edtProd.data.id
+                params.hash = localStorage.getItem('hash')
+            const myPromisse = queryDB(params,15);
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    main_data.viewComp.fillItens()
+                    closeModal('edtProd')
+                }  
+            }) 
         }    
     
     })
