@@ -1,0 +1,205 @@
+
+<template>
+    <style>
+
+        #tblViagem tr th{
+            font-size: 0.9em;
+            max-width: 20%;
+        }
+
+        .head-item{
+            display: flex;
+            
+        }
+
+    </style>
+    
+    <fieldset id="fdsComp">
+        <legend>Viagem</legend>
+        <table id="tblViagem">
+            <tr><th>Motorista</th><td id="via-motor"></td></tr>
+            <tr><th>Veículo</th><td id="via-vei"></td></tr>
+            <tr><th>Placa</th><td id="via-placa"></td></tr>
+            <tr><th>Saída</th><td id="via-saida"></td></tr>
+            <tr><th>Peso</th><td id="via-peso"></td></tr>
+            <tr><th>Valor R$</th><td id="via-valor"></td></tr>
+        </table>
+        <div class="inline edtButtons">
+            <button id="btnEdit" disabled>Editar</button>
+            <button id="btnDel" disabled>Deletar</button>
+            <button id="btnFecha" disabled>Encerrar</button>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Ítens</legend>
+        <table id="tblItens"></table>
+        <div class="inline">
+            <label for="cmbCli">Cliente</label>
+            <select id="cmbCli"></select>
+        </div>
+        <button id="btnAdd" disabled>Adicionar Ítens</button>
+        <button id="btnImp" disabled>Imprimir</button>
+
+
+
+    </fieldset>
+
+</template>
+<script>
+
+    const params_cli = new Object;
+        params_cli.field = 'nome'
+        params_cli.signal = 'LIKE'
+        params_cli.value = '"%%"' 
+    fillCombo('cmbCli',params_cli,1,['id','fantasia'], '#')
+
+    main_data.viewViagem.open = function open(){
+console.log(main_data.viewViagem.data)
+    if(main_data.viewViagem.data == 'edit'){
+        document.querySelector('#via-motor').innerHTML = main_data.viewViagem.data.nome.toUpperCase()
+        document.querySelector('#via-vei').innerHTML = main_data.viewViagem.data.modelo.toUpperCase()
+        document.querySelector('#via-placa').innerHTML = main_data.viewViagem.data.placa
+        document.querySelector('#via-saida').innerHTML = main_data.viewViagem.data.saida
+        document.querySelector('#via-peso').innerHTML = ''
+        document.querySelector('#via-valor').innerHTML = ''
+
+        if(main_data.viewViagem.data.aberta ){
+            document.querySelector('#btnEdit').disabled = false
+            document.querySelector('#btnDel').disabled = false
+            document.querySelector('#btnAdd').disabled = false
+            document.querySelector('#btnImp').disabled = false
+            document.querySelector('#btnFecha').innerHTML = 'Encerrar'
+        }else{
+            document.querySelector('#btnFecha').innerHTML = 'Upload NF' 
+            document.querySelector('#btnEdit').disabled = true
+            document.querySelector('#btnDel').disabled = true
+            document.querySelector('#btnAdd').disabled = true            
+            document.querySelector('#btnImp').disabled = true
+        }
+
+        main_data.viewViagem.fillItens()
+
+    }else{
+        const params = new Object;
+            params.hash = localStorage.getItem('hash')
+        const myPromisse = queryDB(params,28);
+        myPromisse.then((resolve)=>{
+            main_data.viewViagem.data = JSON.parse(resolve)[0]
+            main_data.viewViagem.data.saida = dataBR(main_data.viewViagem.data.data) + ' ' +horaBR(main_data.viewViagem.data.data)
+            main_data.viewViagem.data.form = 'viewViagem'
+            main_data.viewViagem.fillItens()            
+            console.log(main_data.viewViagem.data)
+            document.querySelector('#via-motor').innerHTML = main_data.viewViagem.data.nome.toUpperCase()
+            document.querySelector('#via-vei').innerHTML = main_data.viewViagem.data.modelo.toUpperCase()
+            document.querySelector('#via-placa').innerHTML = main_data.viewViagem.data.placa
+            document.querySelector('#via-saida').innerHTML = main_data.viewViagem.data.saida
+            document.querySelector('#via-peso').innerHTML = ''
+            document.querySelector('#via-valor').innerHTML = ''
+
+            document.querySelector('.edtButtons').style.display = 'none'
+            document.querySelector('#btnAdd').disabled = false
+            document.querySelector('#btnImp').disabled = false
+        })
+
+
+
+    }
+
+
+    }
+
+    main_data.viewViagem.fillItens = function fillItens(){
+        const params = new Object;
+            params.id_viagem = main_data.viewViagem.data.id
+console.log(params)            
+        const myPromisse = queryDB(params,29);
+        myPromisse.then((resolve)=>{
+            main_data.viewViagem.data.itens = JSON.parse(resolve)
+            document.querySelector('#btnFecha').disabled = main_data.viewViagem.data.itens.length > 0 ? false : true
+            const tbl = document.querySelector('#tblItens')
+            const tot = new Object
+                tot.blank = ''
+                tot.label = 'TOTAL'
+                tot.val = 0
+            tbl.head('Cod.|mobHide,Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
+            for(let i=0; i<main_data.viewViagem.data.itens.length;i++){
+                tbl.plot(main_data.viewViagem.data.itens[i],'id|mobHide,nome,und|mobHide,qtd,val_unit,total','int,Upp,Upp,str,R$.,R$.')
+                tot.val += parseFloat(main_data.viewViagem.data.itens[i].total)
+            }
+            tbl.plot(tot,'blank|mobHide,blank,blank|mobHide,blank,label,val','str,str,str,str,Upp,R$.')
+            document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
+        })
+    }
+
+    main_data.viewViagem.open()
+    
+
+    document.querySelector('#btnEdit').addEventListener('click',()=>{
+        openHTML('newComp.html','pop-up','Edição', main_data.viewViagem.data)
+    })
+
+    document.querySelector('#btnDel').addEventListener('click',()=>{        
+        if (confirm('Deseja realmente deletar esta compra?')) {            
+            const params = new Object;
+                params.id_compra = main_data.viewViagem.data.id
+                params.hash = localStorage.getItem('hash')
+            const myPromisse = queryDB(params,15); // DELETA OS ÍTENS
+            myPromisse.then((resolve)=>{
+                const myPromisse_1 = queryDB(params,12); // DELETA A COMPRA
+                myPromisse_1.then((resolve)=>{
+                    main_data.compras.busca()
+                    closeModal('viewViagem')
+                })
+            }) 
+        }
+    })
+
+    document.querySelector('#btnAdd').addEventListener('click',()=>{
+        if(document.querySelector('#cmbCli').value != ''){
+            main_data.viewViagem.data.addItem = function(data){
+                const params = new Object;
+                    params.id = 'DEFAULT' 
+                    params.id_viagem = main_data.viewViagem.data.id
+                    params.id_cliente = document.querySelector('#cmbCli').value
+                    params.id_prod = data.id
+                    params.qtd = data.qtd
+                    params.und = data.und
+                    params.preco = data.preco
+                const myPromisse = queryDB(params,30);
+                myPromisse.then((resolve)=>{
+                    if(resolve.trim() != ""){
+                        main_data.viewViagem.fillItens()
+                        closeModal('addProd')
+                    }  
+                })                
+            }
+
+            main_data.viewViagem.data.callby = 'viewViagem'
+            openHTML('addProd.html','pop-up','Adicione um Produto',main_data.viewViagem.data,[100,30])
+        }else{
+            alert('Por Favor, selecione um cliente.')
+            document.querySelector('#cmbCli').focus()
+        }
+    })
+
+    document.querySelector('#btnFecha').addEventListener('click',()=>{
+       
+    })
+
+    document.querySelector('#tblItens').addEventListener('click',(e)=>{
+        if(main_data.viewViagem.data.status == 'ABERTO'){
+            const data = e.target.parentNode.data
+            data.mode = 'edit'
+            if(data.id != undefined){
+                openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
+            }
+        }
+    })
+
+    document.querySelector('#btnImp').addEventListener('click',()=>{
+
+        print_compra(main_data.viewViagem.data)
+
+    })
+
+</script>

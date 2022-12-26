@@ -93,7 +93,8 @@ console.log(json)
     document.querySelector('#tblComp').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         data.mode = 'edit'
-        openHTML('viewViagem.html','pop-up',data.nome+' - '+dataBR(data.data),data)
+        data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
+        openHTML('viewViagem.html','pop-up',data.saida,data)
     })
 
     document.querySelector('#btnNovo').addEventListener('click',()=>{

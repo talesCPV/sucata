@@ -34,6 +34,14 @@
 			]
 		},
 		{
+			"modulo" : "Minha Carga",
+			"script" : "javascript:openHTML('viewViagem.html','pop-up','Minha Carga',{mode:'motorista'})",
+			"access" : [1],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},		
+		{
 			"modulo" : "Cadastros",
 			"script" : "#",
 			"access" : [10],

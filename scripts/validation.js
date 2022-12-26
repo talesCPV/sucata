@@ -299,9 +299,12 @@ function getPlaca(V){
 }
 
 
-
 function dataBR(V){
     return V.substring(8,10)+'/'+V.substring(5,7)+'/'+V.substring(0,4)
+}
+
+function horaBR(V){
+    return V.substring(11,16)
 }
 
 function viewMoneyBR(V){

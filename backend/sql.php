@@ -11,7 +11,7 @@ $query_db = array(
     "4"  => 'SELECT * FROM tb_und WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;' ,
     "5"  => 'INSERT INTO tb_und (id, nome, sigla) VALUES(x00, "x01", "x02") ON DUPLICATE KEY UPDATE nome="x01", sigla="x02";',
     "6"  => 'DELETE FROM tb_und WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-    "7"  => 'SELECT *, ROUND(preco * (1+(margem/100)),2) AS venda FROM tb_prod WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;' ,
+    "7"  => 'SELECT *, ROUND(preco * (1+(margem/100)),2) AS venda FROM tb_prod WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10,1) ORDER BY nome;' ,
     "8"  => 'INSERT INTO tb_prod (id, nome, und, preco, margem, qtd) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE nome="x01", und="x02", preco="x03", margem="x04", qtd="x05";',
     "9"  => 'DELETE FROM tb_prod WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
@@ -62,6 +62,26 @@ $query_db = array(
         ORDER BY data DESC;' ,
     "26" => 'SELECT * FROM tb_usuario WHERE (SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;',
     "27" => 'DELETE FROM tb_usuario WHERE id=x00 ;',
+    "28" => 'SELECT VIA.*, MOT.nome, VEI.modelo, VEI.placa 
+        FROM tb_viagem AS VIA
+        INNER JOIN tb_motorista AS MOT
+        INNER JOIN tb_veiculo AS VEI
+        INNER JOIN tb_usuario AS USR 
+        ON VIA.aberta = 1 
+        AND MOT.id = VIA.id_motorista
+        AND VEI.id = VIA.id_veiculo
+        AND USR.id = MOT.id_usuario
+        AND (SELECT U.id FROM tb_usuario AS U WHERE hash="x00") = USR.id
+        ORDER BY data DESC;' ,
+    "29" => 'SELECT ITEM.*, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND(ITEM.qtd * ITEM.val_unit ,2) as total
+        FROM tb_item_viagem AS ITEM 
+        INNER JOIN tb_prod AS PROD
+        ON PROD.id = ITEM.id_prod
+        AND ITEM.id_viagem="x00";',
+    "30" => 'INSERT INTO tb_item_viagem (id, id_viagem, id_cliente, id_prod, qtd, und, val_unit) VALUES(x00, "x01", "x02", "x03", "x04", "x05", "x06") 
+        ON DUPLICATE KEY UPDATE  id_viagem="x01", id_cliente="x02", id_prod="x03", qtd="x04", und="x05", val_unit="x06";',
+
+
 
 
     );
