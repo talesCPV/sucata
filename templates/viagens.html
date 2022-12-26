@@ -70,14 +70,13 @@
 
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
-                const json = JSON.parse(resolve);
-console.log(json)                
+                const json = JSON.parse(resolve);              
                 let total = 0
                 tbl.innerHTML=''
-                json.length > 0 ? tbl.head('Data,Motorista,Placa|mobHide,Modelo|mobHide') : 0
+                json.length > 0 ? tbl.head('Data,Motorista,Placa|mobHide,Modelo|mobHide,Aberto') : 0
                 for(let i=0; i<json.length;i++){                                       
                     total +=  parseFloat(json[i].valor) // ACUMULA O TOTAL
-                    tbl.plot(json[i],'data,nome,placa|mobHide,modelo|mobHide','date,Upp,Upp,Upp',true)                    
+                    tbl.plot(json[i],'data,nome,placa|mobHide,modelo|mobHide,aberta','date,Upp,Upp,Upp,cha 1=ABERTO 2=FECHADO',true)                    
                 }                
             }        
         })

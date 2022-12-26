@@ -36,8 +36,8 @@
     const params = new Object;
         params.hash = localStorage.getItem('hash')
  
-    fillCombo('cmbMotor',params,23,['id','nome'], main_data.newViagem.data.mode == 'edit' ? main_data.newViagem.data.id_motorista :'' )
-    fillCombo('cmbVeic',params,20,['id','modelo'], main_data.newViagem.data.mode == 'edit' ? main_data.newViagem.data.id_veiculo :'' )
+    fillCombo('cmbMotor',params,31,['id','nome'], main_data.newViagem.data.mode == 'edit' ? main_data.newViagem.data.id_motorista :'' )
+    fillCombo('cmbVeic',params,32,['id','modelo'], main_data.newViagem.data.mode == 'edit' ? main_data.newViagem.data.id_veiculo :'' )
 
     if(main_data.newViagem.data.mode == 'edit'){       
         document.querySelector('#edtObs').value = main_data.newViagem.data.obs

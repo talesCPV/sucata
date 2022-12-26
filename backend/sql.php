@@ -80,8 +80,13 @@ $query_db = array(
         AND ITEM.id_viagem="x00";',
     "30" => 'INSERT INTO tb_item_viagem (id, id_viagem, id_cliente, id_prod, qtd, und, val_unit) VALUES(x00, "x01", "x02", "x03", "x04", "x05", "x06") 
         ON DUPLICATE KEY UPDATE  id_viagem="x01", id_cliente="x02", id_prod="x03", qtd="x04", und="x05", val_unit="x06";',
-
-
+    "31" => 'SELECT * FROM tb_motorista
+	    WHERE id NOT IN (SELECT V.id_motorista FROM tb_viagem AS V WHERE V.aberta=1)	
+	    GROUP BY nome;' ,
+    "32" => 'SELECT * FROM tb_veiculo
+        WHERE id NOT IN (SELECT V.id_veiculo FROM tb_viagem AS V WHERE V.aberta=1)	
+        GROUP BY placa;',
+    "33" => 'UPDATE tb_viagem SET aberta="0" WHERE id=x00 AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10)',
 
 
     );

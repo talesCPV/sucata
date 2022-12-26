@@ -54,41 +54,8 @@
     fillCombo('cmbCli',params_cli,1,['id','fantasia'], '#')
 
     main_data.viewViagem.open = function open(){
-console.log(main_data.viewViagem.data)
-    if(main_data.viewViagem.data == 'edit'){
-        document.querySelector('#via-motor').innerHTML = main_data.viewViagem.data.nome.toUpperCase()
-        document.querySelector('#via-vei').innerHTML = main_data.viewViagem.data.modelo.toUpperCase()
-        document.querySelector('#via-placa').innerHTML = main_data.viewViagem.data.placa
-        document.querySelector('#via-saida').innerHTML = main_data.viewViagem.data.saida
-        document.querySelector('#via-peso').innerHTML = ''
-        document.querySelector('#via-valor').innerHTML = ''
-
-        if(main_data.viewViagem.data.aberta ){
-            document.querySelector('#btnEdit').disabled = false
-            document.querySelector('#btnDel').disabled = false
-            document.querySelector('#btnAdd').disabled = false
-            document.querySelector('#btnImp').disabled = false
-            document.querySelector('#btnFecha').innerHTML = 'Encerrar'
-        }else{
-            document.querySelector('#btnFecha').innerHTML = 'Upload NF' 
-            document.querySelector('#btnEdit').disabled = true
-            document.querySelector('#btnDel').disabled = true
-            document.querySelector('#btnAdd').disabled = true            
-            document.querySelector('#btnImp').disabled = true
-        }
-
-        main_data.viewViagem.fillItens()
-
-    }else{
-        const params = new Object;
-            params.hash = localStorage.getItem('hash')
-        const myPromisse = queryDB(params,28);
-        myPromisse.then((resolve)=>{
-            main_data.viewViagem.data = JSON.parse(resolve)[0]
-            main_data.viewViagem.data.saida = dataBR(main_data.viewViagem.data.data) + ' ' +horaBR(main_data.viewViagem.data.data)
-            main_data.viewViagem.data.form = 'viewViagem'
-            main_data.viewViagem.fillItens()            
-            console.log(main_data.viewViagem.data)
+//console.log(main_data.viewViagem.data)
+        if(main_data.viewViagem.data.mode == 'edit'){
             document.querySelector('#via-motor').innerHTML = main_data.viewViagem.data.nome.toUpperCase()
             document.querySelector('#via-vei').innerHTML = main_data.viewViagem.data.modelo.toUpperCase()
             document.querySelector('#via-placa').innerHTML = main_data.viewViagem.data.placa
@@ -96,22 +63,57 @@ console.log(main_data.viewViagem.data)
             document.querySelector('#via-peso').innerHTML = ''
             document.querySelector('#via-valor').innerHTML = ''
 
-            document.querySelector('.edtButtons').style.display = 'none'
-            document.querySelector('#btnAdd').disabled = false
-            document.querySelector('#btnImp').disabled = false
-        })
+            if(main_data.viewViagem.data.aberta == '1' ){
+                document.querySelector('#btnEdit').disabled = false
+                document.querySelector('#btnDel').disabled = false
+                document.querySelector('#btnAdd').disabled = false
+                document.querySelector('#cmbCli').disabled = false
+                document.querySelector('#btnImp').disabled = false
+                document.querySelector('#btnFecha').innerHTML = 'Encerrar'
+            }else{
+                document.querySelector('#btnFecha').innerHTML = 'Upload NF' 
+                document.querySelector('#btnEdit').disabled = true
+                document.querySelector('#btnDel').disabled = true
+                document.querySelector('#btnAdd').disabled = true  
+                document.querySelector('#cmbCli').disabled = true           
+                document.querySelector('#btnImp').disabled = true
+            }
 
+            main_data.viewViagem.fillItens()
 
+        }else{
+            const params = new Object;
+                params.hash = localStorage.getItem('hash')
+            const myPromisse = queryDB(params,28);
+            myPromisse.then((resolve)=>{
+                main_data.viewViagem.data = JSON.parse(resolve)[0]
+console.log(main_data.viewViagem.data) 
+                if(main_data.viewViagem.data != undefined){
+                    main_data.viewViagem.data.saida = dataBR(main_data.viewViagem.data.data) + ' ' +horaBR(main_data.viewViagem.data.data)
+                    main_data.viewViagem.data.form = 'viewViagem'
+                    main_data.viewViagem.fillItens()            
+                    console.log(main_data.viewViagem.data)
+                    document.querySelector('#via-motor').innerHTML = main_data.viewViagem.data.nome.toUpperCase()
+                    document.querySelector('#via-vei').innerHTML = main_data.viewViagem.data.modelo.toUpperCase()
+                    document.querySelector('#via-placa').innerHTML = main_data.viewViagem.data.placa
+                    document.querySelector('#via-saida').innerHTML = main_data.viewViagem.data.saida
+                    document.querySelector('#via-peso').innerHTML = ''
+                    document.querySelector('#via-valor').innerHTML = ''
 
-    }
-
+                    document.querySelector('.edtButtons').style.display = 'none'
+                    document.querySelector('#btnAdd').disabled = false
+                    document.querySelector('#btnImp').disabled = false
+                }else{
+                    alert('Nenhuma carga ativa, favor ligar para central.')
+                }
+            })
+        }
 
     }
 
     main_data.viewViagem.fillItens = function fillItens(){
         const params = new Object;
-            params.id_viagem = main_data.viewViagem.data.id
-console.log(params)            
+            params.id_viagem = main_data.viewViagem.data.id       
         const myPromisse = queryDB(params,29);
         myPromisse.then((resolve)=>{
             main_data.viewViagem.data.itens = JSON.parse(resolve)
@@ -133,7 +135,6 @@ console.log(params)
 
     main_data.viewViagem.open()
     
-
     document.querySelector('#btnEdit').addEventListener('click',()=>{
         openHTML('newComp.html','pop-up','Edição', main_data.viewViagem.data)
     })
@@ -183,7 +184,15 @@ console.log(params)
     })
 
     document.querySelector('#btnFecha').addEventListener('click',()=>{
-       
+        if (confirm('Deseja realmente encerrar esta viagem?')) {
+            const params = new Object;
+                params.id = main_data.viewViagem.data.id
+                params.hash = localStorage.getItem('hash')
+            const myPromisse = queryDB(params,33); 
+            myPromisse.then((resolve)=>{
+                main_data.viewViagem.open()
+            }) 
+        }
     })
 
     document.querySelector('#tblItens').addEventListener('click',(e)=>{
