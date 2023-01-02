@@ -143,11 +143,46 @@ console.log(main_data.viewComp.data)
     document.querySelector('#tblItens').addEventListener('click',(e)=>{
         if(main_data.viewComp.data.status == 'ABERTO'){
             const data = e.target.parentNode.data
+            data.edtItem = function(){
+                const params = new Object;
+                    params.id = main_data.edtProd.data.id
+                    params.id_prod = main_data.edtProd.data.id_prod
+                    params.id_comp = main_data.edtProd.data.id_compra
+                    params.qtd = document.querySelector('#edtQtd').value
+                    params.und = main_data.edtProd.data.und
+                    params.preco = document.querySelector('#edtPreco').value
+                const myPromisse = queryDB(params,14);
+                myPromisse.then((resolve)=>{
+                    if(resolve.trim() != ""){
+                        main_data.viewComp.fillItens()
+                        closeModal('edtProd')
+                    }  
+                })                                
+            }
+            data.delItem = function(){               
+                const params = new Object;
+                    params.id = main_data.edtProd.data.id
+                    params.hash = localStorage.getItem('hash')
+                const myPromisse = queryDB(params,15);
+                myPromisse.then((resolve)=>{
+                    if(resolve.trim() != ""){
+                        main_data.viewComp.fillItens()
+                        closeModal('edtProd')
+                    }  
+                }) 
+            } 
+        }
+
+    }
+/*        
+        if(main_data.viewComp.data.status == 'ABERTO'){
+            const data = e.target.parentNode.data
             data.mode = 'edit'
             if(data.id != undefined){
                 openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
             }
         }
+*/        
     })
 
     document.querySelector('#btnVerNF').addEventListener('click',()=>{

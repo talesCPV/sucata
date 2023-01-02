@@ -46,7 +46,6 @@
 
 </template>
 <script>
-
     const params_cli = new Object;
         params_cli.field = 'nome'
         params_cli.signal = 'LIKE'
@@ -196,9 +195,41 @@ console.log(main_data.viewViagem.data)
     })
 
     document.querySelector('#tblItens').addEventListener('click',(e)=>{
-        if(main_data.viewViagem.data.status == 'ABERTO'){
+        if(main_data.viewViagem.data.aberta == '1'){
             const data = e.target.parentNode.data
-            data.mode = 'edit'
+         
+            data.edtItem = function(){
+                const params = new Object;
+                    params.id = main_data.edtProd.data.id 
+                    params.id_viagem = main_data.edtProd.data.id_viagem
+                    params.id_cliente = main_data.edtProd.data.id_cliente
+                    params.id_prod = main_data.edtProd.data.id_prod
+                    params.qtd = document.querySelector('#edtQtd').value
+                    params.und = main_data.edtProd.data.und
+                    params.preco = document.querySelector('#edtPreco').value
+                const myPromisse = queryDB(params,30);
+                               
+                myPromisse.then((resolve)=>{
+                    if(resolve.trim() != ""){
+                        main_data.viewViagem.fillItens()
+                        closeModal('edtProd')
+                    }  
+                })                                
+            }
+            data.delItem = function(){               
+                const params = new Object;
+                    params.id = main_data.edtProd.data.id
+                    params.hash = localStorage.getItem('hash')                
+                const myPromisse = queryDB(params,34);
+                myPromisse.then((resolve)=>{
+                    if(resolve.trim() != ""){
+                        main_data.viewViagem.fillItens()
+                        closeModal('edtProd')
+                    }  
+                }) 
+            }
+
+            data.callby = 'viewViagem'
             if(data.id != undefined){
                 openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
             }

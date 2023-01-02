@@ -87,7 +87,7 @@ $query_db = array(
         WHERE id NOT IN (SELECT V.id_veiculo FROM tb_viagem AS V WHERE V.aberta=1)	
         GROUP BY placa;',
     "33" => 'UPDATE tb_viagem SET aberta="0" WHERE id=x00 AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10)',
-
+    "34" => 'DELETE FROM tb_item_viagem WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1);',
 
     );
 
