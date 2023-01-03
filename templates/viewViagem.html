@@ -122,12 +122,12 @@ console.log(main_data.viewViagem.data)
                 tot.blank = ''
                 tot.label = 'TOTAL'
                 tot.val = 0
-            tbl.head('Cod.|mobHide,Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
+            tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
             for(let i=0; i<main_data.viewViagem.data.itens.length;i++){
-                tbl.plot(main_data.viewViagem.data.itens[i],'id|mobHide,nome,und|mobHide,qtd,val_unit,total','int,Upp,Upp,str,R$.,R$.')
+                tbl.plot(main_data.viewViagem.data.itens[i],'nome,und|mobHide,qtd,val_unit,total','Upp,Upp,str,R$.,R$.')
                 tot.val += parseFloat(main_data.viewViagem.data.itens[i].total)
             }
-            tbl.plot(tot,'blank|mobHide,blank,blank|mobHide,blank,label,val','str,str,str,str,Upp,R$.')
+            tbl.plot(tot,'blank,blank|mobHide,blank,label,val','str,str,str,Upp,R$.')
             document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
         })
     }

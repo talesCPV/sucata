@@ -47,7 +47,7 @@
 <script>
 
     main_data.viewComp.open = function open(){
-console.log(main_data.viewComp.data)        
+        
         document.querySelector('#tdCli').innerHTML = main_data.viewComp.data.fantasia.toUpperCase()
         document.querySelector('#tdData').innerHTML = main_data.viewComp.data.data != null ? dataBR(main_data.viewComp.data.data) : '*'
 
@@ -81,12 +81,12 @@ console.log(main_data.viewComp.data)
                 tot.blank = ''
                 tot.label = 'TOTAL'
                 tot.val = 0
-            tbl.head('Cod.|mobHide,Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
+            tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
             for(let i=0; i<main_data.viewComp.data.itens.length;i++){
-                tbl.plot(main_data.viewComp.data.itens[i],'id|mobHide,nome,und|mobHide,qtd,val_unit,total','int,Upp,Upp,str,R$.,R$.')
+                tbl.plot(main_data.viewComp.data.itens[i],'nome,und|mobHide,qtd,val_unit,total','Upp,Upp,str,R$.,R$.')
                 tot.val += parseFloat(main_data.viewComp.data.itens[i].total)
             }
-            tbl.plot(tot,'blank|mobHide,blank,blank|mobHide,blank,label,val','str,str,str,str,Upp,R$.')
+            tbl.plot(tot,'blank,blank|mobHide,blank,label,val','str,str,str,Upp,R$.')
             document.querySelector('#tdTot').innerHTML = viewMoneyBR(tot.val.toFixed(2))
         })
     }
@@ -171,9 +171,15 @@ console.log(main_data.viewComp.data)
                     }  
                 }) 
             } 
+
+            data.mode = 'edit'
+            if(data.id != undefined){
+                openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
+            }
+
         }
 
-    }
+    
 /*        
         if(main_data.viewComp.data.status == 'ABERTO'){
             const data = e.target.parentNode.data
