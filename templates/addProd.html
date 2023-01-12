@@ -7,6 +7,11 @@
 
 <fieldset>
     <legend>Selecione o Produto</legend>
+    <div class="inline">
+        <label for="edtBusca_prod">Descrição</label>
+        <input type="text" id="edtBusca_prod" onkeypress="return getEnter(event, 'btnBusca_prod')">
+        <button id="btnBusca_prod">Busca</button>
+    </div>
     <table id="tblAddProd"></table>
 </fieldset>
 
@@ -21,6 +26,7 @@
         const tbl = document.getElementById('tblAddProd')
         tbl.innerHTML = ''
         const params = new Object;
+            params.nome = document.querySelector('#edtBusca_prod').value.trim()
             params.hash = localStorage.getItem('hash');
 
         const myPromisse = queryDB(params,7);
@@ -37,6 +43,10 @@
             }        
         });
     }
+
+    document.querySelector('#btnBusca_prod').addEventListener('click',()=>{
+        busca()
+    })
 
     document.querySelector('#tblAddProd').addEventListener('click',(e)=>{
         const data = e.target.parentNode.data

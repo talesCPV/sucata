@@ -203,6 +203,10 @@
         }
     })
 
+    document.querySelector('#btnVend').addEventListener('click',()=>{        
+        openHTML('venda.html','pop-up','Venda de Material',{mode:'venda'})
+    })
+
     document.querySelector('#btnFecha').addEventListener('click',()=>{
         if (confirm('Deseja realmente encerrar esta viagem?')) {
             const params = new Object;

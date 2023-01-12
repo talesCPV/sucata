@@ -17,30 +17,13 @@
 			"itens"  : []
 		},
 		{
-			"modulo" : "Compras",
-			"script" : "#",
+			"modulo" : "Viagens",
+			"script" : "javascript:openHTML('viagens.html','content-screen')",
 			"access" : [10],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
-			"itens"  : [
-				{
-					"modulo" : "Viagens",
-					"script" : "javascript:openHTML('viagens.html','content-screen')",
-					"access" : [10],
-					"class"  : "",
-					"icone"  : "fa fa-industry",
-					"itens"  : []
-				},
-				{
-					"modulo" : "Ver Compras",
-					"script" : "javascript:openHTML('compras.html','content-screen')",
-					"access" : [10],
-					"class"  : "",
-					"icone"  : "fa fa-industry",
-					"itens"  : []
-				}
-			]
-		},
+			"itens"  : []
+		},		
 		{
 			"modulo" : "Minha Carga",
 			"script" : "javascript:openHTML('viewViagem.html','pop-up','Minha Carga',{mode:'motorista'})",
@@ -50,7 +33,7 @@
 			"itens"  : []
 		},		
 		{
-			"modulo" : "Cadastros",
+			"modulo" : "Configuração",
 			"script" : "#",
 			"access" : [10],
 			"class"  : "",

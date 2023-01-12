@@ -1,0 +1,86 @@
+
+<template>
+    <style>
+
+    </style>
+ 
+        <h1>Venda de Material</h1>
+
+        <fieldset>
+            <legend>Selecione um ítem</legend>
+            <table id="tbl-itens_etq"></table>
+        </fieldset>
+    
+
+        <fieldset>
+            <legend>Venda</legend>
+            <table id="tbl-itens_venda"></table>
+        </fieldset>
+
+
+
+</template>
+<script>
+ 
+    main_data.venda.fillItens = ()=>{
+        const params = new Object;
+            params.id_viagem = main_data.viewViagem.data.id       
+        const myPromisse = queryDB(params,29);
+        myPromisse.then((resolve)=>{
+            main_data.venda.data.itens = JSON.parse(resolve)
+            document.querySelector('#btnFecha').disabled = main_data.venda.data.itens.length > 0 ? false : true
+            const tbl = document.querySelector('#tbl-itens_etq')
+            tbl.head('Descrição,Und.|mobHide,Qtd.,Preço')            
+            for(let i=0; i<main_data.venda.data.itens.length;i++){
+                tbl.plot(main_data.venda.data.itens[i],'nome,und|mobHide,qtd_tot,val_venda','Upp,Upp,str,R$.')
+            }
+
+        })
+    }
+ 
+    main_data.venda.fillTemp = ()=>{
+        const params = new Object;
+            params.id_viagem = main_data.viewViagem.data.id       
+        const myPromisse = queryDB(params,35);
+        myPromisse.then((resolve)=>{
+            main_data.venda.data.itens_temp = JSON.parse(resolve)
+            document.querySelector('#btnFecha').disabled = main_data.venda.data.itens_temp.length > 0 ? false : true
+            const tbl = document.querySelector('#tbl-itens_venda')
+            tbl.head('Descrição,Und.|mobHide,Qtd.,Preço,Sub-Total')            
+            for(let i=0; i<main_data.venda.data.itens_temp.length;i++){
+                tbl.plot(main_data.venda.data.itens_temp[i],'nome,und|mobHide,qtd,val_venda,total','Upp,Upp,str,R$.,R$.')
+            }
+
+        })
+    }
+
+
+    main_data.venda.fillItens()
+    main_data.venda.fillTemp()
+
+    document.querySelector('#tbl-itens_etq').addEventListener('click',(e)=>{
+            const data = e.target.parentNode.data
+            const qtd = prompt(`Digite a quantidade desejada`)
+            data.qtd_venda = qtd != null ? getFloat(qtd) : 0
+            console.log(data)
+            if(parseFloat(data.qtd_venda) > parseFloat(data.qtd_tot)){
+                alert('Quantidade maior que o estoque disponível')
+            }else if(data.qtd_venda > 0){
+                const params = new Object;
+                    params.id = 'DEFAULT'
+                    params.id_viagem = main_data.viewViagem.data.id
+                    params.id_prod = data.id_prod
+                    params.nome = data.nome
+                    params.qtd = data.qtd_venda
+                    params.und = data.und
+                    params.val_venda = data.val_venda
+                const myPromisse = queryDB(params,36); 
+                myPromisse.then((resolve)=>{
+                    main_data.venda.fillTemp()
+                }) 
+
+
+            }
+    })
+
+</script>

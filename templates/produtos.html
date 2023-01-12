@@ -15,12 +15,20 @@
   
     <div class="form-base">
         <h1>Produtos</h1>
+        
         <fieldset>
             <legend>Modelos</legend>
+            <div class="inline">
+                <label for="edtBusca">Descrição</label>
+                <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
+                <button id="btnBusca">Busca</button>
+                <button id="btnNovo" class="btnAdd" >+</button>
+            </div>
+
             <div id="scroll">
                 <table id="tblProd"></table>
             </div>
-            <button id="btnProd">Novo</button>
+
         </fieldset>          
  
         
@@ -34,6 +42,7 @@
         const tbl = document.getElementById('tblProd')
         tbl.innerHTML = ''
         const params = new Object;
+            params.nome = document.querySelector('#edtBusca').value.trim();
             params.hash = localStorage.getItem('hash');
 
         const myPromisse = queryDB(params,7);
@@ -51,7 +60,11 @@
     }
 
 
-    main_data.produtos.fillProd()
+    
+
+    document.querySelector('#btnBusca').addEventListener('click',()=>{
+        main_data.produtos.fillProd()
+    })
 
     document.querySelector('#tblProd').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
@@ -59,7 +72,7 @@
         openHTML('viewProd.html','pop-up','Editar Produto',data)
     })
 
-    document.querySelector('#btnProd').addEventListener('click',()=>{
+    document.querySelector('#btnNovo').addEventListener('click',()=>{
         const data = new Object
         data.mode = 'new'
         openHTML('viewProd.html','pop-up','Novo Produto',data)
