@@ -29,7 +29,7 @@
             </select>
         </div>
         <div class="inline" id="divFANT">
-            <label for="edtFant">Fantasia</label>
+            <label for="edtFant" id="lblFant">Fantasia</label>
             <input type="text" id="edtFant" maxlength="40" >
         </div>
         <div class="inline" id="divJUR">
@@ -129,11 +129,11 @@
 
         if(status){
             document.querySelector('#divJUR').style.display  = 'flex'
-            document.querySelector('#divFANT').style.display = 'flex'
+            document.querySelector('#lblFant').innerHTML = 'Fantasia'
             document.querySelector('#divFIS').style.display  = 'none'
         }else{
             document.querySelector('#divJUR').style.display  = 'none'
-            document.querySelector('#divFANT').style.display = 'none'
+            document.querySelector('#lblFant').innerHTML = 'Apelido'
             document.querySelector('#divFIS').style.display  = 'flex'
         }
 
@@ -194,21 +194,6 @@
         }
         const params = new Object;
             params.hash = localStorage.getItem('hash');
-/*
-        const myPromisse = queryDB(params,10);
-        myPromisse.then((resolve)=>{
-            const perm = JSON.parse(resolve)
-            if(perm[0].access == '1'){
-                if (main_data.viewEmp.data != 'new'){
-                    document.querySelector('#btnEdit').style.display = 'block'                
-                    document.querySelector('#btnCNPJ').style.display = 'block'
-                }else{
-                    document.querySelector('#btnEdit').click()
-                    document.querySelector('#btnDel').style.display = 'none'
-                }
-            }
-        })
-*/
     
 
     document.querySelector('#btnEdit').addEventListener('click',()=>{
@@ -248,10 +233,13 @@
             params.bco_cc = getNum(document.querySelector('#edtCC').value)
             params.bco_pix = document.querySelector('#edtPix').value.trim()
             
-console.log(params)
         const myPromisse = queryDB(params,2);
         myPromisse.then((resolve)=>{
-            main_data.viewCliente.data.mode == 'edit' ? document.querySelector('#btnBusca').click() : 0            
+            main_data.viewCliente.data.mode == 'edit' ? document.querySelector('#btnBusca').click() : 0
+            if(main_data.viewCliente.data.mode == 'vendedor'){
+                main_data.viewViagem.fillClientes()     
+            }
+
             closeModal('viewCliente')
         })
         }

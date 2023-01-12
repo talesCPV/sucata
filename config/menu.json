@@ -9,6 +9,14 @@
 			"itens"  : []
 		},
 		{
+			"modulo" : "Produtos",
+			"script" : "javascript:openHTML('produtos.html','content-screen')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},
+		{
 			"modulo" : "Compras",
 			"script" : "#",
 			"access" : [10],
@@ -51,14 +59,6 @@
 				{
 					"modulo" : "Unidades",
 					"script" : "javascript:openHTML('unidades.html','content-screen')",
-					"access" : [10],
-					"class"  : "",
-					"icone"  : "fa fa-industry",
-					"itens"  : []
-				},
-				{
-					"modulo" : "Produtos",
-					"script" : "javascript:openHTML('produtos.html','content-screen')",
 					"access" : [10],
 					"class"  : "",
 					"icone"  : "fa fa-industry",

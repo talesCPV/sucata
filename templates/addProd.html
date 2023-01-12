@@ -41,9 +41,8 @@
     document.querySelector('#tblAddProd').addEventListener('click',(e)=>{
         const data = e.target.parentNode.data
             data.estoque = parseInt(data.estoque)
-            data.qtd = parseInt(prompt(`Digite a quantidade desejada`))
-            data.qtd = data.qtd == NaN ? 0 : data.qtd
-console.log(data)            
+            data.qtd = parseFloat(prompt(`Digite a quantidade desejada`))
+            data.qtd = data.qtd == NaN ? 0 : data.qtd          
             main_data.addProd.data.addItem(data)
     })
 

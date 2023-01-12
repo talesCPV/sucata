@@ -29,15 +29,18 @@
             <button id="btnDel" disabled>Deletar</button>
             <button id="btnFecha" disabled>Encerrar</button>
         </div>
+        <div class="inline">
+            <label for="cmbCli">Cliente</label>
+            <select id="cmbCli"></select>
+            <button id="btnNovoCli" class="btnAdd" >+</button>
+        </div>
+
     </fieldset>
     <fieldset>
         <legend>Ítens</legend>
         <table id="tblItens"></table>
-        <div class="inline">
-            <label for="cmbCli">Cliente</label>
-            <select id="cmbCli"></select>
-        </div>
-        <button id="btnAdd" disabled>Adicionar Ítens</button>
+        <button id="btnAdd" disabled>Comprar Ítens</button>
+        <button id="btnVend" disabled>Vender Ítens</button>
         <button id="btnImp" disabled>Imprimir</button>
 
 
@@ -50,7 +53,13 @@
         params_cli.field = 'nome'
         params_cli.signal = 'LIKE'
         params_cli.value = '"%%"' 
-    fillCombo('cmbCli',params_cli,1,['id','fantasia'], '#')
+    
+
+    main_data.viewViagem.fillClientes =  ()=>{
+        fillCombo('cmbCli',params_cli,1,['id','fantasia'], '#')
+    }
+
+    main_data.viewViagem.fillClientes()
 
     main_data.viewViagem.open = function open(){
 //console.log(main_data.viewViagem.data)
@@ -66,6 +75,7 @@
                 document.querySelector('#btnEdit').disabled = false
                 document.querySelector('#btnDel').disabled = false
                 document.querySelector('#btnAdd').disabled = false
+                document.querySelector('#btnVend').disabled = false
                 document.querySelector('#cmbCli').disabled = false
                 document.querySelector('#btnImp').disabled = false
                 document.querySelector('#btnFecha').innerHTML = 'Encerrar'
@@ -74,6 +84,7 @@
                 document.querySelector('#btnEdit').disabled = true
                 document.querySelector('#btnDel').disabled = true
                 document.querySelector('#btnAdd').disabled = true  
+                document.querySelector('#btnVend').disabled = true  
                 document.querySelector('#cmbCli').disabled = true           
                 document.querySelector('#btnImp').disabled = true
             }
@@ -86,7 +97,6 @@
             const myPromisse = queryDB(params,28);
             myPromisse.then((resolve)=>{
                 main_data.viewViagem.data = JSON.parse(resolve)[0]
-console.log(main_data.viewViagem.data) 
                 if(main_data.viewViagem.data != undefined){
                     main_data.viewViagem.data.saida = dataBR(main_data.viewViagem.data.data) + ' ' +horaBR(main_data.viewViagem.data.data)
                     main_data.viewViagem.data.form = 'viewViagem'
@@ -101,6 +111,7 @@ console.log(main_data.viewViagem.data)
 
                     document.querySelector('.edtButtons').style.display = 'none'
                     document.querySelector('#btnAdd').disabled = false
+                    document.querySelector('#btnVend').disabled = false
                     document.querySelector('#btnImp').disabled = false
                 }else{
                     alert('Nenhuma carga ativa, favor ligar para central.')
@@ -121,19 +132,28 @@ console.log(main_data.viewViagem.data)
             const tot = new Object
                 tot.blank = ''
                 tot.label = 'TOTAL'
+                tot.peso = 0
                 tot.val = 0
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
             for(let i=0; i<main_data.viewViagem.data.itens.length;i++){
-                tbl.plot(main_data.viewViagem.data.itens[i],'nome,und|mobHide,qtd,val_unit,total','Upp,Upp,str,R$.,R$.')
+                tbl.plot(main_data.viewViagem.data.itens[i],'nome,und|mobHide,qtd_tot,val_unit,total','Upp,Upp,str,R$.,R$.')
                 tot.val += parseFloat(main_data.viewViagem.data.itens[i].total)
+                tot.peso += parseFloat(main_data.viewViagem.data.itens[i].qtd_tot)
             }
             tbl.plot(tot,'blank,blank|mobHide,blank,label,val','str,str,str,Upp,R$.')
             document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
+            document.querySelector('#via-peso').innerHTML = tot.peso.toFixed(2)+' Kg'
         })
     }
 
     main_data.viewViagem.open()
     
+    document.querySelector('#btnNovoCli').addEventListener('click',()=>{
+        const obj = new Object
+        obj.mode = 'vendedor'
+        openHTML('viewCliente.html','pop-up','Adicionar Cliente', {mode : 'vendedor'})
+    })
+
     document.querySelector('#btnEdit').addEventListener('click',()=>{
         openHTML('newComp.html','pop-up','Edição', main_data.viewViagem.data)
     })
@@ -157,6 +177,7 @@ console.log(main_data.viewViagem.data)
     document.querySelector('#btnAdd').addEventListener('click',()=>{
         if(document.querySelector('#cmbCli').value != ''){
             main_data.viewViagem.data.addItem = function(data){
+                console.log(data)
                 const params = new Object;
                     params.id = 'DEFAULT' 
                     params.id_viagem = main_data.viewViagem.data.id

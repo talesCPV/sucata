@@ -73,11 +73,12 @@ $query_db = array(
         AND USR.id = MOT.id_usuario
         AND (SELECT U.id FROM tb_usuario AS U WHERE hash="x00") = USR.id
         ORDER BY data DESC;' ,
-    "29" => 'SELECT ITEM.*, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND(ITEM.qtd * ITEM.val_unit ,2) as total
+    "29" => 'SELECT ITEM.*, SUM(ITEM.qtd) as qtd_tot, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND(ITEM.qtd * ITEM.val_unit ,2) as total
         FROM tb_item_viagem AS ITEM 
         INNER JOIN tb_prod AS PROD
         ON PROD.id = ITEM.id_prod
-        AND ITEM.id_viagem="x00";',
+        AND ITEM.id_viagem="x00"
+        GROUP BY ITEM.id_prod;',
     "30" => 'INSERT INTO tb_item_viagem (id, id_viagem, id_cliente, id_prod, qtd, und, val_unit) VALUES(x00, "x01", "x02", "x03", "x04", "x05", "x06") 
         ON DUPLICATE KEY UPDATE  id_viagem="x01", id_cliente="x02", id_prod="x03", qtd="x04", und="x05", val_unit="x06";',
     "31" => 'SELECT * FROM tb_motorista
