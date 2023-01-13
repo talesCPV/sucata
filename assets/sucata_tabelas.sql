@@ -34,9 +34,13 @@ CREATE TABLE tb_clientes(
     bco_cc varchar(15) DEFAULT NULL,
 	bco_pix varchar(40) DEFAULT NULL,
     saldo DOUBLE NOT NULL DEFAULT 0,
+    modal varchar(5) DEFAULT "FORN",
 	UNIQUE KEY (nome),
     PRIMARY KEY (id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_clientes
+ADD COLUMN modal varchar(5) DEFAULT "FORN";
 
 CREATE TABLE tb_und(
     id INT NOT NULL AUTO_INCREMENT,
@@ -133,6 +137,20 @@ CREATE TABLE tb_item_viagem(
     val_unit double NOT NULL DEFAULT 0,
     FOREIGN KEY (id_viagem) REFERENCES tb_viagem(id),
     FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
+    FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
+    PRIMARY KEY(id)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+/*drop table tb_item_temp;*/
+CREATE TABLE tb_item_temp(
+    id INT NOT NULL AUTO_INCREMENT,
+    id_viagem int(11) NOT NULL,
+    id_prod int(11) NOT NULL,
+    nome VARCHAR(20) NOT NULL,
+    qtd double NOT NULL DEFAULT 0,
+    und  VARCHAR(10) NOT NULL,
+    val_venda double NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_viagem) REFERENCES tb_viagem(id),
     FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

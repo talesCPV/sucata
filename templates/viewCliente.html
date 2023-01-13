@@ -7,7 +7,12 @@
         .frm button{
             display: none;
         }
-
+/*
+        input[type=checkbox]{
+            margin : 0;
+            max-width: 15px;
+        } 
+*/
         @media all and (max-width : 768px) {
             .frm input, .frm select{
                 width: 98% !important;
@@ -31,6 +36,11 @@
         <div class="inline" id="divFANT">
             <label for="edtFant" id="lblFant">Fantasia</label>
             <input type="text" id="edtFant" maxlength="40" >
+            <select id="cmbModal" style="max-width: 160px;">
+                <option value="FORN">Fornecedor</option>
+                <option value="CLI">Cliente</option>
+                <option value="BOTH">Ambos</option>
+            </select>
         </div>
         <div class="inline" id="divJUR">
             <label for="edtCNPJ">CNPJ*</label>
@@ -41,7 +51,7 @@
             <input type="text" id="edtInscMun" maxlength="14" >     
         </div>
         <div class="inline" id="divFIS">
-            <label for="edtCPF">CPF</label>
+            <label for="edtCPF">CPF*</label>
             <input type="text" id="edtCPF" maxlength="14" onkeyup="valCPF(this)" >
         </div>
 
@@ -89,8 +99,13 @@
             <input type="text" id="edtBairro" maxlength="50" >
             <label for="edtCEP">CEP</label>
             <input type="text" id="edtCEP" maxlength="10" onkeyup="valCEP(this)" style="width: 180px;" >
+        </div>
+        <div class="inline"> 
             <label for="edtTel">Tel*</label>
-            <input type="text" id="edtTel" onkeyup="phone(this)" maxlength="15" style="width: 220px;" >            
+            <input type="text" id="edtTel" onkeyup="phone(this)" maxlength="15"  >            
+            <label for="ckbWhats">Whatsapp</label>
+            <input type="checkbox" id="ckbWhats" checked>
+            <input type="text" id="edtWhats" onkeyup="phone(this)" maxlength="15" disabled>            
         </div>
         <div class="inline">            
             <label for="edtBanco">Banco</label>
@@ -122,7 +137,7 @@
             for(let i=0; i<inputs.length; i++){
                 inputs[i].disabled = !status
             }
-
+            document.querySelector('#edtWhats').disabled = document.querySelector('#ckbWhats').checked
     }
 
     function juridica(status){
@@ -140,10 +155,14 @@
     }
 
     document.querySelector('#cmbTipo').addEventListener('change',()=>{
-
         document.querySelector('#cmbTipo').value == 'JUR' ? juridica(true) : juridica(false)
-
     })
+
+    document.querySelector('#ckbWhats').addEventListener('change',()=>{
+        document.querySelector('#edtWhats').disabled = document.querySelector('#ckbWhats').checked
+    })
+
+    
 
 
     function pageBegin(){
@@ -167,8 +186,12 @@
             document.querySelector('#edtAG').value = main_data.viewCliente.data.bco_ag == null ? '' : main_data.viewCliente.data.bco_ag
             document.querySelector('#edtCC').value = main_data.viewCliente.data.bco_cc == null ? '' : main_data.viewCliente.data.bco_cc
             document.querySelector('#edtPix').value = main_data.viewCliente.data.bco_pix == null ? '' : main_data.viewCliente.data.bco_pix
+            document.querySelector('#cmbModal').value = main_data.viewCliente.data.modal == null ? '' : main_data.viewCliente.data.modal
+            document.querySelector('#edtWhats').value = main_data.viewCliente.data.whatsapp == null ? '' : main_data.viewCliente.data.whatsapp
             document.querySelector('#btnEdit').style.display = 'block'
+            document.querySelector('#ckbWhats').checked = false
             ableFields(false)
+            document.querySelector('#edtWhats').disabled = true
 
             if(document.querySelector('#cmbTipo').value == 'JUR'){
                 document.querySelector('#edtFant').value = main_data.viewCliente.data.fantasia == null ? '' : main_data.viewCliente.data.fantasia.toUpperCase() 
@@ -205,14 +228,15 @@
     })
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
-        if(checkField(['edtNome','edtCNPJ','edtEnd','edtTel'])){
+        const tipo = document.querySelector('#cmbTipo').value        
+        if(checkField(tipo == 'JUR' ? ['edtNome','edtCNPJ','edtEnd','edtTel'] : ['edtNome','edtCPF','edtEnd','edtTel'])){
             const fant = document.querySelector('#edtFant').value.trim() == '' ? document.querySelector('#edtNome').value.trim() : document.querySelector('#edtFant').value.trim()
             const params = new Object;
             params.id = main_data.viewCliente.mode == 'edit' ? main_data.viewCliente.data.id : 'DEFAULT'
             params.nome = document.querySelector('#edtNome').value.trim().toUpperCase()
             params.fantasia = fant.toUpperCase()
-            params.tipo = document.querySelector('#cmbTipo').value
-            if(document.querySelector('#cmbTipo').value == 'JUR'){
+            params.tipo = tipo
+            if(tipo == 'JUR'){
                 params.cnpj = document.querySelector('#edtCNPJ').value
                 params.ie = document.querySelector('#edtIncEst').value
                 params.im = document.querySelector('#edtInscMun').value
@@ -232,7 +256,9 @@
             params.bco_ag = getNum(document.querySelector('#edtAG').value)
             params.bco_cc = getNum(document.querySelector('#edtCC').value)
             params.bco_pix = document.querySelector('#edtPix').value.trim()
-            
+            params.modal = document.querySelector('#cmbModal').value
+            params.whatsapp = document.querySelector('#ckbWhats').checked ? document.querySelector('#edtTel').value.trim() : document.querySelector('#edtWhats').value.trim()
+
         const myPromisse = queryDB(params,2);
         myPromisse.then((resolve)=>{
             main_data.viewCliente.data.mode == 'edit' ? document.querySelector('#btnBusca').click() : 0

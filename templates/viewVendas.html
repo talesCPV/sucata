@@ -12,19 +12,6 @@
 
         <fieldset>
             <legend>Busca</legend>
-
-            <div class="inline">
-                <label for="edtBusca">por:</label>
-                <select id="cmbBusca">
-                    <option value="VEND.id" signal=">=" val="0" selected>Todos</option>
-                    <option value="VEND.status" signal="=" val="ABERTA">Aberta</option>
-                    <option value="VEND.status" signal="=" val="FECHADA">Encerrada</option>
-                </select>
-                <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
-                <button id="btnBusca">Busca</button>
-                <button id="btnNovo" class="btnAdd" >+</button>
-
-            </div>
             <div class="inline center-itens">
                 <div class="ckBOX">
                     <label for="ckbData">Início/Final</label>
@@ -32,9 +19,8 @@
                 </div>
                 <input type="date" id="edtIni">
                 <input type="date" id="edtFin">
+                <button id="btnBusca">Busca</button>
             </div>  
-
-
             <table id="tblComp"></table>
         </fieldset>
     
@@ -48,18 +34,13 @@
     document.querySelector('#edtFin').value =  today.finMonth()
 
     main_data.viewVendas.busca = function (){
-        const sel = document.querySelector('#cmbBusca')
-        const field = sel.value
-        const signal = sel.options[sel.selectedIndex].getAttribute('signal')
-        const ckb = document.querySelector('#ckbData').checked
-        let value = sel.options[sel.selectedIndex].hasAttribute('val') ? sel.options[sel.selectedIndex].getAttribute('val') : document.querySelector('#edtBusca').value.trim()
-        value = signal=='LIKE' ? `"%${value}%"` : signal=='IN' ? `(${value})` : sel.value=='true'? sel.value : `"${value}"`
 
+        const ckb = document.querySelector('#ckbData').checked
         const tbl = document.getElementById('tblComp')
         const params = new Object;
-            params.field = field
-            params.signal = signal
-            params.value = value
+            params.field = 'VEND.id'
+            params.signal = '>='
+            params.value = 0
             params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
             params.fin = ckb ? document.querySelector('#edtFin').value : '2100-12-31';        
 
@@ -67,8 +48,7 @@
 
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
-                const json = JSON.parse(resolve);  
-console.log(json)                            
+                const json = JSON.parse(resolve);                             
                 let total = 0
                 tbl.innerHTML=''
                 json.length > 0 ? tbl.head('Data,Cliente,Vendedor,Valor') : 0
@@ -96,13 +76,5 @@ console.log(json)
 
         openHTML('viewVenda_detal.html','pop-up',data.saida,data)
     })
-
-    document.querySelector('#btnNovo').addEventListener('click',()=>{
-        data = new Object
-        data.mode = 'new'
-        openHTML('newViagem.html','pop-up',"Gerar Nova Viagem",data)
-    })
-
-
 
 </script>
