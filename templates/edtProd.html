@@ -26,14 +26,11 @@
 
     document.querySelector('#lgdItem').innerHTML = main_data.edtProd.data.nome
     document.querySelector('#edtQtd').value = main_data.edtProd.data.qtd
-    document.querySelector('#edtPreco').value = parseFloat(main_data.edtProd.data.val_unit).toFixed(2)
+    document.querySelector('#edtPreco').value = main_data.edtProd.data.callby == 'viewViagem'||'viewVenda_detal' ? parseFloat(main_data.edtProd.data.val_unit).toFixed(2) : parseFloat(main_data.edtProd.data.val_venda).toFixed(2)
 
 
     document.querySelector('#btnSaveItem').addEventListener('click',()=>{
-
         main_data.edtProd.data.edtItem()
-
-
     })
 
     document.querySelector('#btnDelItem').addEventListener('click',()=>{

@@ -33,7 +33,7 @@
             <input type="text" id="edtFant" maxlength="40" >
         </div>
         <div class="inline" id="divJUR">
-            <label for="edtCNPJ">CNPJ</label>
+            <label for="edtCNPJ">CNPJ*</label>
             <input type="text" id="edtCNPJ" maxlength="18" onkeyup="valCNPJ(this)" >
             <label for="edtIncEst">Insc.Est.</label>
             <input type="text" id="edtIncEst" maxlength="15" onkeyup="valIE(this)" >            
@@ -46,7 +46,7 @@
         </div>
 
         <div class="inline">
-            <label for="edtEnd">Endereço</label>
+            <label for="edtEnd">Endereço*</label>
             <input type="text" id="edtEnd" maxlength="60" >
             <label for="edtNum">Num.</label>
             <input type="text" id="edtNum" maxlength="6" style="width: 150px;" >    
@@ -89,7 +89,7 @@
             <input type="text" id="edtBairro" maxlength="50" >
             <label for="edtCEP">CEP</label>
             <input type="text" id="edtCEP" maxlength="10" onkeyup="valCEP(this)" style="width: 180px;" >
-            <label for="edtTel">Tel</label>
+            <label for="edtTel">Tel*</label>
             <input type="text" id="edtTel" onkeyup="phone(this)" maxlength="15" style="width: 220px;" >            
         </div>
         <div class="inline">            
@@ -205,7 +205,7 @@
     })
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
-        if(checkField(['edtNome'])){
+        if(checkField(['edtNome','edtCNPJ','edtEnd','edtTel'])){
             const fant = document.querySelector('#edtFant').value.trim() == '' ? document.querySelector('#edtNome').value.trim() : document.querySelector('#edtFant').value.trim()
             const params = new Object;
             params.id = main_data.viewCliente.mode == 'edit' ? main_data.viewCliente.data.id : 'DEFAULT'

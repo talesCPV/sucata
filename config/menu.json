@@ -23,7 +23,15 @@
 			"class"  : "",
 			"icone"  : "fa fa-industry",
 			"itens"  : []
-		},		
+		},	
+		{
+			"modulo" : "Vendas",
+			"script" : "javascript:openHTML('viewVendas.html','content-screen')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},				
 		{
 			"modulo" : "Minha Carga",
 			"script" : "javascript:openHTML('viewViagem.html','pop-up','Minha Carga',{mode:'motorista'})",

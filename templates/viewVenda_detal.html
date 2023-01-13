@@ -1,0 +1,181 @@
+
+<template>
+    <style>
+
+        #tblViagem tr th{
+            font-size: 0.9em;
+            max-width: 20%;
+        }
+
+        .head-item{
+            display: flex;
+            
+        }
+
+    </style>
+    
+    <fieldset id="fdsComp">
+        <legend>Venda</legend>
+        <table id="tblViagem">
+            <tr><th>Cliente</th><td id="via-cli"></td></tr>
+            <tr><th>Vendedor</th><td id="via-vend"></td></tr>
+            <tr><th>Data</th><td id="via-data"></td></tr>
+            <tr><th>Valor R$</th><td id="via-valor"></td></tr>
+        </table>
+        <div class="inline edtButtons">
+            <button id="btnEdit">Editar</button>
+            <button id="btnDel" disabled>Deletar</button>
+        </div>
+
+    </fieldset>
+    <fieldset>
+        <legend>Ítens</legend>
+        <table id="tblItens"></table>
+        <button id="btnAdd" disabled>Adicionar Ítens</button>
+        <button id="btnImp">Imprimir</button>
+
+
+
+    </fieldset>
+
+</template>
+<script>
+
+    main_data.viewVenda_detal.open = function open(){
+        
+        document.querySelector('#via-cli').innerHTML = main_data.viewVenda_detal.data.nome.toUpperCase()
+        document.querySelector('#via-vend').innerHTML = main_data.viewVenda_detal.data.nome_vend.toUpperCase()
+        document.querySelector('#via-data').innerHTML = main_data.viewVenda_detal.data.saida
+        document.querySelector('#via-valor').innerHTML = ''
+        main_data.viewVenda_detal.fillItens()
+        
+    }
+
+    main_data.viewVenda_detal.fillItens = function fillItens(){
+        const params = new Object;
+            params.id_viagem = main_data.viewVenda_detal.data.id       
+        const myPromisse = queryDB(params,13);
+        myPromisse.then((resolve)=>{
+            main_data.viewVenda_detal.data.itens = JSON.parse(resolve)    
+            const tbl = document.querySelector('#tblItens')
+            const tot = new Object
+                tot.blank = ''
+                tot.label = 'TOTAL'
+                tot.peso = 0
+                tot.val = 0
+            tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
+            for(let i=0; i<main_data.viewVenda_detal.data.itens.length;i++){
+                tbl.plot(main_data.viewVenda_detal.data.itens[i],'nome,und|mobHide,qtd,val_unit,total','Upp,Upp,str,R$.,R$.')
+                tot.val += parseFloat(main_data.viewVenda_detal.data.itens[i].total)
+                tot.peso += parseFloat(main_data.viewVenda_detal.data.itens[i].qtd_tot)
+            }
+            tbl.plot(tot,'blank,blank|mobHide,blank,label,val','str,str,str,Upp,R$.')
+            document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
+//            document.querySelector('#via-peso').innerHTML = tot.peso.toFixed(2)+' Kg'
+        })
+    }
+
+    main_data.viewVenda_detal.open()
+    
+    document.querySelector('#btnEdit').addEventListener('click',()=>{
+
+        if(document.querySelector('#btnDel').disabled){  
+            document.querySelector('#btnDel').disabled = false
+            document.querySelector('#btnAdd').disabled = false
+        }else{
+            document.querySelector('#btnDel').disabled = true
+            document.querySelector('#btnAdd').disabled = true
+        }
+    
+    
+    })
+
+    document.querySelector('#btnDel').addEventListener('click',()=>{        
+        if (confirm('Deseja realmente deletar esta venda?')) {            
+            const params = new Object;
+                params.id_venda = main_data.viewVenda_detal.data.id
+                params.hash = localStorage.getItem('hash')
+            const myPromisse = queryDB(params,15); // DELETA OS ÍTENS
+            myPromisse.then((resolve)=>{
+                const myPromisse_1 = queryDB(params,12); // DELETA A VENDA
+                myPromisse_1.then((resolve)=>{
+                    main_data.viewVendas.busca()
+                    closeModal('viewVenda_detal')
+                })
+            }) 
+        }
+    })
+
+    document.querySelector('#btnAdd').addEventListener('click',()=>{
+        
+        main_data.viewVenda_detal.data.addItem = (data)=>{
+            console.log(data)
+            const params = new Object;
+                params.id = 'DEFAULT' 
+                params.id_venda = main_data.viewVenda_detal.data.id
+                params.id_prod = data.id
+                params.qtd = data.qtd
+                params.und = data.und
+                params.val_unit = data.preco
+            const myPromisse = queryDB(params,14);
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    main_data.viewVenda_detal.fillItens()
+                    closeModal('addProd')
+                }  
+            })                
+        }
+
+        main_data.viewVenda_detal.data.callby = 'viewVenda_detal'
+        openHTML('addProd.html','pop-up','Adicione um Produto',main_data.viewVenda_detal.data,[100,30])
+
+    })
+
+    document.querySelector('#tblItens').addEventListener('click',(e)=>{
+        if(!document.querySelector('#btnDel').disabled){
+            const data = e.target.parentNode.data
+         
+            data.edtItem = function(){
+                const params = new Object;
+                    params.id = main_data.edtProd.data.id 
+                    params.id_venda = main_data.edtProd.data.id_venda
+                    params.id_prod = main_data.edtProd.data.id_prod
+                    params.qtd = document.querySelector('#edtQtd').value
+                    params.und = main_data.edtProd.data.und
+                    params.val_unit = document.querySelector('#edtPreco').value
+                const myPromisse = queryDB(params,14);
+                               
+                myPromisse.then((resolve)=>{
+                    if(resolve.trim() != ""){
+                        main_data.viewVenda_detal.fillItens()
+                        closeModal('edtProd')
+                    }  
+                })                                
+            }
+            data.delItem = function(){               
+                const params = new Object;
+                    params.id = main_data.edtProd.data.id
+                    params.hash = localStorage.getItem('hash')                
+                const myPromisse = queryDB(params,15);
+                myPromisse.then((resolve)=>{
+                    if(resolve.trim() != ""){
+                        main_data.viewVenda_detal.fillItens()
+                        closeModal('edtProd')
+                    }  
+                }) 
+            }
+
+            data.callby = 'viewVenda_detal'        
+            if(data.id != undefined){
+                openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
+            }
+        }
+    })
+
+    document.querySelector('#btnImp').addEventListener('click',()=>{
+
+        print_compra(main_data.viewVenda_detal.data)
+
+    })
+
+</script>

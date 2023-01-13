@@ -7,14 +7,19 @@
         <h1>Venda de Material</h1>
 
         <fieldset>
-            <legend>Selecione um ítem</legend>
+            <legend>Material Disponível</legend>
             <table id="tbl-itens_etq"></table>
         </fieldset>
     
 
         <fieldset>
             <legend>Venda</legend>
+            <div class="inline">
+                <label for="cmbCli_venda">Cliente</label>
+                <select id="cmbCli_venda"></select>
+            </div>
             <table id="tbl-itens_venda"></table>
+            <button id="btnVenda">Gerar Venda</button>
         </fieldset>
 
 
@@ -22,6 +27,12 @@
 </template>
 <script>
  
+    const params_cli = new Object;
+            params_cli.field = 'nome'
+            params_cli.signal = 'LIKE'
+            params_cli.value = '"%%"' 
+    fillCombo('cmbCli_venda',params_cli,1,['id','fantasia'], '#')
+
     main_data.venda.fillItens = ()=>{
         const params = new Object;
             params.id_viagem = main_data.viewViagem.data.id       
@@ -82,5 +93,107 @@
 
             }
     })
+
+    document.querySelector('#tbl-itens_venda').addEventListener('click',(e)=>{
+        
+        const data = e.target.parentNode.data
+        
+        data.edtItem = function(){
+            const params = new Object;
+                params.id = main_data.edtProd.data.id 
+                params.id_viagem = main_data.edtProd.data.id_viagem
+                params.id_prod = main_data.edtProd.data.id_prod
+                params.nome = main_data.edtProd.data.nome
+                params.qtd = document.querySelector('#edtQtd').value
+                params.und = main_data.edtProd.data.und
+                params.preco = document.querySelector('#edtPreco').value
+            const myPromisse = queryDB(params,36);
+                            
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    main_data.venda.fillTemp()
+                    closeModal('edtProd')
+                }  
+            })                                
+        }
+
+        data.delItem = function(){               
+            const params = new Object;
+                params.id = main_data.edtProd.data.id
+                params.hash = localStorage.getItem('hash')                
+            const myPromisse = queryDB(params,37);
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    main_data.venda.fillTemp()
+                    closeModal('edtProd')
+                }  
+            }) 
+        }
+
+        data.callby = 'venda'
+        if(data.id != undefined){
+            openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
+        }
+        
+    })
+
+    document.querySelector('#btnVenda').addEventListener('click',()=>{
+
+        if(document.querySelector('#cmbCli_venda').value.trim() != ''){
+            const now = new Date
+            const params = new Object; // cria venda
+                    params.id = 'DEFAULT' 
+                    params.id_cliente = document.querySelector('#cmbCli_venda').value
+                    params.id_resp = localStorage.getItem('id_user')
+                    params.status = 'FECHADO'
+                    params.obs = `Venda realizada dia ${now.getFullDate()} pelo usuário ${localStorage.getItem('username')}.`
+                    params.data = now.getFullDateTime()
+                const myPromisse = queryDB(params,11);
+                               
+                myPromisse.then((resolve)=>{
+                    if(resolve.trim() != ""){
+                        console.log(main_data.venda.data)
+                        for(let i=0; i<main_data.venda.data.itens_temp.length; i++){
+                            const params_itens = new Object; // adiciona item venda
+                                params_itens.id = 'DEFAULT' 
+                                params_itens.id_venda = '(SELECT MAX(id) FROM tb_venda)'
+                                params_itens.id_prod = main_data.venda.data.itens_temp[i].id_prod
+                                params_itens.qtd = main_data.venda.data.itens_temp[i].qtd
+                                params_itens.und = main_data.venda.data.itens_temp[i].und
+                                params_itens.val_unit = main_data.venda.data.itens_temp[i].val_venda
+                            const myPromisse_itens = queryDB(params_itens,14);
+
+                            const params_update = new Object // atualiza estoque
+                                params_update.id_viagem = main_data.viewViagem.data.id
+                                params_update.id_prod = main_data.venda.data.itens_temp[i].id_prod
+                                params_update.qtd = main_data.venda.data.itens_temp[i].qtd
+                            const myPromisse_update = queryDB(params_update,38);
+
+                        }
+
+                        const params_del_temp = new Object; // deleta venda temporaria
+                            params_del_temp.id_viagem = main_data.viewViagem.data.id
+                            params_del_temp.hash = localStorage.getItem('hash')
+                        const myPromisse_del_itens = queryDB(params_del_temp,37);
+                        myPromisse.then((resolve)=>{
+                            alert('Venda Realizada com sucesso!')
+                            main_data.venda.fillTemp()
+                            main_data.venda.fillItens()
+                            main_data.viewViagem.fillItens()
+                        })
+
+
+                    }  
+                })               
+
+
+        }else{
+            alert('Por favor, selecione um cliente para a venda.')
+            document.querySelector('#cmbCli_venda').focus()
+        }
+
+
+    })
+
 
 </script>

@@ -15,28 +15,30 @@ $query_db = array(
     "8"  => 'INSERT INTO tb_prod (id, nome, und, preco, margem, qtd) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE nome="x01", und="x02", preco="x03", margem="x04", qtd="x05";',
     "9"  => 'DELETE FROM tb_prod WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-    "10" => 'SELECT  CLI.*, COMP.*, ITEM.valor 
-        FROM tb_compra AS COMP 
+    "10" => 'SELECT  CLI.*, VEND.*, ITEM.valor, USR.user, USR.nome AS nome_vend 
+        FROM tb_venda AS VEND 
         INNER JOIN tb_clientes AS CLI
-        INNER JOIN ( SELECT id as id_comp, 0 as valor, 0 as id_prod FROM tb_compra WHERE id NOT IN (SELECT id_compra FROM tb_item_compra)
-        UNION ALL SELECT id_compra, ROUND(SUM(qtd * val_unit),2) AS valor, id_prod FROM tb_item_compra GROUP BY id_compra) AS ITEM
-        ON COMP.id = ITEM.id_comp
-        AND COMP.id_cliente = CLI.id
+        INNER JOIN tb_usuario AS USR
+        INNER JOIN ( SELECT id as id_comp, 0 as valor, 0 as id_prod FROM tb_venda WHERE id NOT IN (SELECT id_venda FROM tb_item_venda)
+        UNION ALL SELECT id_venda, ROUND(SUM(qtd * val_unit),2) AS valor, id_prod FROM tb_item_venda GROUP BY id_venda) AS ITEM
+        ON VEND.id = ITEM.id_comp
+        AND VEND.id_cliente = CLI.id
+        AND VEND.id_resp = USR.id
         AND x00 x01 x02
-        AND COMP.data >= "x03"
-        AND COMP.data <= "x04"
-        ORDER BY COMP.data DESC;',
-    "11" => 'INSERT INTO tb_compra (id, id_cliente, id_resp, data, status, obs) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
-        ON DUPLICATE KEY UPDATE id_cliente="x01", id_resp="x02", data="x03", status="x04", obs="x05";',
-    "12" => 'DELETE FROM tb_compra WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+        AND VEND.data >= "x03"
+        AND VEND.data <= "x04"
+        ORDER BY VEND.data DESC;',
+    "11" => 'INSERT INTO tb_venda (id, id_cliente, id_resp, status, obs, data) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
+        ON DUPLICATE KEY UPDATE id_cliente="x01", id_resp="x02", status="x03", obs="x04", data="x05";',
+    "12" => 'DELETE FROM tb_venda WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "13" => 'SELECT ITEM.*, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND(ITEM.qtd * ITEM.val_unit ,2) as total
-        FROM tb_item_compra AS ITEM 
+        FROM tb_item_venda AS ITEM 
         INNER JOIN tb_prod AS PROD
         ON PROD.id = ITEM.id_prod
-        AND ITEM.id_compra="x00";',
-    "14" => 'INSERT INTO tb_item_compra (id, id_prod, id_compra, qtd, und, val_unit) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
-        ON DUPLICATE KEY UPDATE  id_prod="x01", id_compra="x02", qtd="x03", und="x04", val_unit="x05";',
-    "15" => 'DELETE FROM tb_item_compra WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+        AND ITEM.id_venda="x00";',
+    "14" => 'INSERT INTO tb_item_venda (id, id_venda, id_prod, qtd, und, val_unit) VALUES(x00, x01, "x02", "x03", "x04", "x05") 
+        ON DUPLICATE KEY UPDATE   id_venda="x01", id_prod="x02", qtd="x03", und="x04", val_unit="x05";',
+    "15" => 'DELETE FROM tb_item_venda WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "16" => 'INSERT INTO tb_usuario (id, user, hash, class, nome, email, cel) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06") 
         ON DUPLICATE KEY UPDATE user="x01", hash="x02", class="x03", nome="x04", email="x05", cel="x06";',
     "17" => 'DELETE FROM tb_usuario WHERE id="x00";',
@@ -89,9 +91,12 @@ $query_db = array(
         GROUP BY placa;',
     "33" => 'UPDATE tb_viagem SET aberta="0" WHERE id=x00 AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10)',
     "34" => 'DELETE FROM tb_item_viagem WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1);',
-    "35" => 'SELECT *, ROUND(qtd * val_venda ,2) as total  FROM tb_item_temp WHERE id_viagem="x00";',
+    "35" => 'SELECT *, ROUND(qtd * val_venda ,2) as total  FROM tb_item_temp WHERE id_viagem="x00"
+        GROUP BY id_prod;',
     "36" => 'INSERT INTO tb_item_temp (id, id_viagem, id_prod, nome, qtd, und, val_venda) VALUES(x00, "x01", "x02", "x03", "x04", "x05", "x06") 
         ON DUPLICATE KEY UPDATE  qtd="x04", val_venda="x06";',
+    "37" => 'DELETE FROM tb_item_temp WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1);',
+    "38" => 'UPDATE tb_item_viagem SET qtd=(qtd-x02) WHERE id_viagem = "x00" AND id_prod="x01";',
 
     );
 
