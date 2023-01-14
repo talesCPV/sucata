@@ -25,13 +25,45 @@
             <input type="text" id="edtMargem" placeholder="Markup" onkeyup="return valFloat(this)">
         </div>        
         <div class="inline">
+            <button id="btnEdit">Editar</button>
             <button id="btnSave">Salvar</button>
             <button id="btnDel">Deletar</button>    
         </div>
+        <table id="tblDetal"></table>
     </fieldset>
 
 </template>
 <script>
+
+    ableFields(false)    
+
+    function ableFields(status){
+        const inputs = document.querySelector('.frm').querySelectorAll('input,select')
+            for(let i=0; i<inputs.length; i++){
+                inputs[i].disabled = !status
+            }          
+            document.querySelector('#btnSave').disabled = !status 
+            document.querySelector('#btnDel').disabled = !status 
+    }
+
+    main_data.viewProd.fillDetal = ()=>{
+        const tbl = document.getElementById('tblDetal')
+        tbl.innerHTML = ''
+        const params = new Object;
+            params.id_prod = main_data.viewProd.data.id
+
+        const myPromisse = queryDB(params,39);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);                                         
+                tbl.head('Local,Qtd.')
+                for(let i=0; i<json.length;i++){
+                    tbl.plot(json[i],'modelo,qtd_tot','UPP,str')
+                }                
+            } 
+        })
+    }
 
     if(main_data.viewProd.data.mode == 'edit'){
         document.querySelector('#edtNome').value = main_data.viewProd.data.nome
@@ -45,6 +77,8 @@
     const params = new Object;
         params.hash = localStorage.getItem('hash');
     fillCombo('cmbUnd',params,4,['sigla','nome'], main_data.viewProd.data.mode == 'edit' ? main_data.viewProd.data.und :'' )
+
+    main_data.viewProd.fillDetal()
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
         if(checkField(['edtNome','edtQtd','edtPreco','edtMargem']) ){
@@ -81,5 +115,8 @@
         }
     })
 
+    document.querySelector('#btnEdit').addEventListener('click',()=>{
+       ableFields(document.querySelector('#btnSave').disabled)
+    })
 
 </script>

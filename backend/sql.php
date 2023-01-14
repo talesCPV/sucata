@@ -11,7 +11,25 @@ $query_db = array(
     "4"  => 'SELECT * FROM tb_und WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;' ,
     "5"  => 'INSERT INTO tb_und (id, nome, sigla) VALUES(x00, "x01", "x02") ON DUPLICATE KEY UPDATE nome="x01", sigla="x02";',
     "6"  => 'DELETE FROM tb_und WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-    "7"  => 'SELECT *, ROUND(preco * (1+(margem/100)),2) AS venda FROM tb_prod WHERE nome LIKE "%x00%" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1) ORDER BY nome;' ,
+    "7"  => 'SELECT *, 0 as qtd_tot, ROUND(preco * (1+margem/100) ,2) AS venda FROM tb_prod 
+        WHERE id NOT IN (
+            SELECT ITEM.id_prod FROM tb_item_viagem AS ITEM
+            INNER JOIN tb_viagem AS VIA
+            ON VIA.id = ITEM.id_viagem
+            AND VIA.aberta=1)
+            AND nome LIKE "%x00%" 
+            AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1)
+        UNION ALL
+            SELECT PROD.*, ROUND(SUM(ITEM.qtd),2) as qtd_tot, ROUND(preco * (1+margem/100) ,2) AS venda FROM tb_prod AS PROD
+            INNER JOIN tb_viagem AS VIA
+            INNER JOIN tb_item_viagem AS ITEM
+            ON VIA.id = ITEM.id_viagem
+            AND VIA.aberta=1
+            AND PROD.id = ITEM.id_prod
+            AND PROD.nome LIKE "%x00%" 
+            AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1) 
+            GROUP BY ITEM.id_prod
+            ORDER BY nome;' ,
     "8"  => 'INSERT INTO tb_prod (id, nome, und, preco, margem, qtd) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE nome="x01", und="x02", preco="x03", margem="x04", qtd="x05";',
     "9"  => 'DELETE FROM tb_prod WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
@@ -42,10 +60,10 @@ $query_db = array(
     "16" => 'INSERT INTO tb_usuario (id, user, hash, class, nome, email, cel) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06") 
         ON DUPLICATE KEY UPDATE user="x01", hash="x02", class="x03", nome="x04", email="x05", cel="x06";',
     "17" => 'DELETE FROM tb_usuario WHERE id="x00";',
-    "18" => 'INSERT INTO tb_veiculo (id, ano, modelo, placa, tipo, tara) VALUES (x00, "x01", "x02", "x03", "x04", "x05") 
-        ON DUPLICATE KEY UPDATE ano="x01", modelo="x02", placa="x03", tipo="x04", tara="x05";',
-    "19" => 'DELETE FROM tb_veiculo WHERE id="x00"',
-    "20" => 'SELECT * FROM tb_veiculo WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY modelo;' ,
+    "18" => 'INSERT INTO tb_local (id, ano, modelo, placa, tipo, tara, local) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06") 
+        ON DUPLICATE KEY UPDATE ano="x01", modelo="x02", placa="x03", tipo="x04", tara="x05", local="x06";',
+    "19" => 'DELETE FROM tb_local WHERE id="x00"',
+    "20" => 'SELECT * FROM tb_local WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY modelo;' ,
     "21" => 'INSERT INTO tb_motorista (id, nome, cpf, rg, cnh, tipo, validade, id_usuario) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06", "x07") 
         ON DUPLICATE KEY UPDATE nome="x01", cpf="x02", rg="x03", cnh="x04", tipo="x05", validade="x06", id_usuario="x07";',
     "22" => 'DELETE FROM tb_motorista WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
@@ -55,7 +73,7 @@ $query_db = array(
     "25" => 'SELECT VIA.*, MOT.nome, VEI.modelo, VEI.placa 
         FROM tb_viagem AS VIA
         INNER JOIN tb_motorista AS MOT
-        INNER JOIN tb_veiculo AS VEI 
+        INNER JOIN tb_local AS VEI 
         ON x00 x01 x02 
         AND MOT.id = VIA.id_motorista
         AND VEI.id = VIA.id_veiculo
@@ -67,7 +85,7 @@ $query_db = array(
     "28" => 'SELECT VIA.*, MOT.nome, VEI.modelo, VEI.placa 
         FROM tb_viagem AS VIA
         INNER JOIN tb_motorista AS MOT
-        INNER JOIN tb_veiculo AS VEI
+        INNER JOIN tb_local AS VEI
         INNER JOIN tb_usuario AS USR 
         ON VIA.aberta = 1 
         AND MOT.id = VIA.id_motorista
@@ -86,9 +104,8 @@ $query_db = array(
     "31" => 'SELECT * FROM tb_motorista
 	    WHERE id NOT IN (SELECT V.id_motorista FROM tb_viagem AS V WHERE V.aberta=1)	
 	    GROUP BY nome;' ,
-    "32" => 'SELECT * FROM tb_veiculo
-        WHERE id NOT IN (SELECT V.id_veiculo FROM tb_viagem AS V WHERE V.aberta=1)	
-        GROUP BY placa;',
+    "32" => 'SELECT * FROM tb_local WHERE local = "MOVEL" 
+        AND id NOT IN (SELECT V.id_veiculo FROM tb_viagem AS V WHERE V.aberta=1);',
     "33" => 'UPDATE tb_viagem SET aberta="0" WHERE id=x00 AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10)',
     "34" => 'DELETE FROM tb_item_viagem WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1);',
     "35" => 'SELECT *, ROUND(qtd * val_venda ,2) as total  FROM tb_item_temp WHERE id_viagem="x00"
@@ -97,7 +114,14 @@ $query_db = array(
         ON DUPLICATE KEY UPDATE  qtd="x04", val_venda="x06";',
     "37" => 'DELETE FROM tb_item_temp WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1);',
     "38" => 'UPDATE tb_item_viagem SET qtd=(qtd-x02) WHERE id_viagem = "x00" AND id_prod="x01";',
-
+    "39" => 'SELECT ITEM.*, LOCAL.modelo, ROUND(SUM(ITEM.qtd),2) AS qtd_tot FROM tb_item_viagem AS ITEM 
+        INNER JOIN tb_viagem AS VIA
+        INNER JOIN tb_local AS LOCAL
+        ON VIA.id = ITEM.id_viagem
+        AND VIA.aberta=1
+        AND LOCAL.id = VIA.id_veiculo
+        AND ITEM.id_prod="x00"
+        GROUP BY ITEM.id_viagem;',
     );
 
 ?>

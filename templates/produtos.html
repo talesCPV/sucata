@@ -49,18 +49,14 @@
 
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
-                const json = JSON.parse(resolve);
-               
-                tbl.head('Nome,Und.,Compra,Venda')
+                const json = JSON.parse(resolve);                            
+                tbl.head('Nome,Und.,Compra,Venda,Qtd.')
                 for(let i=0; i<json.length;i++){
-                    tbl.plot(json[i],'nome,und,preco,venda','str,UPP,R$.,R$.')
+                    tbl.plot(json[i],'nome,und,preco,venda,qtd_tot','str,UPP,R$.,R$.,str')
                 }                
             } 
         })
     }
-
-
-    
 
     document.querySelector('#btnBusca').addEventListener('click',()=>{
         main_data.produtos.fillProd()

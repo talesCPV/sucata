@@ -40,7 +40,7 @@ CREATE TABLE tb_clientes(
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 ALTER TABLE tb_clientes
-ADD COLUMN modal varchar(5) DEFAULT "FORN";
+ADD COLUMN whatsapp varchar(15) DEFAULT NULL;
 
 CREATE TABLE tb_und(
     id INT NOT NULL AUTO_INCREMENT,
@@ -89,16 +89,20 @@ CREATE TABLE tb_item_venda(
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
-/*DROP TABLES tb_veiculo;*/
-CREATE TABLE tb_veiculo(
+/*DROP TABLES tb_local;*/
+CREATE TABLE tb_local(
     id INT NOT NULL AUTO_INCREMENT,
     ano  VARCHAR(4) NOT NULL,
     modelo  VARCHAR(20) NOT NULL,
     placa  VARCHAR(8) NOT NULL,
     tipo VARCHAR(10) DEFAULT "CAMINHÃO",
     tara double NOT NULL DEFAULT 0,
+    local VARCHAR(5) DEFAULT "FIXO",
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_veiculo
+ADD COLUMN local VARCHAR(5) DEFAULT "FIXO";
 
 /*drop table tb_motorista;*/
 CREATE TABLE tb_motorista(

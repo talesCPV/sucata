@@ -56,8 +56,8 @@
 					"itens"  : []
 				},
 				{
-					"modulo" : "Veículos",
-					"script" : "javascript:openHTML('veiculos.html','content-screen')",
+					"modulo" : "Local Estoque",
+					"script" : "javascript:openHTML('local.html','content-screen')",
 					"access" : [10],
 					"class"  : "",
 					"icone"  : "fa fa-industry",

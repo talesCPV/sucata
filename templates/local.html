@@ -14,9 +14,9 @@
     </style>
   
     <div class="form-base">
-        <h1>Veículos</h1>
+        <h1>Estoques</h1>
         <fieldset>
-            <legend>Modelos</legend>
+            <legend>Locais</legend>
             <div id="scroll">
                 <table id="tblVeic"></table>
             </div>
@@ -28,7 +28,7 @@
 </template>
 <script>
 
-    main_data.veiculos.fillVeic =  function (){
+    main_data.local.fillLocal =  function (){
         const tbl = document.getElementById('tblVeic')
         tbl.innerHTML = ''
         const params = new Object;
@@ -39,9 +39,9 @@
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);
-                tbl.head('Modelo,Ano,Placa,Tipo')
+                tbl.head('Descrição,Tipo')
                 for(let i=0; i<json.length;i++){
-                    tbl.plot(json[i],'modelo,ano,placa,tipo')
+                    tbl.plot(json[i],'modelo,local')
                 }                
             } 
         })
@@ -50,18 +50,18 @@
 
 
 
-    main_data.veiculos.fillVeic()
+    main_data.local.fillLocal()
 
     document.querySelector('#tblVeic').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         data.mode = 'edit'
-        openHTML('viewVeic.html','pop-up','Editar Veículos',data)
+        openHTML('viewLocal.html','pop-up','Editar Local de Estoque',data)
     })
 
     document.querySelector('#btnVeic').addEventListener('click',()=>{
         const data = new Object
         data.mode = 'new'
-        openHTML('viewVeic.html','pop-up','Novo Veículo',data)
+        openHTML('viewLocal.html','pop-up','Novo Local de Estoque',data)
 
     })
 
