@@ -190,17 +190,16 @@
             document.querySelector('#edtWhats').value = main_data.viewCliente.data.whatsapp == null ? '' : main_data.viewCliente.data.whatsapp
             document.querySelector('#btnEdit').style.display = 'block'
             document.querySelector('#ckbWhats').checked = false
+            document.querySelector('#edtFant').value = main_data.viewCliente.data.fantasia == null ? '' : main_data.viewCliente.data.fantasia.toUpperCase() 
             ableFields(false)
             document.querySelector('#edtWhats').disabled = true
 
             if(document.querySelector('#cmbTipo').value == 'JUR'){
-                document.querySelector('#edtFant').value = main_data.viewCliente.data.fantasia == null ? '' : main_data.viewCliente.data.fantasia.toUpperCase() 
                 document.querySelector('#edtCNPJ').value = main_data.viewCliente.data.cnpj_cpf
                 document.querySelector('#edtIncEst').value = main_data.viewCliente.data.ie
                 document.querySelector('#edtInscMun').value = main_data.viewCliente.data.im == null ? '' : main_data.viewCliente.data.im
                 document.querySelector('#edtCPF').value = ''
             }else{
-                document.querySelector('#edtFant').value = '' 
                 document.querySelector('#edtCNPJ').value = ''
                 document.querySelector('#edtIncEst').value = ''
                 document.querySelector('#edtInscMun').value = ''

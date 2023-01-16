@@ -1,52 +1,28 @@
 {
 	"menu": [
 		{
-			"modulo" : "Clientes",
-			"script" : "javascript:openHTML('clientes.html','content-screen')",
-			"access" : [10],
-			"class"  : "",
-			"icone"  : "fa fa-industry",
-			"itens"  : []
-		},
-		{
-			"modulo" : "Produtos",
-			"script" : "javascript:openHTML('produtos.html','content-screen')",
-			"access" : [10],
-			"class"  : "",
-			"icone"  : "fa fa-industry",
-			"itens"  : []
-		},
-		{
-			"modulo" : "Viagens",
-			"script" : "javascript:openHTML('viagens.html','content-screen')",
-			"access" : [10],
-			"class"  : "",
-			"icone"  : "fa fa-industry",
-			"itens"  : []
-		},	
-		{
-			"modulo" : "Vendas",
-			"script" : "javascript:openHTML('viewVendas.html','content-screen')",
-			"access" : [10],
-			"class"  : "",
-			"icone"  : "fa fa-industry",
-			"itens"  : []
-		},				
-		{
-			"modulo" : "Minha Carga",
-			"script" : "javascript:openHTML('viewViagem.html','pop-up','Minha Carga',{mode:'motorista'})",
-			"access" : [1],
-			"class"  : "",
-			"icone"  : "fa fa-industry",
-			"itens"  : []
-		},		
-		{
-			"modulo" : "Configuração",
+			"modulo" : "Cadastros",
 			"script" : "#",
 			"access" : [10],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
 			"itens"  : [
+				{
+					"modulo" : "Empresas",
+					"script" : "javascript:openHTML('clientes.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
+				{
+					"modulo" : "Produtos",
+					"script" : "javascript:openHTML('produtos.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
 				{
 					"modulo" : "Unidades",
 					"script" : "javascript:openHTML('unidades.html','content-screen')",
@@ -78,8 +54,41 @@
 					"class"  : "",
 					"icone"  : "fa fa-industry",
 					"itens"  : []
-				}											
+				}				
 			]
+		},		
+
+		{
+			"modulo" : "Viagens",
+			"script" : "javascript:openHTML('viagens.html','content-screen')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},	
+		{
+			"modulo" : "Vendas",
+			"script" : "javascript:openHTML('viewVendas.html','content-screen')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},		
+		{
+			"modulo" : "Compras",
+			"script" : "javascript:openHTML('viewCompras.html','content-screen')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},					
+		{
+			"modulo" : "Minha Carga",
+			"script" : "javascript:openHTML('viewViagem.html','pop-up','Minha Carga',{mode:'motorista'})",
+			"access" : [1],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
 		}							
 
 	]

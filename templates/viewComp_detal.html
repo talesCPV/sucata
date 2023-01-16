@@ -15,10 +15,10 @@
     </style>
     
     <fieldset id="fdsComp">
-        <legend>Venda</legend>
+        <legend>Compra</legend>
         <table id="tblViagem">
-            <tr><th>Cliente</th><td id="via-cli"></td></tr>
-            <tr><th>Vendedor</th><td id="via-vend"></td></tr>
+            <tr><th>Fornecedor</th><td id="via-cli"></td></tr>
+            <tr><th>Comprador</th><td id="via-comp"></td></tr>
             <tr><th>Data</th><td id="via-data"></td></tr>
             <tr><th>Valor R$</th><td id="via-valor"></td></tr>
         </table>
@@ -33,30 +33,27 @@
         <table id="tblItens"></table>
         <button id="btnAdd" disabled>Adicionar Ítens</button>
         <button id="btnImp">Imprimir</button>
-
-
-
     </fieldset>
 
 </template>
 <script>
 
-    main_data.viewVenda_detal.open = function open(){
+    main_data.viewComp_detal.open = function open(){
         
-        document.querySelector('#via-cli').innerHTML = main_data.viewVenda_detal.data.nome.toUpperCase()
-        document.querySelector('#via-vend').innerHTML = main_data.viewVenda_detal.data.nome_vend.toUpperCase()
-        document.querySelector('#via-data').innerHTML = main_data.viewVenda_detal.data.saida
+        document.querySelector('#via-cli').innerHTML = main_data.viewComp_detal.data.nome.toUpperCase()
+        document.querySelector('#via-comp').innerHTML = main_data.viewComp_detal.data.nome_comp.toUpperCase()
+        document.querySelector('#via-data').innerHTML = main_data.viewComp_detal.data.saida
         document.querySelector('#via-valor').innerHTML = ''
-        main_data.viewVenda_detal.fillItens()
+        main_data.viewComp_detal.fillItens()
         
     }
 
-    main_data.viewVenda_detal.fillItens = function fillItens(){
+    main_data.viewComp_detal.fillItens = function fillItens(){
         const params = new Object;
-            params.id_viagem = main_data.viewVenda_detal.data.id       
-        const myPromisse = queryDB(params,13);
+            params.id_viagem = main_data.viewComp_detal.data.id       
+        const myPromisse = queryDB(params,44);
         myPromisse.then((resolve)=>{
-            main_data.viewVenda_detal.data.itens = JSON.parse(resolve)    
+            main_data.viewComp_detal.data.itens = JSON.parse(resolve)    
             const tbl = document.querySelector('#tblItens')
             const tot = new Object
                 tot.blank = ''
@@ -64,10 +61,10 @@
                 tot.peso = 0
                 tot.val = 0
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
-            for(let i=0; i<main_data.viewVenda_detal.data.itens.length;i++){
-                tbl.plot(main_data.viewVenda_detal.data.itens[i],'nome,und|mobHide,qtd,val_unit,total','Upp,Upp,str,R$.,R$.')
-                tot.val += parseFloat(main_data.viewVenda_detal.data.itens[i].total)
-                tot.peso += parseFloat(main_data.viewVenda_detal.data.itens[i].qtd_tot)
+            for(let i=0; i<main_data.viewComp_detal.data.itens.length;i++){
+                tbl.plot(main_data.viewComp_detal.data.itens[i],'nome,und|mobHide,qtd,val_unit,total','Upp,Upp,str,R$.,R$.')
+                tot.val += parseFloat(main_data.viewComp_detal.data.itens[i].total)
+                tot.peso += parseFloat(main_data.viewComp_detal.data.itens[i].qtd_tot)
             }
             tbl.plot(tot,'blank,blank|mobHide,blank,label,val','str,str,str,Upp,R$.')
             document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
@@ -75,7 +72,7 @@
         })
     }
 
-    main_data.viewVenda_detal.open()
+    main_data.viewComp_detal.open()
     
     document.querySelector('#btnEdit').addEventListener('click',()=>{
 
@@ -93,14 +90,14 @@
     document.querySelector('#btnDel').addEventListener('click',()=>{        
         if (confirm('Deseja realmente deletar esta venda?')) {            
             const params = new Object;
-                params.id_venda = main_data.viewVenda_detal.data.id
+                params.id_venda = main_data.viewComp_detal.data.id
                 params.hash = localStorage.getItem('hash')
             const myPromisse = queryDB(params,15); // DELETA OS ÍTENS
             myPromisse.then((resolve)=>{
                 const myPromisse_1 = queryDB(params,12); // DELETA A VENDA
                 myPromisse_1.then((resolve)=>{
-                    main_data.viewVendas.busca()
-                    closeModal('viewVenda_detal')
+                    main_data.viewCompras.busca()
+                    closeModal('viewComp_detal')
                 })
             }) 
         }
@@ -108,26 +105,26 @@
 
     document.querySelector('#btnAdd').addEventListener('click',()=>{
         
-        main_data.viewVenda_detal.data.addItem = (data)=>{
+        main_data.viewComp_detal.data.addItem = (data)=>{
             console.log(data)
             const params = new Object;
                 params.id = 'DEFAULT' 
-                params.id_venda = main_data.viewVenda_detal.data.id
+                params.id_compra = main_data.viewComp_detal.data.id
                 params.id_prod = data.id
                 params.qtd = data.qtd
                 params.und = data.und
                 params.val_unit = data.preco
-            const myPromisse = queryDB(params,14);
+            const myPromisse = queryDB(params,45);
             myPromisse.then((resolve)=>{
                 if(resolve.trim() != ""){
-                    main_data.viewVenda_detal.fillItens()
+                    main_data.viewComp_detal.fillItens()
                     closeModal('addProd')
                 }  
             })                
         }
 
-        main_data.viewVenda_detal.data.callby = 'viewVenda_detal'
-        openHTML('addProd.html','pop-up','Adicione um Produto',main_data.viewVenda_detal.data,[100,30])
+        main_data.viewComp_detal.data.callby = 'viewComp_detal'
+        openHTML('addProd.html','pop-up','Adicione um Produto',main_data.viewComp_detal.data,[100,30])
 
     })
 
@@ -138,16 +135,16 @@
             data.edtItem = function(){
                 const params = new Object;
                     params.id = main_data.edtProd.data.id 
-                    params.id_venda = main_data.edtProd.data.id_venda
+                    params.id_compra = main_data.edtProd.data.id_compra
                     params.id_prod = main_data.edtProd.data.id_prod
                     params.qtd = document.querySelector('#edtQtd').value
                     params.und = main_data.edtProd.data.und
                     params.val_unit = document.querySelector('#edtPreco').value
-                const myPromisse = queryDB(params,14);
-                               
+                const myPromisse = queryDB(params,45);
+
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
-                        main_data.viewVenda_detal.fillItens()
+                        main_data.viewComp_detal.fillItens()
                         closeModal('edtProd')
                     }  
                 })                                
@@ -156,17 +153,17 @@
                 const params = new Object;
                     params.id = main_data.edtProd.data.id
                     params.hash = localStorage.getItem('hash')                
-                const myPromisse = queryDB(params,15);
+                const myPromisse = queryDB(params,46);
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
-                        main_data.viewVenda_detal.fillItens()
+                        main_data.viewComp_detal.fillItens()
                         closeModal('edtProd')
                     }  
                 }) 
             }
 
-            data.callby = 'viewVenda_detal'
-            data.edtVal = data.val_unit        
+            data.callby = 'viewComp_detal' 
+            data.edtVal = data.val_unit                   
             if(data.id != undefined){
                 openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
             }
@@ -175,7 +172,7 @@
 
     document.querySelector('#btnImp').addEventListener('click',()=>{
 
-        print_compra(main_data.viewVenda_detal.data)
+        print_compra(main_data.viewComp_detal.data)
 
     })
 

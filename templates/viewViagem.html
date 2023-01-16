@@ -29,17 +29,12 @@
             <button id="btnDel" disabled>Deletar</button>
             <button id="btnFecha" disabled>Encerrar</button>
         </div>
-        <div class="inline">
-            <label for="cmbCli">Cliente</label>
-            <select id="cmbCli"></select>
-            <button id="btnNovoCli" class="btnAdd" >+</button>
-        </div>
 
     </fieldset>
     <fieldset>
         <legend>Ítens</legend>
-        <table id="tblItens"></table>
-        <button id="btnAdd" disabled>Comprar Ítens</button>
+        <table id="tblItens-viagem"></table>
+        <button id="btnComp" disabled>Comprar Ítens</button>
         <button id="btnVend" disabled>Vender Ítens</button>
         <button id="btnImp" disabled>Imprimir</button>
 
@@ -55,12 +50,6 @@
         params_cli.value = '"%%"' 
     
 
-    main_data.viewViagem.fillClientes =  ()=>{
-        fillCombo('cmbCli',params_cli,1,['id','fantasia'], '#')
-    }
-
-    main_data.viewViagem.fillClientes()
-
     main_data.viewViagem.open = function open(){
 //console.log(main_data.viewViagem.data)
         if(main_data.viewViagem.data.mode == 'edit'){
@@ -74,18 +63,16 @@
             if(main_data.viewViagem.data.aberta == '1' ){
                 document.querySelector('#btnEdit').disabled = false
                 document.querySelector('#btnDel').disabled = false
-                document.querySelector('#btnAdd').disabled = false
+                document.querySelector('#btnComp').disabled = false
                 document.querySelector('#btnVend').disabled = false
-                document.querySelector('#cmbCli').disabled = false
                 document.querySelector('#btnImp').disabled = false
                 document.querySelector('#btnFecha').innerHTML = 'Encerrar'
             }else{
                 document.querySelector('#btnFecha').innerHTML = 'Upload NF' 
                 document.querySelector('#btnEdit').disabled = true
                 document.querySelector('#btnDel').disabled = true
-                document.querySelector('#btnAdd').disabled = true  
+                document.querySelector('#btnComp').disabled = true  
                 document.querySelector('#btnVend').disabled = true  
-                document.querySelector('#cmbCli').disabled = true           
                 document.querySelector('#btnImp').disabled = true
             }
 
@@ -110,7 +97,7 @@
                     document.querySelector('#via-valor').innerHTML = ''
 
                     document.querySelector('.edtButtons').style.display = 'none'
-                    document.querySelector('#btnAdd').disabled = false
+                    document.querySelector('#btnComp').disabled = false
                     document.querySelector('#btnVend').disabled = false
                     document.querySelector('#btnImp').disabled = false
                 }else{
@@ -128,7 +115,7 @@
         myPromisse.then((resolve)=>{
             main_data.viewViagem.data.itens = JSON.parse(resolve)
             document.querySelector('#btnFecha').disabled = main_data.viewViagem.data.itens.length > 0 ? false : true
-            const tbl = document.querySelector('#tblItens')
+            const tbl = document.querySelector('#tblItens-viagem')
             const tot = new Object
                 tot.blank = ''
                 tot.label = 'TOTAL'
@@ -147,12 +134,6 @@
     }
 
     main_data.viewViagem.open()
-    
-    document.querySelector('#btnNovoCli').addEventListener('click',()=>{
-        const obj = new Object
-        obj.mode = 'vendedor'
-        openHTML('viewCliente.html','pop-up','Adicionar Cliente', {mode : 'vendedor'})
-    })
 
     document.querySelector('#btnEdit').addEventListener('click',()=>{
         openHTML('newComp.html','pop-up','Edição', main_data.viewViagem.data)
@@ -174,33 +155,8 @@
         }
     })
 
-    document.querySelector('#btnAdd').addEventListener('click',()=>{
-        if(document.querySelector('#cmbCli').value != ''){
-            main_data.viewViagem.data.addItem = function(data){
-                console.log(data)
-                const params = new Object;
-                    params.id = 'DEFAULT' 
-                    params.id_viagem = main_data.viewViagem.data.id
-                    params.id_cliente = document.querySelector('#cmbCli').value
-                    params.id_prod = data.id
-                    params.qtd = data.qtd
-                    params.und = data.und
-                    params.preco = data.preco
-                const myPromisse = queryDB(params,30);
-                myPromisse.then((resolve)=>{
-                    if(resolve.trim() != ""){
-                        main_data.viewViagem.fillItens()
-                        closeModal('addProd')
-                    }  
-                })                
-            }
-
-            main_data.viewViagem.data.callby = 'viewViagem'
-            openHTML('addProd.html','pop-up','Adicione um Produto',main_data.viewViagem.data,[100,30])
-        }else{
-            alert('Por Favor, selecione um cliente.')
-            document.querySelector('#cmbCli').focus()
-        }
+    document.querySelector('#btnComp').addEventListener('click',()=>{
+        openHTML('compra.html','pop-up','Compra de Material',{mode:'compra'})
     })
 
     document.querySelector('#btnVend').addEventListener('click',()=>{        
@@ -219,31 +175,32 @@
         }
     })
 
-    document.querySelector('#tblItens').addEventListener('click',(e)=>{
-        if(main_data.viewViagem.data.aberta == '1'){
+    document.querySelector('#tblItens-viagem').addEventListener('click',(e)=>{
+  
             const data = e.target.parentNode.data
          
             data.edtItem = function(){
                 const params = new Object;
-                    params.id = main_data.edtProd.data.id 
-                    params.id_viagem = main_data.edtProd.data.id_viagem
-                    params.id_cliente = main_data.edtProd.data.id_cliente
+                    params.id_local = main_data.edtProd.data.id_local
                     params.id_prod = main_data.edtProd.data.id_prod
                     params.qtd = document.querySelector('#edtQtd').value
                     params.und = main_data.edtProd.data.und
-                    params.preco = document.querySelector('#edtPreco').value
+                    params.val_unit = document.querySelector('#edtPreco').value
                 const myPromisse = queryDB(params,30);
+                console.log(params)
                                
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
                         main_data.viewViagem.fillItens()
                         closeModal('edtProd')
                     }  
-                })                                
+                })            
+                                    
             }
             data.delItem = function(){               
                 const params = new Object;
-                    params.id = main_data.edtProd.data.id
+                    params.id_local = main_data.edtProd.data.id_local
+                    params.id_prod = main_data.edtProd.data.id_prod
                     params.hash = localStorage.getItem('hash')                
                 const myPromisse = queryDB(params,34);
                 myPromisse.then((resolve)=>{
@@ -253,16 +210,17 @@
                     }  
                 }) 
             }
-
+            
             data.callby = 'viewViagem'
-            if(data.id != undefined){
+            data.edtVal = data.val_unit
+            if(data.id_local != undefined){
                 openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
             }
-        }
+        
     })
 
     document.querySelector('#btnImp').addEventListener('click',()=>{
-
+        main_data.viewViagem.data.callby = 'viewViagem'
         print_compra(main_data.viewViagem.data)
 
     })

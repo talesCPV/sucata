@@ -10,9 +10,9 @@
 
     <div class="inline">
         <label for="edtQtd">Qtd</label>
-        <input type="text" id="edtQtd" onkeyup="return valFloat(this)">
+        <input type="text" id="edtQtd" onkeyup="return valFloat(this)" onkeypress="return getEnter(event, 'btnSaveItem')">
         <label for="edtPreco">Preço</label>
-        <input type="text" id="edtPreco" onkeyup="return valFloat(this)">
+        <input type="text" id="edtPreco" onkeyup="return valFloat(this)" onkeypress="return getEnter(event, 'btnSaveItem')">
     </div>
     <div class="inline">
         <button id="btnSaveItem">Salvar</button>
@@ -26,8 +26,7 @@
 
     document.querySelector('#lgdItem').innerHTML = main_data.edtProd.data.nome
     document.querySelector('#edtQtd').value = main_data.edtProd.data.qtd
-    document.querySelector('#edtPreco').value = main_data.edtProd.data.callby == 'viewViagem'||'viewVenda_detal' ? parseFloat(main_data.edtProd.data.val_unit).toFixed(2) : parseFloat(main_data.edtProd.data.val_venda).toFixed(2)
-
+    document.querySelector('#edtPreco').value = parseFloat(main_data.edtProd.data.edtVal).toFixed(2)
 
     document.querySelector('#btnSaveItem').addEventListener('click',()=>{
         main_data.edtProd.data.edtItem()

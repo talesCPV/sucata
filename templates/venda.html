@@ -140,8 +140,9 @@
     document.querySelector('#btnVenda').addEventListener('click',()=>{
 
         if(document.querySelector('#cmbCli_venda').value.trim() != ''){
-            const now = new Date
-            const params = new Object; // cria venda
+            if (confirm('Confirma esta venda?')) {
+                const now = new Date
+                const params = new Object; // cria venda
                     params.id = 'DEFAULT' 
                     params.id_cliente = document.querySelector('#cmbCli_venda').value
                     params.id_resp = localStorage.getItem('id_user')
@@ -152,7 +153,6 @@
                                
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
-                        console.log(main_data.venda.data)
                         for(let i=0; i<main_data.venda.data.itens_temp.length; i++){
                             const params_itens = new Object; // adiciona item venda
                                 params_itens.id = 'DEFAULT' 
@@ -163,10 +163,11 @@
                                 params_itens.val_unit = main_data.venda.data.itens_temp[i].val_venda
                             const myPromisse_itens = queryDB(params_itens,14);
 
-                            const params_update = new Object // atualiza estoque
-                                params_update.id_viagem = main_data.viewViagem.data.id
+                            const params_update = new Object // atualiza estoque                                
+                                params_update.id_local = main_data.viewViagem.data.id
                                 params_update.id_prod = main_data.venda.data.itens_temp[i].id_prod
                                 params_update.qtd = main_data.venda.data.itens_temp[i].qtd
+                                 
                             const myPromisse_update = queryDB(params_update,38);
 
                         }
@@ -177,16 +178,14 @@
                         const myPromisse_del_itens = queryDB(params_del_temp,37);
                         myPromisse.then((resolve)=>{
                             alert('Venda Realizada com sucesso!')
-                            main_data.venda.fillTemp()
-                            main_data.venda.fillItens()
                             main_data.viewViagem.fillItens()
+                            closeModal('venda')
                         })
-
 
                     }  
                 })               
 
-
+            }
         }else{
             alert('Por favor, selecione um cliente para a venda.')
             document.querySelector('#cmbCli_venda').focus()

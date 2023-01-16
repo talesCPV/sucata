@@ -228,17 +228,27 @@ function print_compra(data){
 
     doc.setFontSize(10)
 //    doc.setFont(undefined, 'NORMAL')
-    doc.text('Cliente:'+ data.nome, 10,50);
-    if(data.tipo == 'JUR'){
-        doc.text('CNPJ:'+ data.cnpj_cpf, 10,55);
+    if(data.callby == 'viewViagem'){
+        doc.text('Viagem: '+ data.saida, 10,50);
+        doc.text('Motorista: '+ data.nome, 10,55);        
+        doc.text('Veículo: '+data.modelo, 10,60);
+        doc.text('Placa: '+data.placa, 10,65);
+        doc.text('Obs: '+data.obs, 10,70);
+
     }else{
-        doc.text('CPF:'+ data.cnpj_cpf, 10,55);
+        doc.text('Cliente: '+ data.nome, 10,50);
+        if(data.tipo == 'JUR'){
+            doc.text('CNPJ: '+ data.cnpj_cpf, 10,55);
+        }else{
+            doc.text('CPF: '+ data.cnpj_cpf, 10,55);
+        }
+        doc.text('End.: '+data.endereco+','+data.num, 10,60);
+        doc.text('Bairro: '+data.bairro+' - '+data.cidade+'-'+data.estado, 10,65);
+        doc.text('Fone: '+data.tel + ' CEP:'+data.cep, 10,70);
+        doc.text('Banco: '+data.bco_nome+' AG:'+data.bco_ag+' C/C:'+data.bco_cc, 10,75);
+        doc.text('Chave PIX: '+data.bco_pix, 10,80);
     }
-    doc.text('End.:'+data.endereco+','+data.num, 10,60);
-    doc.text('Bairro:'+data.bairro+' - '+data.cidade+'-'+data.estado, 10,65);
-    doc.text('Fone:'+data.tel + ' CEP:'+data.cep, 10,70);
-    doc.text('Banco:'+data.bco_nome+' AG:'+data.bco_ag+' C/C:'+data.bco_cc, 10,75);
-    doc.text('Chave PIX:'+data.bco_pix, 10,80);
+
 
     txt.y = 90
 

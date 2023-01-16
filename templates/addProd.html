@@ -30,11 +30,11 @@
             params.hash = localStorage.getItem('hash');
 
         const myPromisse = queryDB(params,7);
-
+console.log(params)
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);
-                
+console.log(json)                
                 tbl.head('Cod.|mobHide,Descrição,Preço')
                 for(let i=0; i<json.length;i++){
                     tbl.plot(json[i],'id|mobHide,nome,preco','int,Upp,R$.')

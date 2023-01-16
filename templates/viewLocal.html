@@ -13,17 +13,17 @@
         <div class="inline">
             <label for="edtModelo" id="lblModelo">Modelo*</label>
             <input type="text" id="edtModelo" maxlength="20">
+            <label for="cmbLocal">Local</label>
+            <select id="cmbLocal" style="max-width: 150px;">
+                <option value="FIXO">Fixo</option>
+                <option value="MOVEL" selected>Móvel</option>
+            </select> 
+        </div>
+        <div class="inline">
             <label for="edtAno">Ano</label>
             <input type="text" id="edtAno" maxlength="4" style="max-width: 100px;" onkeyup="return valInt(this)">
             <label for="edtPlaca">Placa</label>
             <input type="text" id="edtPlaca" maxlength="8" style="max-width: 100px;" onkeyup="return valPlaca(this)">
-        </div>
-        <div class="inline">
-            <label for="cmbLocal">Local</label>
-            <select id="cmbLocal">
-                <option value="FIXO">Fixo</option>
-                <option value="MOVEL" selected>Móvel</option>
-            </select>            
             <label for="cmbTipo">Tipo</label>
             <select id="cmbTipo">
                 <option value="CAMINHÃO" selected>Caminhão</option>
