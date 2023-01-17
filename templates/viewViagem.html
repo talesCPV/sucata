@@ -34,8 +34,11 @@
     <fieldset>
         <legend>Ítens</legend>
         <table id="tblItens-viagem"></table>
-        <button id="btnComp" disabled>Comprar Ítens</button>
-        <button id="btnVend" disabled>Vender Ítens</button>
+        <div class="inline">
+            <button id="btnComp" disabled>Comprar</button>
+            <button id="btnVend" disabled>Vender</button>
+            <button id="btnTrans" disabled>Transferir</button>
+        </div>
         <button id="btnImp" disabled>Imprimir</button>
 
 
@@ -65,6 +68,7 @@
                 document.querySelector('#btnDel').disabled = false
                 document.querySelector('#btnComp').disabled = false
                 document.querySelector('#btnVend').disabled = false
+                document.querySelector('#btnTrans').disabled = false
                 document.querySelector('#btnImp').disabled = false
                 document.querySelector('#btnFecha').innerHTML = 'Encerrar'
             }else{
@@ -73,6 +77,7 @@
                 document.querySelector('#btnDel').disabled = true
                 document.querySelector('#btnComp').disabled = true  
                 document.querySelector('#btnVend').disabled = true  
+                document.querySelector('#btnTrans').disabled = true
                 document.querySelector('#btnImp').disabled = true
             }
 
@@ -99,6 +104,7 @@
                     document.querySelector('.edtButtons').style.display = 'none'
                     document.querySelector('#btnComp').disabled = false
                     document.querySelector('#btnVend').disabled = false
+                    document.querySelector('#btnTrans').disabled = false
                     document.querySelector('#btnImp').disabled = false
                 }else{
                     alert('Nenhuma carga ativa, favor ligar para central.')
@@ -110,7 +116,7 @@
 
     main_data.viewViagem.fillItens = function fillItens(){
         const params = new Object;
-            params.id_viagem = main_data.viewViagem.data.id       
+            params.id_local = main_data.viewViagem.data.id_local       
         const myPromisse = queryDB(params,29);
         myPromisse.then((resolve)=>{
             main_data.viewViagem.data.itens = JSON.parse(resolve)
@@ -163,6 +169,11 @@
         openHTML('venda.html','pop-up','Venda de Material',{mode:'venda'})
     })
 
+    document.querySelector('#btnTrans').addEventListener('click',()=>{        
+        openHTML('transf.html','pop-up','Transferência de Material',{mode:'transf'})
+    })
+
+
     document.querySelector('#btnFecha').addEventListener('click',()=>{
         if (confirm('Deseja realmente encerrar esta viagem?')) {
             const params = new Object;
@@ -186,7 +197,7 @@
                     params.qtd = document.querySelector('#edtQtd').value
                     params.und = main_data.edtProd.data.und
                     params.val_unit = document.querySelector('#edtPreco').value
-                const myPromisse = queryDB(params,30);
+                const myPromisse = queryDB(params,48);
                 console.log(params)
                                
                 myPromisse.then((resolve)=>{

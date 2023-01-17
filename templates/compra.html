@@ -157,7 +157,7 @@
                             const myPromisse_itens = queryDB(params_itens,42);
 
                             const params_update = new Object // atualiza estoque
-                                params_update.id_local = main_data.viewViagem.data.id
+                                params_update.id_local = main_data.viewViagem.data.id_local
                                 params_update.id_prod = main_data.compra.data.itens_temp[i].id_prod
                                 params_update.qtd = main_data.compra.data.itens_temp[i].qtd
                                 params_update.und = main_data.compra.data.itens_temp[i].und

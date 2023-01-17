@@ -52,7 +52,7 @@ $query_db = array(
     "23" => 'SELECT * FROM tb_motorista WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;' ,
     "24" => 'INSERT INTO tb_viagem (id, id_motorista, id_veiculo, data, aberta, obs) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE id_motorista="x01", id_veiculo="x02", data="x03", aberta="x04", obs="x05";',
-    "25" => 'SELECT VIA.*, MOT.nome, VEI.modelo, VEI.placa 
+    "25" => 'SELECT VIA.*, MOT.nome, VEI.modelo, VEI.placa, VEI.id AS id_local
         FROM tb_viagem AS VIA
         INNER JOIN tb_motorista AS MOT
         INNER JOIN tb_local AS VEI 
@@ -80,6 +80,7 @@ $query_db = array(
         INNER JOIN tb_prod AS PROD
         ON PROD.id = ITEM.id_prod
         AND ITEM.id_local="x00"
+        AND ITEM.qtd > 0
         GROUP BY ITEM.id_prod;',
     "30" => 'INSERT INTO tb_item_estoque (id_local, id_prod, qtd, und, val_unit) VALUES (x00, "x01", "x02", "x03", "x04") 
         ON DUPLICATE KEY UPDATE  id_local="x00", id_prod="x01", qtd=(qtd+x02), und="x03", val_unit="x04";',
@@ -148,9 +149,18 @@ $query_db = array(
     "45" => 'INSERT INTO tb_item_compra (id, id_compra, id_prod, qtd, und, val_unit) VALUES(x00, x01, x02, "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE   id_compra="x01", id_prod="x02", qtd="x03", und="x04", val_unit="x05";',
     "46" => 'DELETE FROM tb_item_compra WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-
-
-
+    "47" => 'SELECT TOTAL.* FROM 
+	    (SELECT PROD.*, SUM(ITEM.qtd) AS qtd_tot, ROUND(PROD.preco * (1+PROD.margem/100),2) as venda
+		    FROM tb_item_estoque AS ITEM
+            INNER JOIN tb_prod AS PROD
+            ON ITEM.id_prod=PROD.ID	
+            GROUP BY ITEM.id_prod
+        UNION ALL 
+            SELECT *, 0 AS qtd_tot, ROUND(preco * (1+margem/100),2) as venda
+            FROM tb_prod
+        ) AS TOTAL
+        GROUP BY TOTAL.id;',
+    "48" => ' UPDATE tb_item_estoque SET qtd=x02 WHERE id_local="x00" AND id_prod="x01";',
     );
 
 ?>

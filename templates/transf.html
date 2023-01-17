@@ -1,0 +1,219 @@
+
+<template>
+    <style>
+
+    </style>
+ 
+        <h1>Transferência de Material</h1>
+
+        <fieldset>
+            <legend>Material Disponível</legend>
+            <table id="tbl-itens_etq"></table>
+            <button id="btnAddAll">Adicionar Todos</button>
+        </fieldset>
+    
+
+        <fieldset>
+            <legend>Transferência</legend>
+            <div class="inline">
+                <label for="cmbLocal">Local</label>
+                <select id="cmbLocal"></select>
+            </div>
+            <table id="tbl-itens_transf"></table>
+            <button id="btnClear">Limpar Lista</button>
+            <button id="btnTransf">Transferir</button>
+        </fieldset>
+
+
+
+</template>
+<script>
+ 
+    const params_local = new Object;
+        params_local.hash = localStorage.getItem('hash')
+    fillCombo('cmbLocal',params_local,20,['id','modelo'], '#')
+
+    main_data.transf.fillItens = ()=>{
+        const params = new Object;
+            params.id_local = main_data.viewViagem.data.id_local       
+        const myPromisse = queryDB(params,29);
+        myPromisse.then((resolve)=>{
+            main_data.transf.data.itens = JSON.parse(resolve)           
+            document.querySelector('#btnFecha').disabled = main_data.transf.data.itens.length > 0 ? false : true
+            const tbl = document.querySelector('#tbl-itens_etq')
+            tbl.head('Descrição,Und.|mobHide,Qtd.')            
+            for(let i=0; i<main_data.transf.data.itens.length;i++){
+                tbl.plot(main_data.transf.data.itens[i],'nome,und|mobHide,qtd_tot','Upp,Upp,str')
+            }
+
+        })
+    }
+ 
+    main_data.transf.fillTemp = ()=>{
+        const params = new Object;
+            params.id_viagem = main_data.viewViagem.data.id       
+        const myPromisse = queryDB(params,35);
+        myPromisse.then((resolve)=>{
+            main_data.transf.data.itens_temp = JSON.parse(resolve)
+            document.querySelector('#btnFecha').disabled = main_data.transf.data.itens_temp.length > 0 ? false : true
+            const tbl = document.querySelector('#tbl-itens_transf')
+            tbl.head('Descrição,Und.|mobHide,Qtd.')            
+            for(let i=0; i<main_data.transf.data.itens_temp.length;i++){
+                tbl.plot(main_data.transf.data.itens_temp[i],'nome,und|mobHide,qtd','Upp,Upp,str')
+            }
+
+        })
+    }
+
+    main_data.transf.fillItens()
+    main_data.transf.fillTemp()
+
+    document.querySelector('#tbl-itens_etq').addEventListener('click',(e)=>{
+            const data = e.target.parentNode.data
+            const qtd = prompt(`Digite a quantidade desejada`)
+            data.qtd_venda = qtd != null ? getFloat(qtd) : 0
+            console.log(data)
+            if(parseFloat(data.qtd_venda) > parseFloat(data.qtd_tot)){
+                alert('Quantidade maior que o estoque disponível')
+            }else if(data.qtd_venda > 0){
+                const params = new Object;
+                    params.id = 'DEFAULT'
+                    params.id_viagem = main_data.viewViagem.data.id
+                    params.id_prod = data.id_prod
+                    params.nome = data.nome
+                    params.qtd = data.qtd_venda
+                    params.und = data.und
+                    params.val_venda = data.val_venda
+                const myPromisse = queryDB(params,36); 
+                myPromisse.then((resolve)=>{
+                    main_data.transf.fillTemp()
+                }) 
+
+
+            }
+    })
+
+    document.querySelector('#tbl-itens_transf').addEventListener('click',(e)=>{
+        
+        const data = e.target.parentNode.data
+        
+        data.edtItem = function(){
+            const params = new Object;
+                params.id = main_data.edtProd.data.id 
+                params.id_viagem = main_data.edtProd.data.id_viagem
+                params.id_prod = main_data.edtProd.data.id_prod
+                params.nome = main_data.edtProd.data.nome
+                params.qtd = document.querySelector('#edtQtd').value
+                params.und = main_data.edtProd.data.und
+                params.preco = main_data.edtProd.data.val_venda
+            const myPromisse = queryDB(params,36);
+                            
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    main_data.transf.fillTemp()
+                    closeModal('edtProd')
+                }  
+            })                                
+        }
+
+        data.delItem = function(){               
+            const params = new Object;
+                params.id = main_data.edtProd.data.id
+                params.hash = localStorage.getItem('hash')                
+            const myPromisse = queryDB(params,37);
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    main_data.transf.fillTemp()
+                    closeModal('edtProd')
+                }  
+            }) 
+        }
+
+        data.callby = 'venda'
+        data.edtVal = 0
+        if(data.id != undefined){
+            openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
+        }
+        
+    })
+
+    document.querySelector('#btnTransf').addEventListener('click',()=>{
+
+        if(document.querySelector('#cmbLocal').value.trim() != ''){
+            if (confirm('Confirma a transferência?')) {
+                               
+
+                for(let i=0; i<main_data.transf.data.itens_temp.length; i++){
+                    const params_add = new Object // adiciona estoque
+                    params_add.id_local = document.querySelector('#cmbLocal').value
+                    params_add.id_prod = main_data.transf.data.itens_temp[i].id_prod
+                    params_add.qtd = main_data.transf.data.itens_temp[i].qtd
+                    params_add.und = main_data.transf.data.itens_temp[i].und
+                    params_add.val_unit = main_data.transf.data.itens_temp[i].val_venda
+                    const myPromisse_update = queryDB(params_add,30);
+
+                    const params_less = new Object // retira estoque                                
+                    params_less.id_local = main_data.viewViagem.data.id_local
+                    params_less.id_prod = main_data.transf.data.itens_temp[i].id_prod
+                    params_less.qtd = main_data.transf.data.itens_temp[i].qtd                                 
+                    const myPromisse_update_2 = queryDB(params_less,38);
+
+                }
+
+                clearItens().then((resolve)=>{ // deleta venda temporaria
+                    alert('Transferência realizada com sucesso!')
+                    main_data.viewViagem.fillItens()
+                    closeModal('transf')
+                })
+
+           
+
+            }
+        }else{
+            alert('Por favor, selecione um Local destino do material.')
+            document.querySelector('#cmbLocal').focus()
+        }
+
+
+    })
+
+    function clearItens(){
+        const params = new Object; // deleta venda temporaria
+            params.id_viagem = main_data.viewViagem.data.id
+            params.hash = localStorage.getItem('hash')
+        return queryDB(params,37)
+    }
+
+    document.querySelector('#btnClear').addEventListener('click',()=>{
+        if (confirm('Deseja eliminar todos os ítens da lista?')) {
+            clearItens().then(()=>{
+                main_data.transf.fillTemp()
+            })
+        }
+    })
+
+    document.querySelector('#btnAddAll').addEventListener('click',()=>{
+        if (confirm('Deseja adicionar todos os ítens disponíveis?')) {
+            clearItens().then(()=>{
+
+                for(let i=0; i<main_data.transf.data.itens.length; i++){
+                    const params = new Object;
+                        params.id = 'DEFAULT'
+                        params.id_viagem = main_data.viewViagem.data.id
+                        params.id_prod = main_data.transf.data.itens[i].id_prod
+                        params.nome = main_data.transf.data.itens[i].nome
+                        params.qtd = main_data.transf.data.itens[i].qtd_tot
+                        params.und = main_data.transf.data.itens[i].und
+                        params.val_venda = main_data.transf.data.itens[i].val_venda
+console.log(params)                        
+                    const myPromisse = queryDB(params,36); 
+                    myPromisse.then(()=>{
+                        main_data.transf.fillTemp()
+                    })
+                }
+                
+            })
+        }
+    })
+
+</script>

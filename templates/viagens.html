@@ -70,7 +70,7 @@
 
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
-                const json = JSON.parse(resolve);              
+                const json = JSON.parse(resolve);                              
                 let total = 0
                 tbl.innerHTML=''
                 json.length > 0 ? tbl.head('Data,Motorista,Placa|mobHide,Modelo|mobHide,Aberto') : 0

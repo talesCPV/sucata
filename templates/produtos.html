@@ -45,7 +45,7 @@
             params.nome = document.querySelector('#edtBusca').value.trim();
             params.hash = localStorage.getItem('hash');
 
-        const myPromisse = queryDB(params,7);
+        const myPromisse = queryDB(params,47);
 
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){

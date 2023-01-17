@@ -35,7 +35,7 @@
 
     main_data.venda.fillItens = ()=>{
         const params = new Object;
-            params.id_viagem = main_data.viewViagem.data.id       
+            params.id_viagem = main_data.viewViagem.data.id_local       
         const myPromisse = queryDB(params,29);
         myPromisse.then((resolve)=>{
             main_data.venda.data.itens = JSON.parse(resolve)
