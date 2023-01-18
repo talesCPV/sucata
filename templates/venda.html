@@ -35,11 +35,10 @@
 
     main_data.venda.fillItens = ()=>{
         const params = new Object;
-            params.id_viagem = main_data.viewViagem.data.id_local       
+            params.id_local = main_data.viewLocal.data.id      
         const myPromisse = queryDB(params,29);
         myPromisse.then((resolve)=>{
             main_data.venda.data.itens = JSON.parse(resolve)
-            document.querySelector('#btnFecha').disabled = main_data.venda.data.itens.length > 0 ? false : true
             const tbl = document.querySelector('#tbl-itens_etq')
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço')            
             for(let i=0; i<main_data.venda.data.itens.length;i++){
@@ -51,11 +50,10 @@
  
     main_data.venda.fillTemp = ()=>{
         const params = new Object;
-            params.id_viagem = main_data.viewViagem.data.id       
+            params.id_local = main_data.viewLocal.data.id       
         const myPromisse = queryDB(params,35);
         myPromisse.then((resolve)=>{
             main_data.venda.data.itens_temp = JSON.parse(resolve)
-            document.querySelector('#btnFecha').disabled = main_data.venda.data.itens_temp.length > 0 ? false : true
             const tbl = document.querySelector('#tbl-itens_venda')
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço,Sub-Total')            
             for(let i=0; i<main_data.venda.data.itens_temp.length;i++){
@@ -73,13 +71,12 @@
             const data = e.target.parentNode.data
             const qtd = prompt(`Digite a quantidade desejada`)
             data.qtd_venda = qtd != null ? getFloat(qtd) : 0
-            console.log(data)
             if(parseFloat(data.qtd_venda) > parseFloat(data.qtd_tot)){
                 alert('Quantidade maior que o estoque disponível')
             }else if(data.qtd_venda > 0){
                 const params = new Object;
                     params.id = 'DEFAULT'
-                    params.id_viagem = main_data.viewViagem.data.id
+                    params.id_local = main_data.viewLocal.data.id
                     params.id_prod = data.id_prod
                     params.nome = data.nome
                     params.qtd = data.qtd_venda
@@ -164,7 +161,7 @@
                             const myPromisse_itens = queryDB(params_itens,14);
 
                             const params_update = new Object // atualiza estoque                                
-                                params_update.id_local = main_data.viewViagem.data.id
+                                params_update.id_local = main_data.viewLocal.data.id
                                 params_update.id_prod = main_data.venda.data.itens_temp[i].id_prod
                                 params_update.qtd = main_data.venda.data.itens_temp[i].qtd
                                  
@@ -173,12 +170,12 @@
                         }
 
                         const params_del_temp = new Object; // deleta venda temporaria
-                            params_del_temp.id_viagem = main_data.viewViagem.data.id
+                            params_del_temp.id_local = main_data.viewLocal.data.id
                             params_del_temp.hash = localStorage.getItem('hash')
                         const myPromisse_del_itens = queryDB(params_del_temp,37);
                         myPromisse.then((resolve)=>{
                             alert('Venda Realizada com sucesso!')
-                            main_data.viewViagem.fillItens()
+                            main_data.viewLocal.fillItens()
                             closeModal('venda')
                         })
 

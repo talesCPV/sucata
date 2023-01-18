@@ -39,9 +39,9 @@
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);
-                tbl.head('Nome,CPF,CNH Tipo')
+                tbl.head('Nome,CPF,Veículo')
                 for(let i=0; i<json.length;i++){
-                    tbl.plot(json[i],'nome,cpf,tipo')
+                    tbl.plot(json[i],'nome,cpf,modelo')
                 }                
             } 
         })

@@ -19,8 +19,6 @@
             <input type="text" id="edtCPF" placeholder="CPF" maxlength="14" onkeyup="return valCPF(this)">
             <label for="edtRG">RG</label>
             <input type="text" id="edtRG" placeholder="RG" maxlength="12" onkeyup="return valRG(this)" >
-            <label for="cmbUser">Usuário</label>
-            <select id="cmbUser"></select>
         </div>
         <div class="inline">
             <label for="edtCNH">CNH</label>
@@ -29,6 +27,13 @@
             <input type="text" id="edtTipo" placeholder="ex: A, AB, D, E" maxlength="2">
             <label for="edtVal">Validade</label>
             <input type="date" id="edtVal"  >
+        </div>
+        <div class="inline">
+            <label for="cmbUser">Usuário</label>
+            <select id="cmbUser"></select>
+            <label for="cmbLocal">Veículo</label>
+            <select id="cmbLocal"></select>
+        
         </div>
 
         <div class="inline">
@@ -42,8 +47,12 @@
 
     const params = new Object;
         params.hash = localStorage.getItem('hash')
+        params.field = 'local'
+        params.signal = '='
+        params.value = '"MOVEL"'        
 
     fillCombo('cmbUser',params,26,['id','nome'], main_data.viewMotorista.data.mode == 'edit' ? main_data.viewMotorista.data.id_usuario :'' )
+    fillCombo('cmbLocal',params,20,['id','modelo'], main_data.viewMotorista.data.mode == 'edit' ? main_data.viewMotorista.data.id_local :'' )
 
 
     if(main_data.viewMotorista.data.mode == 'edit'){
@@ -69,6 +78,7 @@
                 params.tipo = document.querySelector('#edtTipo').value.trim().toUpperCase()
                 params.validade = document.querySelector('#edtVal').value
                 params.id_usuario = document.querySelector('#cmbUser').value
+                params.id_local = document.querySelector('#cmbLocal').value
 
             const myPromisse = queryDB(params,21);
 

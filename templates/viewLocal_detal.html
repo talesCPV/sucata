@@ -1,0 +1,119 @@
+<template>
+    <style>
+
+        .frm{
+            display: flex;
+            flex-direction: column;
+        }
+     
+    </style>
+  
+    <fieldset class="frm">
+        <legend>Local</legend>
+        <div class="inline">
+            <label for="edtModelo" id="lblModelo">Modelo*</label>
+            <input type="text" id="edtModelo" maxlength="20">
+            <label for="cmbLocal">Local</label>
+            <select id="cmbLocal" style="max-width: 150px;">
+                <option value="FIXO">Fixo</option>
+                <option value="MOVEL" selected>Móvel</option>
+            </select> 
+        </div>
+        <div class="inline">
+            <label for="edtAno">Ano</label>
+            <input type="text" id="edtAno" maxlength="4" style="max-width: 100px;" onkeyup="return valInt(this)">
+            <label for="edtPlaca">Placa</label>
+            <input type="text" id="edtPlaca" maxlength="8" style="max-width: 100px;" onkeyup="return valPlaca(this)">
+            <label for="cmbTipo">Tipo</label>
+            <select id="cmbTipo">
+                <option value="CAMINHÃO" selected>Caminhão</option>
+                <option value="CARRETA">Carreta</option>
+                <option value="UTILITARIO">Utilitário</option>
+                <option value="CARRO">Carro</option>
+                <option value="MOTO">Moto</option>
+            </select>            
+            <label for="edtTara">Tara</label>
+            <input type="text" id="edtTara" placeholder="Tara" onkeyup="return valFloat(this)" value="0">
+        </div>
+
+        <div class="inline">
+            <button id="btnSave">Salvar</button>
+            <button id="btnDel">Deletar</button>    
+        </div>
+    </fieldset>
+
+</template>
+<script>
+
+
+    if(main_data.viewLocal_detal.data.mode == 'edit'){
+        document.querySelector('#edtModelo').value = main_data.viewLocal_detal.data.modelo
+        document.querySelector('#edtAno').value = main_data.viewLocal_detal.data.ano
+        document.querySelector('#edtPlaca').value = main_data.viewLocal_detal.data.placa
+        document.querySelector('#cmbTipo').value = main_data.viewLocal_detal.data.tipo
+        document.querySelector('#edtTara').value = main_data.viewLocal_detal.data.tara
+        document.querySelector('#cmbLocal').value = main_data.viewLocal_detal.data.local
+        changeLocal()
+    }else{
+        document.querySelector('#btnDel').style.display = 'none'
+    }
+
+    function changeLocal(){
+        if(document.querySelector('#cmbLocal').value == 'FIXO'){
+            document.querySelector('#lblModelo').innerHTML = 'Nome Local*'
+            document.querySelector('#edtAno').disabled = true
+            document.querySelector('#edtPlaca').disabled = true
+            document.querySelector('#cmbTipo').disabled = true
+            document.querySelector('#edtTara').disabled = true
+        }else{
+            document.querySelector('#lblModelo').innerHTML = 'Modelo*'
+            document.querySelector('#edtAno').disabled = false
+            document.querySelector('#edtPlaca').disabled = false
+            document.querySelector('#cmbTipo').disabled = false
+            document.querySelector('#edtTara').disabled = false
+        }
+    }
+
+    document.querySelector('#cmbLocal').addEventListener('change',()=>{
+        changeLocal()
+    })
+
+    document.querySelector('#btnSave').addEventListener('click',()=>{
+        if(checkField(['edtModelo']) ){
+
+            const local = document.querySelector('#cmbLocal').value
+
+            const params = new Object;
+                params.id = main_data.viewLocal_detal.data.mode == 'new' ? 'DEFAULT' : main_data.viewLocal_detal.data.id
+                params.ano = local == 'MOVEL' ? document.querySelector('#edtAno').value.trim() : ''
+                params.modelo = document.querySelector('#edtModelo').value.trim().toUpperCase()
+                params.placa = local == 'MOVEL' ? document.querySelector('#edtPlaca').value : ''
+                params.tipo = local == 'MOVEL' ? document.querySelector('#cmbTipo').value : ''
+                params.tara = local == 'MOVEL' ? document.querySelector('#edtTara').value : ''
+                params.local = local
+            const myPromisse = queryDB(params,18);
+
+            myPromisse.then((resolve)=>{
+                main_data.local.fillLocal()
+                closeModal('viewLocal_detal')
+            })
+        }        
+    })
+
+    document.querySelector('#btnDel').addEventListener('click',()=>{
+
+        if (confirm('Deseja realmente deletar este local?')) {
+            const params = new Object;
+                params.id = main_data.viewLocal_detal.data.id
+                params.hash = localStorage.getItem('hash')
+
+            const myPromisse = queryDB(params,19);
+            myPromisse.then((resolve)=>{
+                main_data.veiculos.fillLocal()
+                closeModal('viewLocal_detal')                
+            })
+        }
+    })
+
+
+</script>

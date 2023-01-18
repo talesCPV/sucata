@@ -18,9 +18,9 @@
         <fieldset>
             <legend>Locais</legend>
             <div id="scroll">
-                <table id="tblVeic"></table>
+                <table id="tblLocal"></table>
             </div>
-            <button id="btnVeic">Novo</button>
+            <button id="btnLocal">Novo</button>
         </fieldset>          
          
     </div>
@@ -29,11 +29,13 @@
 <script>
 
     main_data.local.fillLocal =  function (){
-        const tbl = document.getElementById('tblVeic')
+        const tbl = document.getElementById('tblLocal')
         tbl.innerHTML = ''
         const params = new Object;
             params.hash = localStorage.getItem('hash');
-
+            params.field = 'id'
+            params.signal = '>='
+            params.value = '0'
         const myPromisse = queryDB(params,20);
 
         myPromisse.then((resolve)=>{
@@ -52,16 +54,16 @@
 
     main_data.local.fillLocal()
 
-    document.querySelector('#tblVeic').addEventListener('click',(e)=>{
+    document.querySelector('#tblLocal').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         data.mode = 'edit'
         openHTML('viewLocal.html','pop-up','Editar Local de Estoque',data)
     })
 
-    document.querySelector('#btnVeic').addEventListener('click',()=>{
+    document.querySelector('#btnLocal').addEventListener('click',()=>{
         const data = new Object
         data.mode = 'new'
-        openHTML('viewLocal.html','pop-up','Novo Local de Estoque',data)
+        openHTML('viewLocal_detal.html','pop-up','Novo Local de Estoque',data)
 
     })
 

@@ -16,24 +16,8 @@
 					"itens"  : []
 				},
 				{
-					"modulo" : "Produtos",
-					"script" : "javascript:openHTML('produtos.html','content-screen')",
-					"access" : [10],
-					"class"  : "",
-					"icone"  : "fa fa-industry",
-					"itens"  : []
-				},
-				{
 					"modulo" : "Unidades",
 					"script" : "javascript:openHTML('unidades.html','content-screen')",
-					"access" : [10],
-					"class"  : "",
-					"icone"  : "fa fa-industry",
-					"itens"  : []
-				},
-				{
-					"modulo" : "Local Estoque",
-					"script" : "javascript:openHTML('local.html','content-screen')",
 					"access" : [10],
 					"class"  : "",
 					"icone"  : "fa fa-industry",
@@ -59,12 +43,29 @@
 		},		
 
 		{
-			"modulo" : "Viagens",
+			"modulo" : "Estoque",
 			"script" : "javascript:openHTML('viagens.html','content-screen')",
 			"access" : [10],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
-			"itens"  : []
+			"itens"  : [
+				{
+					"modulo" : "Local",
+					"script" : "javascript:openHTML('local.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},				
+				{
+					"modulo" : "Produtos",
+					"script" : "javascript:openHTML('produtos.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				}					
+			]
 		},	
 		{
 			"modulo" : "Vendas",
@@ -84,8 +85,8 @@
 		},					
 		{
 			"modulo" : "Minha Carga",
-			"script" : "javascript:openHTML('viewViagem.html','pop-up','Minha Carga',{mode:'motorista'})",
-			"access" : [1],
+			"script" : "javascript:openHTML('viewLocal.html','pop-up','Minha Carga',{mode:'motorista'})",
+			"access" : [1,10],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
 			"itens"  : []
