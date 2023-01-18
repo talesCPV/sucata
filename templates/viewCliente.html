@@ -39,7 +39,7 @@
             <select id="cmbModal" style="max-width: 160px;">
                 <option value="FORN">Fornecedor</option>
                 <option value="CLI">Cliente</option>
-                <option value="BOTH">Ambos</option>
+                <option value="BOTH" selected>Ambos</option>
             </select>
         </div>
         <div class="inline" id="divJUR">
@@ -101,7 +101,7 @@
             <input type="text" id="edtCEP" maxlength="10" onkeyup="valCEP(this)" style="width: 180px;" >
         </div>
         <div class="inline"> 
-            <label for="edtTel">Tel*</label>
+            <label for="edtTel">Tel</label>
             <input type="text" id="edtTel" onkeyup="phone(this)" maxlength="15"  >            
             <label for="ckbWhats">Whatsapp</label>
             <input type="checkbox" id="ckbWhats" checked>
@@ -116,7 +116,7 @@
             <input type="text" id="edtCC" maxlength="15" style="width: 250px;" >            
         </div>
         <div class="inline">            
-            <label for="edtPix">Chave Pix</label>
+            <label for="edtPix">Chave Pix*</label>
             <input type="text" id="edtPix" maxlength="40" >
         </div>
 
@@ -211,6 +211,15 @@
         }else{
             document.querySelector('#btnSave').style.display = 'block'
             ableFields(true)
+            if(main_data.viewCliente.data.mode == 'vendedor'){
+                document.querySelector('#cmbModal').disabled = true
+                if(main_data.viewCliente.data.callby =='compra'){
+                    document.querySelector('#cmbModal').value = 'FORN'
+                }else if(main_data.viewCliente.data.callby =='venda'){
+                    document.querySelector('#cmbModal').value = 'CLI'
+                }
+             
+            }
         }
 
         }
@@ -228,7 +237,7 @@
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
         const tipo = document.querySelector('#cmbTipo').value        
-        if(checkField(tipo == 'JUR' ? ['edtNome','edtCNPJ','edtEnd','edtTel'] : ['edtNome','edtCPF','edtEnd','edtTel'])){
+        if(checkField(tipo == 'JUR' ? ['edtNome','edtCNPJ','edtEnd','edtPix'] : ['edtNome','edtCPF','edtEnd','edtPix'])){
             const fant = document.querySelector('#edtFant').value.trim() == '' ? document.querySelector('#edtNome').value.trim() : document.querySelector('#edtFant').value.trim()
             const params = new Object;
             params.id = main_data.viewCliente.mode == 'edit' ? main_data.viewCliente.data.id : 'DEFAULT'
@@ -262,7 +271,12 @@
         myPromisse.then((resolve)=>{
             main_data.viewCliente.data.mode == 'edit' ? document.querySelector('#btnBusca').click() : 0
             if(main_data.viewCliente.data.mode == 'vendedor'){
-                main_data.viewViagem.fillClientes()     
+                if(main_data.viewCliente.data.callby =='compra'){
+                    main_data.compra.fillClientes()
+                }else if(main_data.viewCliente.data.callby =='venda'){
+                    main_data.venda.fillClientes()
+                }
+             
             }
 
             closeModal('viewCliente')

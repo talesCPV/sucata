@@ -67,6 +67,7 @@
         }else if (main_data.viewLocal.data.mode == 'motorista'){
             const params = new Object;
                 params.hash = localStorage.getItem('hash')
+                params.user = localStorage.getItem('username')
             const myPromisse = queryDB(params,28);
             myPromisse.then((resolve)=>{  
                 const json = JSON.parse(resolve)   

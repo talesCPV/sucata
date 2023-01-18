@@ -86,7 +86,7 @@
 		{
 			"modulo" : "Minha Carga",
 			"script" : "javascript:openHTML('viewLocal.html','pop-up','Minha Carga',{mode:'motorista'})",
-			"access" : [1,10],
+			"access" : [1],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
 			"itens"  : []

@@ -17,6 +17,7 @@
             <div class="inline">
                 <label for="cmbCli_venda">Cliente</label>
                 <select id="cmbCli_venda"></select>
+                <button id="btnNovoCli" class="btnAdd" >+</button>
             </div>
             <table id="tbl-itens_venda"></table>
             <button id="btnVenda">Gerar Venda</button>
@@ -27,11 +28,16 @@
 </template>
 <script>
  
-    const params_cli = new Object;
-            params_cli.field = 'nome'
-            params_cli.signal = 'LIKE'
-            params_cli.value = '"%%"' 
-    fillCombo('cmbCli_venda',params_cli,1,['id','fantasia'], '#')
+
+
+
+    main_data.venda.fillClientes = ()=>{
+        const params_cli = new Object;
+            params_cli.field = 'modal'
+            params_cli.signal = '!='
+            params_cli.value = '"FORN"' 
+        fillCombo('cmbCli_venda',params_cli,1,['id','fantasia'], '#')
+    }
 
     main_data.venda.fillItens = ()=>{
         const params = new Object;
@@ -63,9 +69,13 @@
         })
     }
 
-
     main_data.venda.fillItens()
     main_data.venda.fillTemp()
+    main_data.venda.fillClientes()
+
+    document.querySelector('#btnNovoCli').addEventListener('click',()=>{
+        openHTML('viewCliente.html','pop-up','Adicionar Cliente', {mode : 'vendedor', callby:'venda'})
+    })
 
     document.querySelector('#tbl-itens_etq').addEventListener('click',(e)=>{
             const data = e.target.parentNode.data
@@ -98,7 +108,7 @@
         data.edtItem = function(){
             const params = new Object;
                 params.id = main_data.edtProd.data.id 
-                params.id_viagem = main_data.edtProd.data.id_viagem
+                params.id_local = main_data.edtProd.data.id_local
                 params.id_prod = main_data.edtProd.data.id_prod
                 params.nome = main_data.edtProd.data.nome
                 params.qtd = document.querySelector('#edtQtd').value
@@ -127,7 +137,15 @@
             }) 
         }
 
+        data.max = 0
+        for(let i=0; i<main_data.venda.data.itens.length; i++){
+            if(data.id_prod == main_data.venda.data.itens[i].id_prod){
+                data.max = main_data.venda.data.itens[i].qtd
+            }
+        }
+
         data.callby = 'venda'
+        data.edtVal = data.val_venda
         if(data.id != undefined){
             openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
         }

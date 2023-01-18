@@ -29,8 +29,22 @@
     document.querySelector('#edtPreco').value = parseFloat(main_data.edtProd.data.edtVal).toFixed(2)
 
     document.querySelector('#btnSaveItem').addEventListener('click',()=>{
-        main_data.edtProd.data.edtItem()
+        if(max_itens()){
+            main_data.edtProd.data.edtItem()
+        }
     })
+
+    function max_itens(){
+        if(main_data.edtProd.data.max != undefined){
+            if(parseFloat(main_data.edtProd.data.max) < parseFloat(document.querySelector('#edtQtd').value)){
+                alert('Quantidade digitada superior ao estoque disponível!')
+                document.querySelector('#edtQtd').value = main_data.edtProd.data.max
+                document.querySelector('#edtQtd').focus()
+                return false
+            }
+        }
+        return true
+    }
 
     document.querySelector('#btnDelItem').addEventListener('click',()=>{
 
@@ -38,6 +52,10 @@
             main_data.edtProd.data.delItem()
         }
   
+    })
+
+    document.querySelector('#edtQtd').addEventListener('focusout',()=>{
+        max_itens()
     })
 
     document.querySelector('#edtQtd').focus()

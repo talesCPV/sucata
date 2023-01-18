@@ -35,6 +35,9 @@
 
     main_data.viewCompras.busca = function (){
 
+        const date_fin = new Date(document.querySelector('#edtFin').value)
+        date_fin.change(2)
+
         const ckb = document.querySelector('#ckbData').checked
         const tbl = document.getElementById('tblComp')
         const params = new Object;
@@ -42,7 +45,7 @@
             params.signal = '>='
             params.value = 0
             params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
-            params.fin = ckb ? document.querySelector('#edtFin').value : '2100-12-31';        
+            params.fin = ckb ? date_fin.getFormatDate() : '2100-12-31';        
 
         const myPromisse = queryDB(params,43);
 

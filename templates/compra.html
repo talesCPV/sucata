@@ -50,15 +50,17 @@
 
 
     document.querySelector('#btnNovoCli').addEventListener('click',()=>{
-        openHTML('viewCliente.html','pop-up','Adicionar Cliente', {mode : 'vendedor'})
+        openHTML('viewCliente.html','pop-up','Adicionar Cliente', {mode : 'vendedor', callby:'compra'})
     })
 
-    const params_cli = new Object;
-            params_cli.field = 'nome'
-            params_cli.signal = 'LIKE'
-            params_cli.value = '"%%"' 
-    fillCombo('cmbCli_compra',params_cli,1,['id','fantasia'], '#')
- 
+    main_data.compra.fillClientes = ()=>{
+        const params_cli = new Object;
+            params_cli.field = 'modal'
+            params_cli.signal = '!='
+            params_cli.value = '"CLI"' 
+        fillCombo('cmbCli_compra',params_cli,1,['id','fantasia'], '#')
+    }
+
     main_data.compra.fillTemp = ()=>{
         const params = new Object;
             params.id_local = main_data.viewLocal.data.id       
@@ -85,6 +87,7 @@
     }
 
     main_data.compra.fillTemp()
+    main_data.compra.fillClientes()
 
     document.querySelector('#tbl-itens_compra').addEventListener('click',(e)=>{
         
@@ -93,7 +96,7 @@
         data.edtItem = function(){
             const params = new Object;
                 params.id = main_data.edtProd.data.id 
-                params.id_viagem = main_data.edtProd.data.id_viagem
+                params.id_local = main_data.edtProd.data.id_local
                 params.id_prod = main_data.edtProd.data.id_prod
                 params.nome = main_data.edtProd.data.nome
                 params.qtd = document.querySelector('#edtQtd').value
@@ -123,6 +126,7 @@
         }
 
         data.callby = 'compra'
+        data.edtVal = data.val_venda
         if(data.id != undefined){
             openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
         }
