@@ -1,0 +1,82 @@
+<template>
+    <style>
+
+        .frm{
+            display: flex;
+            flex-direction: column;
+        }
+     
+    </style>
+  
+    <fieldset class="frm">
+        <legend>Tipo de Material</legend>
+        <div class="inline">
+            <label for="edtNome">Nome:*</label>
+            <input type="text" id="edtNome" placeholder="Nome" maxlength="20">
+            <label for="edtCod">Código:</label>
+            <input type="text" id="edtCod"  maxlength="20" style="max-width: 300px;">
+        </div>
+        <div class="inline">
+            <label for="edtNCM">NCM:</label>
+            <input type="text" id="edtNCM" maxlength="8" onkeyup="valInt(this)">
+            <label for="cmbUnd">Und:</label>
+            <select id="cmbUnd"></select>
+        </div>
+        <div class="inline">
+            <button id="btnSave">Salvar</button>
+            <button id="btnDel">Deletar</button>    
+        </div>
+    </fieldset>
+
+</template>
+<script>
+
+    const params = new Object;
+        params.hash = localStorage.getItem('hash');
+    fillCombo('cmbUnd',params,4,['sigla','nome'], main_data.viewMat.data.mode == 'edit' ? main_data.viewMat.data.und :'' )
+
+
+    if(main_data.viewMat.data.mode == 'edit'){
+        document.querySelector('#edtNome').value = main_data.viewMat.data.nome
+        document.querySelector('#edtCod').value = main_data.viewMat.data.cod
+        document.querySelector('#edtNCM').value = main_data.viewMat.data.ncm
+    }else{
+        document.querySelector('#btnDel').style.display = 'none'
+    }
+
+    document.querySelector('#btnSave').addEventListener('click',()=>{
+        if(checkField(['edtNome']) ){
+
+            const params = new Object;
+                params.id = main_data.viewMat.data.mode == 'new' ? 'DEFAULT' : main_data.viewMat.data.id
+                params.nome = document.querySelector('#edtNome').value.trim().toUpperCase()
+                params.cod = document.querySelector('#edtCod').value.trim() == '' ? params.nome : document.querySelector('#edtCod').value.trim()
+                params.ncm = document.querySelector('#edtNCM').value.trim()
+                params.und = document.querySelector('#cmbUnd').value
+
+            const myPromisse = queryDB(params,24);
+
+            myPromisse.then((resolve)=>{
+                main_data.material.fillMat()
+                closeModal('viewMat')
+            })
+        }        
+    })
+
+    document.querySelector('#btnDel').addEventListener('click',()=>{
+
+        if (confirm('Deseja realmente deletar este material?')) {
+            const params = new Object;
+                params.id = main_data.viewMat.data.id
+                params.hash = localStorage.getItem('hash')
+
+            const myPromisse = queryDB(params,25);
+            myPromisse.then((resolve)=>{
+                main_data.material.fillMat()
+                closeModal('viewMat')                
+            })
+        }
+    })
+
+
+</script>

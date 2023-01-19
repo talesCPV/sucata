@@ -16,14 +16,6 @@
 					"itens"  : []
 				},
 				{
-					"modulo" : "Unidades",
-					"script" : "javascript:openHTML('unidades.html','content-screen')",
-					"access" : [10],
-					"class"  : "",
-					"icone"  : "fa fa-industry",
-					"itens"  : []
-				},
-				{
 					"modulo" : "Motoristas",
 					"script" : "javascript:openHTML('motoristas.html','content-screen')",
 					"access" : [10],
@@ -38,13 +30,38 @@
 					"class"  : "",
 					"icone"  : "fa fa-industry",
 					"itens"  : []
-				}				
+				},
+				{
+					"modulo" : "Configurações",
+					"script" : "#",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : [
+						{
+							"modulo" : "Unidades",
+							"script" : "javascript:openHTML('unidades.html','content-screen')",
+							"access" : [10],
+							"class"  : "",
+							"icone"  : "fa fa-industry",
+							"itens"  : []
+						},
+						{
+							"modulo" : "Material (NFe)",
+							"script" : "javascript:openHTML('material.html','content-screen')",
+							"access" : [10],
+							"class"  : "",
+							"icone"  : "fa fa-industry",
+							"itens"  : []
+						}						
+					]
+				}						
 			]
 		},		
 
 		{
 			"modulo" : "Estoque",
-			"script" : "javascript:openHTML('viagens.html','content-screen')",
+			"script" : "#",
 			"access" : [10],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
@@ -68,21 +85,32 @@
 			]
 		},	
 		{
-			"modulo" : "Vendas",
-			"script" : "javascript:openHTML('viewVendas.html','content-screen')",
+			"modulo" : "Comercial",
+			"script" : "",
 			"access" : [10],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
-			"itens"  : []
+			"itens"  : [
+				{
+					"modulo" : "Compras",
+					"script" : "javascript:openHTML('viewCompras.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
+				{
+					"modulo" : "Vendas",
+					"script" : "javascript:openHTML('viewVendas.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				}				
+			]
 		},		
-		{
-			"modulo" : "Compras",
-			"script" : "javascript:openHTML('viewCompras.html','content-screen')",
-			"access" : [10],
-			"class"  : "",
-			"icone"  : "fa fa-industry",
-			"itens"  : []
-		},					
+		
+					
 		{
 			"modulo" : "Minha Carga",
 			"script" : "javascript:openHTML('viewLocal.html','pop-up','Minha Carga',{mode:'motorista'})",

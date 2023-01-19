@@ -88,13 +88,13 @@
     })
 
     document.querySelector('#btnDel').addEventListener('click',()=>{        
-        if (confirm('Deseja realmente deletar esta venda?')) {            
+        if (confirm('Deseja realmente deletar esta compra?')) {            
             const params = new Object;
-                params.id_venda = main_data.viewComp_detal.data.id
+                params.id_compra = main_data.viewComp_detal.data.id
                 params.hash = localStorage.getItem('hash')
-            const myPromisse = queryDB(params,15); // DELETA OS ÍTENS
+            const myPromisse = queryDB(params,50); // DELETA OS ÍTENS
             myPromisse.then((resolve)=>{
-                const myPromisse_1 = queryDB(params,12); // DELETA A VENDA
+                const myPromisse_1 = queryDB(params,49); // DELETA A COMPRA
                 myPromisse_1.then((resolve)=>{
                     main_data.viewCompras.busca()
                     closeModal('viewComp_detal')
@@ -106,7 +106,6 @@
     document.querySelector('#btnAdd').addEventListener('click',()=>{
         
         main_data.viewComp_detal.data.addItem = (data)=>{
-            console.log(data)
             const params = new Object;
                 params.id = 'DEFAULT' 
                 params.id_compra = main_data.viewComp_detal.data.id

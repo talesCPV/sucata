@@ -1,0 +1,70 @@
+
+<template>
+    <style>
+        button{
+            width: 98%;
+        }
+
+        #scroll{
+            max-height: 200px;
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+
+    </style>
+  
+    <div class="form-base">
+        <h1>Tipos de Material</h1>
+        <fieldset>
+            <legend>Tipos</legend>
+            <div id="scroll">
+                <table id="tblMat"></table>
+            </div>
+            <button id="btnMat">Novo</button>
+        </fieldset>          
+         
+    </div>
+
+</template>
+<script>
+
+    main_data.material.fillMat =  function (){
+        const tbl = document.getElementById('tblMat')
+        tbl.innerHTML = ''
+        const params = new Object;
+            params.hash = localStorage.getItem('hash');
+
+        const myPromisse = queryDB(params,32);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);
+                tbl.head('Nome,NCM')
+                for(let i=0; i<json.length;i++){
+                    tbl.plot(json[i],'nome,ncm')
+                }                
+            } 
+        })
+    }
+
+
+
+
+    main_data.material.fillMat()
+
+    document.querySelector('#tblMat').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('viewMat.html','pop-up','Editar Tipo de Material',data)
+    })
+
+    document.querySelector('#btnMat').addEventListener('click',()=>{
+        const data = new Object
+        data.mode = 'new'
+        openHTML('viewMat.html','pop-up','Novo Tipo de Material',data)
+
+    })
+
+
+
+</script>

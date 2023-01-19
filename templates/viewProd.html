@@ -13,12 +13,12 @@
         <div class="inline">
             <label for="edtNome">Nome*</label>
             <input type="text" id="edtNome" placeholder="Nome" maxlength="20">
-            <label for="cmbUnd">Und.</label>
-            <select id="cmbUnd"></select>
+            <label for="cmbMat">Material</label>
+            <select id="cmbMat"></select>
         </div>
         <div class="inline">
-            <label for="edtQtd">Estoque</label>
-            <input type="text" id="edtQtd" placeholder="Qtd em Estoque" onkeyup="return valFloat(this)">
+            <label for="cmbUnd">Und.</label>
+            <select id="cmbUnd"></select>
             <label for="edtPreco">Preço Compra*</label>
             <input type="text" id="edtPreco" placeholder="Preço" onkeyup="return valFloat(this)">
             <label for="edtMargem">Markup(%)*</label>
@@ -35,7 +35,14 @@
 </template>
 <script>
 
-    ableFields(false)    
+    const params = new Object;
+        params.hash = localStorage.getItem('hash');
+    fillCombo('cmbUnd',params,4,['sigla','nome'], main_data.viewProd.data.mode == 'edit' ? main_data.viewProd.data.und :'' )
+    fillCombo('cmbMat',params,32,['id','nome'], main_data.viewProd.data.mode == 'edit' ? main_data.viewProd.data.id_mat :'' )
+
+
+
+    ableFields(main_data.viewProd.data.mode=='new'? true : false)    
 
     function ableFields(status){
         const inputs = document.querySelector('.frm').querySelectorAll('input,select')
@@ -67,21 +74,17 @@
 
     if(main_data.viewProd.data.mode == 'edit'){
         document.querySelector('#edtNome').value = main_data.viewProd.data.nome
-        document.querySelector('#edtQtd').value = main_data.viewProd.data.qtd
         document.querySelector('#edtPreco').value = main_data.viewProd.data.preco
         document.querySelector('#edtMargem').value = main_data.viewProd.data.margem
     }else{
-        document.querySelector('#edtQtd').value = 0
+        document.querySelector('#btnEdit').style.display = 'none'
         document.querySelector('#btnDel').style.display = 'none'
     }
-    const params = new Object;
-        params.hash = localStorage.getItem('hash');
-    fillCombo('cmbUnd',params,4,['sigla','nome'], main_data.viewProd.data.mode == 'edit' ? main_data.viewProd.data.und :'' )
 
     main_data.viewProd.fillDetal()
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
-        if(checkField(['edtNome','edtQtd','edtPreco','edtMargem']) ){
+        if(checkField(['edtNome','edtPreco','edtMargem']) ){
 
             const params = new Object;
                 params.id = main_data.viewProd.data.mode == 'new' ? 'DEFAULT' : main_data.viewProd.data.id
@@ -89,7 +92,7 @@
                 params.und = document.querySelector('#cmbUnd').value
                 params.preco = document.querySelector('#edtPreco').value
                 params.margem = document.querySelector('#edtMargem').value
-                params.qtd = document.querySelector('#edtQtd').value
+                params.id_mat = document.querySelector('#cmbMat').value
 
             const myPromisse = queryDB(params,8);
 

@@ -46,7 +46,6 @@
 
         upload.then(function (resolve){
             if(resolve != '0'){
-                console.log(resolve) 
                 if(main_data.uploadFile.data.hasOwnProperty('func')){
                     main_data.uploadFile.data.func(resolve)
                 }else{

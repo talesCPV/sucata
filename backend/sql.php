@@ -12,8 +12,8 @@ $query_db = array(
     "5"  => 'INSERT INTO tb_und (id, nome, sigla) VALUES(x00, "x01", "x02") ON DUPLICATE KEY UPDATE nome="x01", sigla="x02";',
     "6"  => 'DELETE FROM tb_und WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "7"  => 'SELECT * FROM tb_prod WHERE nome LIKE "%x00%" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1);',
-    "8"  => 'INSERT INTO tb_prod (id, nome, und, preco, margem, qtd) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
-        ON DUPLICATE KEY UPDATE nome="x01", und="x02", preco="x03", margem="x04", qtd="x05";',
+    "8"  => 'INSERT INTO tb_prod (id, nome, und, preco, margem, id_mat) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
+        ON DUPLICATE KEY UPDATE nome="x01", und="x02", preco="x03", margem="x04", id_mat="x05";',
     "9"  => 'DELETE FROM tb_prod WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "10" => 'SELECT  CLI.*, VEND.*, ITEM.valor, USR.user, USR.nome AS nome_vend 
         FROM tb_venda AS VEND 
@@ -55,18 +55,9 @@ $query_db = array(
         ON MOT.id_local = LOCAL.id
         AND(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10)
         ORDER BY nome;' ,
-    "24" => 'INSERT INTO tb_viagem (id, id_motorista, id_veiculo, data, aberta, obs) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
-        ON DUPLICATE KEY UPDATE id_motorista="x01", id_veiculo="x02", data="x03", aberta="x04", obs="x05";',
-    "25" => 'SELECT VIA.*, MOT.nome, VEI.modelo, VEI.placa, VEI.id AS id_local
-        FROM tb_viagem AS VIA
-        INNER JOIN tb_motorista AS MOT
-        INNER JOIN tb_local AS VEI 
-        ON x00 x01 x02 
-        AND MOT.id = VIA.id_motorista
-        AND VEI.id = VIA.id_veiculo
-        AND data >= "x03"
-        AND data <= "x04"
-        ORDER BY data DESC;' ,
+    "24" => 'INSERT INTO tb_material (id, nome, cod, ncm, und) VALUES(x00, "x01", "x02", "x03", "x04") 
+        ON DUPLICATE KEY UPDATE nome="x01", cod="x02", ncm="x03", und="x04";',
+    "25" => 'DELETE FROM tb_material WHERE id=x00 AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);' ,
     "26" => 'SELECT * FROM tb_usuario WHERE (SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;',
     "27" => 'DELETE FROM tb_usuario WHERE id=x00 ;',
     "28" => 'SELECT MOT.*, LOCAL.modelo, LOCAL.placa
@@ -89,8 +80,7 @@ $query_db = array(
     "31" => 'SELECT * FROM tb_motorista
 	    WHERE id NOT IN (SELECT V.id_motorista FROM tb_viagem AS V WHERE V.aberta=1)	
 	    GROUP BY nome;' ,
-    "32" => 'SELECT * FROM tb_local WHERE local = "MOVEL" 
-        AND id NOT IN (SELECT V.id_veiculo FROM tb_viagem AS V WHERE V.aberta=1);',
+    "32" => 'SELECT * FROM tb_material WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;',
     "33" => 'UPDATE tb_viagem SET aberta="0" WHERE id=x00 AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10)',
     "34" => 'DELETE FROM tb_item_estoque WHERE y00="x00" AND y01="x01" AND(SELECT U.class FROM tb_usuario AS U WHERE hash="x02") IN (10,1);',
     "35" => 'SELECT *, ROUND(qtd * val_venda ,2) as total  FROM tb_item_temp WHERE id_local="x00"
@@ -165,7 +155,10 @@ $query_db = array(
         ) AS TOTAL
         WHERE TOTAL.nome LIKE "%x00%"
         GROUP BY TOTAL.id;',
-    "48" => ' UPDATE tb_item_estoque SET qtd=x02 WHERE id_local="x00" AND id_prod="x01";',
+    "48" => ' UPDATE tb_item_estoque SET qtd=x02, val_unit=x04 WHERE id_local="x00" AND id_prod="x01";',
+    "49" => 'DELETE FROM tb_compra WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+    "50" => 'DELETE FROM tb_item_compra WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+
     );
 
 ?>

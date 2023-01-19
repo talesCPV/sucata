@@ -12,6 +12,16 @@
 
         <fieldset>
             <legend>Busca</legend>
+            <div class="inline">
+                <label for="edtBusca">por:</label>
+                <select id="cmbBusca">
+                    <option value="COMP.id" signal=">=" val="0" selected>Todos</option>
+                    <option value="USR.nome" signal="LIKE">Comprador</option>
+                    <option value="CLI.nome" signal="LIKE">Cliente</option>
+                </select>
+                <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
+
+            </div>            
             <div class="inline center-itens">
                 <div class="ckBOX">
                     <label for="ckbData">Início/Final</label>
@@ -35,15 +45,21 @@
 
     main_data.viewCompras.busca = function (){
 
+        const sel = document.querySelector('#cmbBusca')
+        const field = sel.value
+        const signal = sel.options[sel.selectedIndex].getAttribute('signal')
+        let value = sel.options[sel.selectedIndex].hasAttribute('val') ? sel.options[sel.selectedIndex].getAttribute('val') : document.querySelector('#edtBusca').value.trim()
+        value = signal=='LIKE' ? `"%${value}%"` : signal=='IN' ? `(${value})` : sel.value=='true'? sel.value : `"${value}"`
+
         const date_fin = new Date(document.querySelector('#edtFin').value)
         date_fin.change(2)
 
         const ckb = document.querySelector('#ckbData').checked
         const tbl = document.getElementById('tblComp')
         const params = new Object;
-            params.field = 'COMP.id'
-            params.signal = '>='
-            params.value = 0
+            params.field = field
+            params.signal = signal
+            params.value = value
             params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
             params.fin = ckb ? date_fin.getFormatDate() : '2100-12-31';        
 

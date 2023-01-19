@@ -49,6 +49,16 @@ CREATE TABLE tb_und(
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
+/*DROP TABLE tb_material;*/
+CREATE TABLE tb_material(
+    id INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(20) NOT NULL,
+    cod VARCHAR(20) DEFAULT NULL,
+    ncm VARCHAR(8) DEFAULT "",
+    und VARCHAR(10) DEFAULT "KG",
+    PRIMARY KEY(id)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
 /*DROP TABLE tb_prod;*/
 CREATE TABLE tb_prod(
     id INT NOT NULL AUTO_INCREMENT,
@@ -61,7 +71,7 @@ CREATE TABLE tb_prod(
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 ALTER TABLE tb_prod
-ADD COLUMN qtd double NOT NULL DEFAULT 0;
+ADD COLUMN mat int(11) NOT NULL DEFAULT 0;
 
 /*DROP TABLE tb_venda;*/
 CREATE TABLE tb_venda(
@@ -89,6 +99,32 @@ CREATE TABLE tb_item_venda(
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
+/*DROP TABLE tb_compra;*/
+CREATE TABLE tb_compra(
+    id INT NOT NULL AUTO_INCREMENT,
+    id_cliente int(11) NOT NULL,
+	id_resp int(11) NOT NULL,
+    status varchar(10) NOT NULL DEFAULT "FECHADO",
+    obs varchar(255) DEFAULT NULL,
+	data datetime DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
+    FOREIGN KEY (id_resp) REFERENCES tb_usuario(id),
+    PRIMARY KEY(id)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+/*DROP TABLE tb_item_compra;*/
+CREATE TABLE tb_item_compra(
+    id INT NOT NULL AUTO_INCREMENT,
+    id_compra int(11) NOT NULL,
+    id_prod int(11) NOT NULL,
+    qtd double NOT NULL DEFAULT 0,
+    und  VARCHAR(10) NOT NULL,
+    val_unit double NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_compra) REFERENCES tb_compra(id),
+    FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
+    PRIMARY KEY(id)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
 /*DROP TABLES tb_local;*/
 CREATE TABLE tb_local(
     id INT NOT NULL AUTO_INCREMENT,
@@ -108,12 +144,14 @@ ADD COLUMN local VARCHAR(5) DEFAULT "FIXO";
 CREATE TABLE tb_motorista(
     id INT NOT NULL AUTO_INCREMENT,
     id_usuario int(11) DEFAULT NULL,
+    id_local int(11) DEFAULT NULL,
     nome  VARCHAR(40) NOT NULL DEFAULT "",
     cpf  VARCHAR(14) NOT NULL DEFAULT "",
     rg  VARCHAR(12) NOT NULL DEFAULT "",
     cnh VARCHAR(12) NOT NULL DEFAULT "",
     tipo VARCHAR(2) NOT NULL DEFAULT "",
     FOREIGN KEY (id_usuario) REFERENCES tb_usuario(id),
+    FOREIGN KEY (id_local) REFERENCES tb_local(id),
 	validade date DEFAULT NULL,
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
@@ -127,34 +165,32 @@ CREATE TABLE tb_viagem(
     aberta boolean DEFAULT TRUE,
     obs varchar(255) DEFAULT NULL,
     FOREIGN KEY (id_motorista) REFERENCES tb_motorista(id),
-    FOREIGN KEY (id_veiculo) REFERENCES tb_veiculo(id),
+    FOREIGN KEY (id_veiculo) REFERENCES tb_local(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
-CREATE TABLE tb_item_viagem(
-    id INT NOT NULL AUTO_INCREMENT,
-    id_viagem int(11) NOT NULL,
-    id_cliente int(11) NOT NULL,
+/*drop table tb_item_estoque;*/
+CREATE TABLE tb_item_estoque(
+    id_local int(11) NOT NULL,
     id_prod int(11) NOT NULL,
     qtd double NOT NULL DEFAULT 0,
     und  VARCHAR(10) NOT NULL,
     val_unit double NOT NULL DEFAULT 0,
-    FOREIGN KEY (id_viagem) REFERENCES tb_viagem(id),
-    FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
+    FOREIGN KEY (id_local) REFERENCES tb_local(id),
     FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
-    PRIMARY KEY(id)
+    PRIMARY KEY(id_local,id_prod)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 /*drop table tb_item_temp;*/
 CREATE TABLE tb_item_temp(
     id INT NOT NULL AUTO_INCREMENT,
-    id_viagem int(11) NOT NULL,
+    id_local int(11) NOT NULL,
     id_prod int(11) NOT NULL,
     nome VARCHAR(20) NOT NULL,
     qtd double NOT NULL DEFAULT 0,
     und  VARCHAR(10) NOT NULL,
     val_venda double NOT NULL DEFAULT 0,
-    FOREIGN KEY (id_viagem) REFERENCES tb_viagem(id),
+    FOREIGN KEY (id_local) REFERENCES tb_local(id),
     FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
