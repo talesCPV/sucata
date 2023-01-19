@@ -636,3 +636,4 @@ function setLog(line){
 
     })    
 }
+

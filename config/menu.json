@@ -56,7 +56,7 @@
 						},
 						{
 							"modulo" : "Log do sistema",
-							"script" : "javascript:window.open('config/log/', '_blank')",
+							"script" : "javascript:openHTML('viewLog.html','pop-up', 'Leitor de Log do Sistema')",
 							"access" : [10],
 							"class"  : "",
 							"icone"  : "fa fa-industry",
