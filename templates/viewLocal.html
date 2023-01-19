@@ -162,7 +162,7 @@
                 const myPromisse = queryDB(params,48);                               
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
-                        setLog(`Alteracao de Etq, de ${qtd_ant}Kg p/ ${document.querySelector('#edtQtd').value}Kg de ${main_data.edtProd.data.nome}`)
+                        setLog(`Alteracao de Etq, de ${qtd_ant}Kg p/ ${document.querySelector('#edtQtd').value}Kg de ${main_data.edtProd.data.nome} em ${main_data.viewLocal.data.modelo}`)
                         main_data.viewLocal.fillItens()
                         closeModal('edtProd')
                     }  
@@ -177,6 +177,7 @@
                 const myPromisse = queryDB(params,34);
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
+                        setLog(`Ítem deletado: ${main_data.edtProd.data.nome} em ${main_data.viewLocal.data.modelo}`)
                         main_data.viewLocal.fillItens()
                         closeModal('edtProd')
                     }  

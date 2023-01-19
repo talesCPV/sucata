@@ -11,3 +11,5 @@
 19/01/2023 15:14:19 sassu -> Alteracao de Etq, de 46Kg p/ 50Kg de COBRE MISTO
 19/01/2023 15:14:52 sassu -> Tranferencia de material 1.2Kg de ALUMINIO PERFIL 1° para GALPÃO DA V. PARAISO
 19/01/2023 15:14:52 sassu -> Tranferencia de material 50Kg de COBRE MISTO para GALPÃO DA V. PARAISO
+19/01/2023 16:26:52 sassu -> Alteracao de Etq, de 13Kg p/ 13Kg de ALUMÍNIO PANELA em MONTANA
+19/01/2023 16:29:21 sassu -> Alteração de preço de compra pelo Admin: ALUMÍNIO CHAPA, de R$17.00 p/ R$18.00 em MONTANA

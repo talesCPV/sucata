@@ -95,6 +95,7 @@
         const data = e.target.parentNode.data
         
         data.edtItem = function(){
+            const val_ant = main_data.edtProd.data.val_venda
             const params = new Object;
                 params.id = main_data.edtProd.data.id 
                 params.id_local = main_data.edtProd.data.id_local
@@ -107,6 +108,7 @@
                             
             myPromisse.then((resolve)=>{
                 if(resolve.trim() != ""){
+                    setLog(`Alteração de preço de compra pelo Admin: ${main_data.edtProd.data.nome}, de R$${parseFloat(val_ant).toFixed(2)} p/ R$${parseFloat(document.querySelector('#edtPreco').value).toFixed(2)} em ${main_data.viewLocal.data.modelo}`)
                     main_data.compra.fillTemp()
                     closeModal('edtProd')
                 }  
