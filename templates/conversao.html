@@ -75,6 +75,7 @@
                     myPromisse_2.then((resolve)=>{
                         main_data.viewProd.fillDetal()
                         main_data.produtos.fillProd()
+                        setLog(`Conversão de ${main_data.conversao.data.dest.qtd}Kg de ${main_data.conversao.data.nome} em ${main_data.conversao.data.dest.nome}`)
                         closeModal('conversao')                
                     })
                 })

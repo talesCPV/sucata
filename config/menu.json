@@ -53,7 +53,15 @@
 							"class"  : "",
 							"icone"  : "fa fa-industry",
 							"itens"  : []
-						}						
+						},
+						{
+							"modulo" : "Log do sistema",
+							"script" : "javascript:window.open('config/log/', '_blank')",
+							"access" : [10],
+							"class"  : "",
+							"icone"  : "fa fa-industry",
+							"itens"  : []
+						}											
 					]
 				}						
 			]
@@ -108,9 +116,7 @@
 					"itens"  : []
 				}				
 			]
-		},		
-		
-					
+		},							
 		{
 			"modulo" : "Minha Carga",
 			"script" : "javascript:openHTML('viewLocal.html','pop-up','Minha Carga',{mode:'motorista'})",

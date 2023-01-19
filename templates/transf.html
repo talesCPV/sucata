@@ -149,6 +149,7 @@
         if(document.querySelector('#cmbLocal').value.trim() != ''){
             if (confirm('Confirma a transferência?')) {
                                
+                const sel = document.querySelector('#cmbLocal')                          
 
                 for(let i=0; i<main_data.transf.data.itens_temp.length; i++){
                     const params_add = new Object // adiciona estoque
@@ -164,6 +165,8 @@
                     params_less.id_prod = main_data.transf.data.itens_temp[i].id_prod
                     params_less.qtd = main_data.transf.data.itens_temp[i].qtd                                 
                     const myPromisse_update_2 = queryDB(params_less,38);
+
+                    setLog(`Tranferencia de material ${main_data.transf.data.itens_temp[i].qtd}Kg de ${main_data.transf.data.itens_temp[i].nome} de ${main_data.viewLocal.data.modelo} para ${sel.options[sel.selectedIndex].text}`)
 
                 }
 

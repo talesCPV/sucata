@@ -612,3 +612,27 @@ function listNF(folder,ext='txt'){
         }
     })
 }
+
+function setLog(line){
+    const now = new Date
+    line = `${now.getFullDate()} ${localStorage.getItem('username')} -> ` + line
+    const data = new URLSearchParams();        
+        data.append("line",line);
+    const myRequest = new Request("backend/setLog.php",{
+        method : "POST",
+        body : data
+    })
+    const myPromisse = new Promise((resolve,reject) =>{
+        fetch(myRequest)
+        .then(function (response){
+            if (response.status === 200) { 
+                resolve(response.text());             
+            } else { 
+                reject(new Error("Houve algum erro na comunicação com o servidor"));                    
+            } 
+        })
+    })  
+    myPromisse.then((txt)=>{
+
+    })    
+}

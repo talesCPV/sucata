@@ -146,9 +146,9 @@
                     params.obs = `Compra realizada dia ${now.getFullDate()} pelo usuário ${localStorage.getItem('username')}.`
                     params.data = now.getFullDateTime()
                 const myPromisse = queryDB(params,41);
-                            
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
+                        const sel = document.querySelector('#cmbCli_compra')                          
                         for(let i=0; i<main_data.compra.data.itens_temp.length; i++){
                             const params_itens = new Object; // adiciona item compra
                                 params_itens.id = 'DEFAULT' 
@@ -165,8 +165,8 @@
                                 params_update.qtd = main_data.compra.data.itens_temp[i].qtd
                                 params_update.und = main_data.compra.data.itens_temp[i].und
                                 params_update.val_unit = main_data.compra.data.itens_temp[i].val_venda
-                            const myPromisse_update = queryDB(params_update,30);
-
+                            const myPromisse_update = queryDB(params_update,30);  
+                            setLog(`Compra ${main_data.compra.data.itens_temp[i].qtd}Kg de ${main_data.compra.data.itens_temp[i].nome} por R$${main_data.compra.data.itens_temp[i].val_venda} de ${sel.options[sel.selectedIndex].text}  `)
                         }
 
                         const params_del_temp = new Object; // deleta venda temporaria

@@ -1,0 +1,13 @@
+
+19/01/2023 14:31:57 sassu -> Conversão de 20Kg de ALUMINIO PERFIL 1° em ALUMINIO PERFIL 2°
+19/01/2023 14:32:49 sassu -> Conversão de 20Kg de ALUMINIO PERFIL 2° em ALUMINIO PERFIL 1°
+19/01/2023 14:51:32 sassu -> Compra 200Kg de AÇO INOX por R$25.3 de ABCD APELIDO  
+19/01/2023 14:51:32 sassu -> Compra 30Kg de ALUMÍNIO BLOCO 50% por R$32 de ABCD APELIDO  
+19/01/2023 14:55:14 adriano -> Compra 500Kg de ALUMÍNIO BLOCO LIMPO por R$12 de ALTIERI GENEROSO LEITE  
+19/01/2023 14:55:14 adriano -> Compra 300Kg de ALUMÍNIO TUBINHO por R$12.5 de ALTIERI GENEROSO LEITE  
+19/01/2023 15:00:17 adriano -> Venda 300Kg de ALUMÍNIO BLOCO LIMPO por R$24  de VALDEMIR DE PAULA 
+19/01/2023 15:00:17 adriano -> Venda 150Kg de ALUMÍNIO TUBINHO por R$15.6  de VALDEMIR DE PAULA 
+19/01/2023 15:08:18 sassu -> Edição de Saldo, de 47Kg p/ 37Kg de METAL
+19/01/2023 15:14:19 sassu -> Alteracao de Etq, de 46Kg p/ 50Kg de COBRE MISTO
+19/01/2023 15:14:52 sassu -> Tranferencia de material 1.2Kg de ALUMINIO PERFIL 1° para GALPÃO DA V. PARAISO
+19/01/2023 15:14:52 sassu -> Tranferencia de material 50Kg de COBRE MISTO para GALPÃO DA V. PARAISO

@@ -152,16 +152,17 @@
             const data = e.target.parentNode.data
          
             data.edtItem = function(){
+                const qtd_ant = main_data.edtProd.data.qtd
                 const params = new Object;
                     params.id_local = main_data.edtProd.data.id_local
                     params.id_prod = main_data.edtProd.data.id_prod
                     params.qtd = document.querySelector('#edtQtd').value
                     params.und = main_data.edtProd.data.und
                     params.val_unit = document.querySelector('#edtPreco').value
-                const myPromisse = queryDB(params,48);
-                               
+                const myPromisse = queryDB(params,48);                               
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
+                        setLog(`Alteracao de Etq, de ${qtd_ant}Kg p/ ${document.querySelector('#edtQtd').value}Kg de ${main_data.edtProd.data.nome}`)
                         main_data.viewLocal.fillItens()
                         closeModal('edtProd')
                     }  
