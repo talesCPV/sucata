@@ -1,0 +1,89 @@
+
+<template>
+    <style>
+
+    </style>
+ 
+        <fieldset>
+            <legend>Conversão</legend>
+            <div class="inline">
+                <label>Material Origem</label>
+                <label id="lblMatOri"></label>
+            </div>
+            <div class="inline">
+                <label>Material Destino</label>
+                <label id="lblMatDest"></label>
+            </div>
+            <div class="inline">
+                <label>Qtd</label>
+                <label id="lblQtd"></label>
+            </div>
+            <button id="btnPickMat">Selecione</button>                
+            
+        </fieldset>
+    
+
+
+        <button id="btnTransf">Transformar</button>
+
+
+
+</template>
+<script>
+ 
+    document.querySelector('#lblMatOri').innerHTML = main_data.viewProd.data.nome
+
+    document.querySelector('#btnPickMat').addEventListener('click',()=>{
+    
+                
+        data.pickItem = function(data){
+            document.querySelector('#lblMatDest').innerHTML = data.nome
+            
+            if(parseFloat(main_data.conversao.data.qtd_tot) < parseFloat(data.qtd)){
+                alert(`A quantidade destino não pode ser maior que ${main_data.conversao.data.qtd_tot}`)
+                data.qtd = parseFloat(main_data.conversao.data.qtd_tot)
+            }
+
+            document.querySelector('#lblQtd').innerHTML = data.qtd
+            main_data.conversao.data.dest = data
+            closeModal('pickProd')   
+        }
+        openHTML('pickProd.html','pop-up','Transformação de Produto',data)      
+    
+    })
+
+    document.querySelector('#btnTransf').addEventListener('click',()=>{
+        if(main_data.conversao.data.dest != undefined){
+            if (confirm(`Deseja realmente transformar ${main_data.conversao.data.dest.qtd}Kg de ${main_data.conversao.data.nome} em ${main_data.conversao.data.dest.nome}?`)) {
+                const params = new Object // adiciona estoque
+                    params.id_local = main_data.conversao.data.id_local
+                    params.id_prod = main_data.conversao.data.dest.id
+                    params.qtd = main_data.conversao.data.dest.qtd
+                    params.und = 'und'
+                    params.val_unit = 'val_unit'      
+                const myPromisse = queryDB(params,30)
+                myPromisse.then((resolve)=>{ 
+                    
+                    const params_2 = new Object // retira do estoque
+                    params_2.id_local = main_data.conversao.data.id_local
+                    params_2.id_prod = main_data.conversao.data.id_prod
+                    params_2.qtd = main_data.conversao.data.dest.qtd
+                    params_2.und = 'und'
+                    params_2.val_unit = 'val_unit'
+                    
+                    const myPromisse_2 = queryDB(params_2,38)
+                    myPromisse_2.then((resolve)=>{
+                        main_data.viewProd.fillDetal()
+                        main_data.produtos.fillProd()
+                        closeModal('conversao')                
+                    })
+                })
+
+            }
+        }else{
+            alert('Favor selecionar um material destino')
+        }
+
+    })
+
+</script>

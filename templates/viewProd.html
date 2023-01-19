@@ -122,4 +122,10 @@
        ableFields(document.querySelector('#btnSave').disabled)
     })
 
+    document.querySelector('#tblDetal').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('conversao.html','pop-up','Transformação de Material',data)
+    })
+
 </script>

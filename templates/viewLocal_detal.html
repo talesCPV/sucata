@@ -94,6 +94,11 @@
             const myPromisse = queryDB(params,18);
 
             myPromisse.then((resolve)=>{
+                if(main_data.viewLocal_detal.data.mode == 'edit'){
+                    main_data.viewLocal.data.modelo = document.querySelector('#edtModelo').value.trim().toUpperCase()
+                    main_data.viewLocal.data.local = local                 
+                    main_data.viewLocal.open()
+                }               
                 main_data.local.fillLocal()
                 closeModal('viewLocal_detal')
             })

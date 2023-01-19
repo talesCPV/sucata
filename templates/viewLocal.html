@@ -70,8 +70,10 @@
                 params.user = localStorage.getItem('username')
             const myPromisse = queryDB(params,28);
             myPromisse.then((resolve)=>{  
-                const json = JSON.parse(resolve)   
+                const json = JSON.parse(resolve)            
                 main_data.viewLocal.data.id = json[0].id_local
+                main_data.viewLocal.data.limite = json[0].limite
+
                 document.querySelector('#via-nome').innerHTML = json[0].modelo.toUpperCase()
                 document.querySelector('#via-tipo').innerHTML = json[0].placa.toUpperCase()
                 document.querySelector('#lblTipo').innerHTML = 'Placa'
@@ -116,21 +118,19 @@
     main_data.viewLocal.open()
 
     document.querySelector('#btnEdit').addEventListener('click',()=>{
-        openHTML('newComp.html','pop-up','Edição', main_data.viewLocal.data)
+        main_data.viewLocal.data.mode = 'edit'
+        openHTML('viewLocal_detal.html','pop-up','Edição', main_data.viewLocal.data)
     })
 
     document.querySelector('#btnDel').addEventListener('click',()=>{        
-        if (confirm('Deseja realmente deletar esta compra?')) {            
+        if (confirm('Deseja realmente deletar este local de estoque?')) {            
             const params = new Object;
-                params.id_compra = main_data.viewLocal.data.id
+                params.id_local = main_data.viewLocal.data.id
                 params.hash = localStorage.getItem('hash')
-            const myPromisse = queryDB(params,15); // DELETA OS ÍTENS
+            const myPromisse = queryDB(params,19); // DELETA O local
             myPromisse.then((resolve)=>{
-                const myPromisse_1 = queryDB(params,12); // DELETA A COMPRA
-                myPromisse_1.then((resolve)=>{
-                    main_data.compras.busca()
-                    closeModal('viewLocal')
-                })
+                main_data.local.fillLocal()
+                closeModal('viewLocal')
             }) 
         }
     })

@@ -24,12 +24,14 @@
 </template>
 <script>
 
+    localStorage.setItem('limite',parseFloat(main_data.edtProd.data.edtVal).toFixed(2))
+
     document.querySelector('#lgdItem').innerHTML = main_data.edtProd.data.nome
     document.querySelector('#edtQtd').value = main_data.edtProd.data.qtd
     document.querySelector('#edtPreco').value = parseFloat(main_data.edtProd.data.edtVal).toFixed(2)
 
     document.querySelector('#btnSaveItem').addEventListener('click',()=>{
-        if(max_itens()){
+        if(max_itens() && limite_preco()){
             main_data.edtProd.data.edtItem()
         }
     })
@@ -46,6 +48,21 @@
         return true
     }
 
+    function limite_preco(){
+        if(main_data.edtProd.data.callby == 'compra' && main_data.viewLocal.data.mode == 'motorista' && main_data.viewLocal.data.limite == '1'){
+                
+                if(parseFloat(document.querySelector('#edtPreco').value) > localStorage.getItem('limite') ){
+                    alert(`O preço não pode ser editado para cima`)
+                    document.querySelector('#edtPreco').value = localStorage.getItem('limite')
+                    return false
+                }else{
+                    return true
+                }
+        }else{
+            return true
+        }
+    }
+
     document.querySelector('#btnDelItem').addEventListener('click',()=>{
 
         if (confirm('Deseja realmente deletar este ítem?')) {
@@ -56,6 +73,10 @@
 
     document.querySelector('#edtQtd').addEventListener('focusout',()=>{
         max_itens()
+    })
+
+    document.querySelector('#edtPreco').addEventListener('focusout',()=>{
+        limite_preco()
     })
 
     document.querySelector('#edtQtd').focus()

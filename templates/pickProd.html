@@ -33,9 +33,9 @@
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);             
-                tbl.head('Cod.|mobHide,Descrição,Preço')
+                tbl.head('Cod.|mobHide,Descrição')
                 for(let i=0; i<json.length;i++){
-                    tbl.plot(json[i],'id|mobHide,nome,preco','int,Upp,R$.')
+                    tbl.plot(json[i],'id|mobHide,nome','int,Upp')
                   
                 }                
             }        
@@ -47,20 +47,10 @@
     })
 
     document.querySelector('#tblAddProd').addEventListener('click',(e)=>{
-        const data = e.target.parentNode.data
-            data.MAX = parseFloat(data.preco)
-            data.estoque = parseInt(data.estoque)       
+        const data = e.target.parentNode.data     
             data.qtd = getFloat(prompt(`Digite a quantidade desejada`))
             data.qtd = data.qtd == NaN ? 0 : data.qtd
-            if(main_data.addProd.data.callby == 'compra'){                
-                const preco = getFloat(prompt(`Digite o preço de compra p/ Kg`))
-                if(main_data.viewLocal.data.mode == 'motorista' && parseFloat(data.preco) < preco && main_data.viewLocal.data.limite == '1'){
-                    alert(`O maior preço permitido para este material é de R$${data.preco}`)
-                }else{
-                    data.preco = preco == NaN ? 0 : preco
-                }
-            }
-            main_data.addProd.data.addItem(data)
+            main_data.conversao.data.pickItem(data)
     })
 
 </script>

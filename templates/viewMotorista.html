@@ -19,6 +19,10 @@
             <input type="text" id="edtCPF" placeholder="CPF" maxlength="14" onkeyup="return valCPF(this)">
             <label for="edtRG">RG</label>
             <input type="text" id="edtRG" placeholder="RG" maxlength="12" onkeyup="return valRG(this)" >
+            <div class="ckBOX">
+                <label for="ckbLimite">Limite de Compra</label>
+                <input type="checkbox" id="ckbLimite" checked>
+            </div>
         </div>
         <div class="inline">
             <label for="edtCNH">CNH</label>
@@ -62,6 +66,7 @@
         document.querySelector('#edtCNH').value = main_data.viewMotorista.data.cnh
         document.querySelector('#edtTipo').value = main_data.viewMotorista.data.tipo
         document.querySelector('#edtVal').value = main_data.viewMotorista.data.validade
+        document.querySelector('#ckbLimite').checked = parseInt(main_data.viewMotorista.data.limite)
     }else{
         document.querySelector('#btnDel').style.display = 'none'
     }
@@ -79,6 +84,7 @@
                 params.validade = document.querySelector('#edtVal').value
                 params.id_usuario = document.querySelector('#cmbUser').value
                 params.id_local = document.querySelector('#cmbLocal').value
+                params.limite = document.querySelector('#ckbLimite').checked
 
             const myPromisse = queryDB(params,21);
 
