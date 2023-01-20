@@ -28,20 +28,7 @@
  
     document.querySelector('#btnAdd').addEventListener('click',()=>{
         main_data.compra.data.addItem = function(data){
-
-            const params = new Object;
-                    params.id = 'DEFAULT'
-                    params.id_local = main_data.viewLocal.data.id
-                    params.id_prod = data.id
-                    params.nome = data.nome
-                    params.qtd = data.qtd
-                    params.und = data.und
-                    params.val_venda = data.preco
-                const myPromisse = queryDB(params,36); 
-                myPromisse.then((resolve)=>{
-                    main_data.compra.fillTemp()
-                    closeModal('addProd')
-                })              
+            
         }
 
         main_data.compra.data.callby = 'compra'

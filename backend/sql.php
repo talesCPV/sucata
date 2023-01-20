@@ -11,7 +11,7 @@ $query_db = array(
     "4"  => 'SELECT * FROM tb_und WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY nome;' ,
     "5"  => 'INSERT INTO tb_und (id, nome, sigla) VALUES(x00, "x01", "x02") ON DUPLICATE KEY UPDATE nome="x01", sigla="x02";',
     "6"  => 'DELETE FROM tb_und WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-    "7"  => 'SELECT * FROM tb_prod WHERE nome LIKE "%x00%" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1);',
+    "7"  => 'SELECT * FROM tb_prod WHERE nome LIKE "%x00%" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1) ORDER BY nome;',
     "8"  => 'INSERT INTO tb_prod (id, nome, und, preco, margem, id_mat) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE nome="x01", und="x02", preco="x03", margem="x04", id_mat="x05";',
     "9"  => 'DELETE FROM tb_prod WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',

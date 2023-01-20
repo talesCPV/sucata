@@ -61,7 +61,7 @@
 							"class"  : "",
 							"icone"  : "fa fa-industry",
 							"itens"  : []
-						}											
+						}																
 					]
 				}						
 			]
@@ -122,6 +122,14 @@
 			"script" : "javascript:openHTML('viewLocal.html','pop-up','Minha Carga',{mode:'motorista'})",
 			"access" : [1],
 			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : []
+		},
+		{
+			"modulo" : "Logout",
+			"script" : "javascript:localStorage.clear();this.location.reload(true);",
+			"access" : [10,1],
+			"class"  : "hideMenu",
 			"icone"  : "fa fa-industry",
 			"itens"  : []
 		}							

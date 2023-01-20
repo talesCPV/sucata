@@ -13,3 +13,12 @@
 19/01/2023 15:14:52 sassu -> Tranferencia de material 50Kg de COBRE MISTO para GALPÃO DA V. PARAISO
 19/01/2023 16:26:52 sassu -> Alteracao de Etq, de 13Kg p/ 13Kg de ALUMÍNIO PANELA em MONTANA
 19/01/2023 16:29:21 sassu -> Alteração de preço de compra pelo Admin: ALUMÍNIO CHAPA, de R$17.00 p/ R$18.00 em MONTANA
+19/01/2023 16:41:26 sassu -> Compra 50Kg de ALUMÍNIO BLOCO 50% por R$12 de ABCD APELIDO  
+19/01/2023 16:41:26 sassu -> Compra 15Kg de ALUMÍNIO CHAPA por R$18 de ABCD APELIDO  
+19/01/2023 16:43:31 adriano -> Alteração de preço de compra pelo Admin: ALUMÍNIO BLOCO 50%, de R$10.00 p/ R$9.50 em undefined
+19/01/2023 16:45:45 adriano -> Compra 10Kg de AÇO INOX por R$10 de ANA GABRIELLY  
+19/01/2023 16:45:45 adriano -> Compra 20Kg de ALUMÍNIO BLOCO 50% por R$9.5 de ANA GABRIELLY  
+20/01/2023 00:26:02 sassu -> Alteração de preço de compra pelo Admin: BRONZE, de R$0.00 p/ R$99.00 em MONTANA
+20/01/2023 00:44:15 adriano -> Alteração de preço de compra pelo Admin: BRONZE, de R$25.00 p/ R$25.00 em undefined
+20/01/2023 00:44:31 adriano -> Alteração de preço de compra pelo Admin: BRONZE, de R$25.00 p/ R$23.00 em undefined
+20/01/2023 00:46:59 adriano -> Alteração de preço de compra pelo Admin: ALUMINIO PERFIL 1°, de R$0.00 p/ R$0.00 em undefined
