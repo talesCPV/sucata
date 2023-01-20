@@ -221,6 +221,10 @@
             max-width: none;
         }
 
+        table{
+            font-size: small;
+        }
+
         .form-base{
             margin-top: 150px;
         }
@@ -251,7 +255,5 @@
         .inline *{
             margin: 2px 10px;
         }
-
-
 
     }
