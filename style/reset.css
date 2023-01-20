@@ -261,4 +261,14 @@
             right: 0 !important;
         }
 
+        .btnAdd{
+            max-width: 100%;
+            border-radius: 0;
+            font-size: 0.9em;
+        }
+
+        .btnAdd:before {
+            content: 'Novo ';
+          }
+
     }

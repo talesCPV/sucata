@@ -8,8 +8,11 @@
         }
 
         .head-item{
-            display: flex;
-            
+            display: flex;            
+        }
+
+        .btnHide{
+            display: none;
         }
 
     </style>
@@ -23,8 +26,8 @@
             <tr><th>Valor R$</th><td id="via-valor"></td></tr>
         </table>
         <div class="inline edtButtons">
-            <button id="btnEdit" disabled>Editar</button>
-            <button id="btnDel" disabled>Deletar</button>
+            <button id="btnEdit" class="btnHide" disabled>Editar</button>
+            <button id="btnDel" class="btnHide" disabled>Deletar</button>
         </div>
 
     </fieldset>
@@ -32,9 +35,9 @@
         <legend>Ítens</legend>
         <table id="tblItens-viagem"></table>
         <div class="inline">
-            <button id="btnComp" disabled>Comprar</button>
-            <button id="btnVend" disabled>Vender</button>
-            <button id="btnTrans" disabled>Transferir</button>
+            <button id="btnComp">Comprar</button>
+            <button id="btnVend">Vender</button>
+            <button id="btnTrans" class="btnHide" disabled>Transferir</button>
         </div>
         <button id="btnImp" disabled>Imprimir</button>
 
@@ -58,9 +61,9 @@
             document.querySelector('#via-tipo').innerHTML = main_data.viewLocal.data.local.toUpperCase()
             document.querySelector('#via-peso').innerHTML = ''
             document.querySelector('#via-valor').innerHTML = ''
-            document.querySelector('#btnEdit').disabled = false
-            document.querySelector('#btnDel').disabled = false
-            document.querySelector('#btnTrans').disabled = false
+            document.querySelector('#btnEdit').style.display = 'block'
+            document.querySelector('#btnDel').style.display = 'block'
+            document.querySelector('#btnTrans').style.display = 'block'
 
             main_data.viewLocal.fillItens()
 
@@ -84,8 +87,6 @@
 
         }
 
-        document.querySelector('#btnComp').disabled = false
-        document.querySelector('#btnVend').disabled = false
         document.querySelector('#btnImp').disabled = false
 
 
