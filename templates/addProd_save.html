@@ -17,6 +17,11 @@
 
 <fieldset >
     <legend>Selecione o Produto</legend>
+    <div class="inline">
+        <label for="edtBusca_prod">Pesquisa</label>
+        <input type="text" id="edtBusca_prod" onkeypress="return getEnter(event, 'btnBusca_prod')">
+        <button id="btnBusca_prod">Busca</button>
+    </div>
     <div id="tblSize">
         <table id="tblAddProd"></table>
     </div>
@@ -48,23 +53,26 @@
         const tbl = document.getElementById('tblAddProd')
         tbl.innerHTML = ''
         const params = new Object;
-            params.nome = ''
+            params.nome = document.querySelector('#edtBusca_prod').value.trim()
             params.hash = localStorage.getItem('hash');
 
         const myPromisse = queryDB(params,7);
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);             
-                tbl.head('Cod.|mobHide,Descrição,Preço|mobHide')
+                tbl.head('Cod.|mobHide,Descrição,Preço')
                 for(let i=0; i<json.length;i++){
-                    tbl.plot(json[i],'id|mobHide,nome,preco|mobHide','int,Upp,R$.')
+                    tbl.plot(json[i],'id|mobHide,nome,preco','int,Upp,R$.')
                   
                 }                
             }        
         })
     }
 
- 
+    document.querySelector('#btnBusca_prod').addEventListener('click',()=>{
+        busca()
+    })
+
     document.querySelector('#tblAddProd').addEventListener('click',(e)=>{
         
         main_data.addProd.select = e.target.parentNode.data
@@ -72,6 +80,39 @@
         document.querySelector('#lblProd').innerHTML = main_data.addProd.select.nome
 
         console.log(main_data.addProd.select)
+
+/*
+        data.MAX = parseFloat(data.preco)
+        data.estoque = parseInt(data.estoque)       
+        data.qtd = getFloat(prompt(`Digite a quantidade desejada`))
+        data.qtd = data.qtd == NaN ? 0 : data.qtd                          
+        const preco = getFloat(prompt(`Digite o preço de compra p/ Kg`))
+        if(main_data.viewLocal.data.mode == 'motorista' && parseFloat(data.preco) < preco && main_data.viewLocal.data.limite == '1'){
+            alert(`O maior preço permitido para este material é de R$${data.preco}`)
+        }else{
+            data.preco = preco == NaN ? 0 : preco
+        }
+        
+    
+        const params = new Object;
+                params.id = 'DEFAULT'
+                params.id_local = main_data.viewLocal.data.id
+                params.id_prod = data.id
+                params.nome = data.nome
+                params.qtd = data.qtd
+                params.und = data.und
+                params.val_venda = data.preco
+            const myPromisse = queryDB(params,36); 
+            myPromisse.then((resolve)=>{
+                main_data.compra.fillTemp()
+                closeModal('addProd')
+            })          
+        
+
+
+        main_data.addProd.data.addItem(data)
+*/       
+//        openHTML('prompt.html','pop-up','Adicione um Produto',data,[100,30])
 
     })
 
