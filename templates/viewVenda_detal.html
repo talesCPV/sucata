@@ -43,6 +43,12 @@
 
     main_data.viewVenda_detal.open = function open(){
         
+        if(localStorage.getItem('access')!='10'){
+            document.querySelector('#btnEdit').style.display = 'none'
+            document.querySelector('#btnDel').style.display = 'none'
+            document.querySelector('#btnAdd').style.display = 'none'
+        }
+
         document.querySelector('#via-cli').innerHTML = main_data.viewVenda_detal.data.nome.toUpperCase()
         document.querySelector('#via-vend').innerHTML = main_data.viewVenda_detal.data.nome_vend.toUpperCase()
         document.querySelector('#via-data').innerHTML = main_data.viewVenda_detal.data.saida
