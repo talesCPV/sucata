@@ -31,8 +31,10 @@
     document.querySelector('#edtPreco').value = parseFloat(main_data.edtProd.data.edtVal).toFixed(2)
 
     document.querySelector('#btnSaveItem').addEventListener('click',()=>{
-        if(max_itens() && limite_preco()){
-            main_data.edtProd.data.edtItem()
+        if (confirm('Confirma a alteração do ítem?')) {
+            if(max_itens() && limite_preco()){
+                main_data.edtProd.data.edtItem()
+            }
         }
     })
 

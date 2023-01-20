@@ -20,6 +20,7 @@
                 <button id="btnNovoCli" class="btnAdd" >+</button>
             </div>
             <table id="tbl-itens_venda"></table>
+            <button id="btnClear">Limpar Lista</button>
             <button id="btnVenda">Gerar Venda</button>
         </fieldset>
 
@@ -61,11 +62,20 @@
         myPromisse.then((resolve)=>{
             main_data.venda.data.itens_temp = JSON.parse(resolve)
             const tbl = document.querySelector('#tbl-itens_venda')
+            const tot = new Object
+                tot.blank = ''
+                tot.lblTot = 'TOTAL'
+                tot.lblPeso = 'PESO TOTAL'
+                tot.peso = 0
+                tot.val = 0  
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço,Sub-Total')            
             for(let i=0; i<main_data.venda.data.itens_temp.length;i++){
                 tbl.plot(main_data.venda.data.itens_temp[i],'nome,und|mobHide,qtd,val_venda,total','Upp,Upp,str,R$.,R$.')
+                tot.val += parseFloat(main_data.venda.data.itens_temp[i].total)
+                tot.peso += parseFloat(main_data.venda.data.itens_temp[i].qtd) 
             }
-
+            tot.peso += ' Kg'
+            tbl.plot(tot,'blank|mobHide,lblPeso,peso,lblTot,val','str,str,str,Upp,R$.')
         })
     }
 
@@ -208,9 +218,18 @@
             alert('Por favor, selecione um cliente para a venda.')
             document.querySelector('#cmbCli_venda').focus()
         }
-
-
     })
 
+    document.querySelector('#btnClear').addEventListener('click',()=>{
+        if (confirm('Deseja eliminar todos os ítens da lista?')) {
+            const params_del_temp = new Object; // deleta venda temporaria
+                params_del_temp.id_local = main_data.viewLocal.data.id
+                params_del_temp.hash = localStorage.getItem('hash')
+            const myPromisse_del_itens = queryDB(params_del_temp,37);
+            myPromisse_del_itens.then((resolve)=>{
+                main_data.venda.fillTemp()
+            })
+        }
+    })
 
 </script>

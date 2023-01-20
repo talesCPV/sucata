@@ -95,14 +95,14 @@
 		{
 			"modulo" : "Comercial",
 			"script" : "",
-			"access" : [10],
+			"access" : [10,1],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
 			"itens"  : [
 				{
 					"modulo" : "Compras",
 					"script" : "javascript:openHTML('viewCompras.html','content-screen')",
-					"access" : [10],
+					"access" : [10,1],
 					"class"  : "",
 					"icone"  : "fa fa-industry",
 					"itens"  : []
@@ -110,7 +110,7 @@
 				{
 					"modulo" : "Vendas",
 					"script" : "javascript:openHTML('viewVendas.html','content-screen')",
-					"access" : [10],
+					"access" : [10,1],
 					"class"  : "",
 					"icone"  : "fa fa-industry",
 					"itens"  : []

@@ -22,3 +22,5 @@
 20/01/2023 00:44:15 adriano -> Alteração de preço de compra pelo Admin: BRONZE, de R$25.00 p/ R$25.00 em undefined
 20/01/2023 00:44:31 adriano -> Alteração de preço de compra pelo Admin: BRONZE, de R$25.00 p/ R$23.00 em undefined
 20/01/2023 00:46:59 adriano -> Alteração de preço de compra pelo Admin: ALUMINIO PERFIL 1°, de R$0.00 p/ R$0.00 em undefined
+20/01/2023 08:12:32 sassu -> Alteracao de Etq, de 33Kg p/ 33Kg de METAL em MONTANA
+20/01/2023 08:16:54 sassu -> Alteração de preço de compra pelo Admin: METAL, de R$2.00 p/ R$3.00 em MONTANA

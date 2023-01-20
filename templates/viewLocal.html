@@ -26,8 +26,8 @@
             <tr><th>Valor R$</th><td id="via-valor"></td></tr>
         </table>
         <div class="inline edtButtons">
-            <button id="btnEdit" class="btnHide" disabled>Editar</button>
-            <button id="btnDel" class="btnHide" disabled>Deletar</button>
+            <button id="btnEdit" class="btnHide">Editar</button>
+            <button id="btnDel" class="btnHide" >Deletar</button>
         </div>
 
     </fieldset>
@@ -37,7 +37,7 @@
         <div class="inline">
             <button id="btnComp">Comprar</button>
             <button id="btnVend">Vender</button>
-            <button id="btnTrans" class="btnHide" disabled>Transferir</button>
+            <button id="btnTrans" class="btnHide">Transferir</button>
         </div>
         <button id="btnImp" disabled>Imprimir</button>
 
@@ -137,11 +137,11 @@
     })
 
     document.querySelector('#btnComp').addEventListener('click',()=>{
-        openHTML('compra.html','pop-up','Compra de Material',{callby:'viewLocal'})
+        openHTML('compra.html','pop-up','D2Soft',{callby:'viewLocal'})
     })
 
     document.querySelector('#btnVend').addEventListener('click',()=>{        
-        openHTML('venda.html','pop-up','Venda de Material',{mode:'venda'})
+        openHTML('venda.html','pop-up','D2Soft',{mode:'venda'})
     })
 
     document.querySelector('#btnTrans').addEventListener('click',()=>{        

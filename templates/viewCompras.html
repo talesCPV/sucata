@@ -5,6 +5,10 @@
             display: none;
         }
 
+        #divBusca{
+            display: none;
+        }
+
     </style>
 
     <div class="form-base">
@@ -12,7 +16,7 @@
 
         <fieldset>
             <legend>Busca</legend>
-            <div class="inline">
+            <div id="divBusca" class="inline">
                 <label for="edtBusca">por:</label>
                 <select id="cmbBusca">
                     <option value="COMP.id" signal=">=" val="0" selected>Todos</option>
@@ -43,6 +47,15 @@
     document.querySelector('#edtIni').value =  today.iniMonth()
     document.querySelector('#edtFin').value =  today.finMonth()
 
+    if(localStorage.getItem('access')=='10'){
+        document.querySelector('#divBusca').style.display = 'flex'
+    }else{
+        document.querySelector('#cmbBusca').value = 'USR.nome'
+        document.querySelector('#edtBusca').value = localStorage.getItem('nome')
+    }
+
+
+
     main_data.viewCompras.busca = function (){
 
         const sel = document.querySelector('#cmbBusca')
@@ -68,17 +81,22 @@
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);                             
-                let total = 0
                 tbl.innerHTML=''
                 json.length > 0 ? tbl.head('Data,Cliente,Comprador,Valor') : 0
+                const tot = new Object
+                tot.blank = ''
+                tot.lblTot = 'TOTAL'
+                tot.val = 0   
                 for(let i=0; i<json.length;i++){                                       
-                    total +=  parseFloat(json[i].valor) // ACUMULA O TOTAL
+                    tot.val +=  parseFloat(json[i].valor) // ACUMULA O TOTAL
                     tbl.plot(json[i],'data,fantasia,nome_comp,valor','date,Upp,Upp,R$.',true)                    
-                }                
+                }
+                tbl.plot(tot,'blank|mobHide,blank|mobHide,lblTot,val','str,str,Upp,R$.')                
             }        
         })
 
     }
+
 
 
     document.querySelector('#btnBusca').addEventListener('click',()=>{
