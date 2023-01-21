@@ -616,7 +616,6 @@ function listNF(folder,ext='txt'){
 function setLog(line){
     const now = new Date
     line = `${now.getFullDate()} ${localStorage.getItem('username')} -> ` + line.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    console.log(line)
     const data = new URLSearchParams();        
         data.append("line",line);
     const myRequest = new Request("backend/setLog.php",{
