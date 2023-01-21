@@ -36,10 +36,10 @@
         <table id="tblItens-viagem"></table>
         <div class="inline">
             <button id="btnComp">Comprar</button>
-            <button id="btnVend">Vender</button>
+            <button id="btnVend" class="btnHide">Vender</button>
             <button id="btnTrans" class="btnHide">Transferir</button>
         </div>
-        <button id="btnImp" disabled>Imprimir</button>
+        <button id="btnImp" class="btnHide">Imprimir</button>
 
 
 
@@ -64,6 +64,8 @@
             document.querySelector('#btnEdit').style.display = 'block'
             document.querySelector('#btnDel').style.display = 'block'
             document.querySelector('#btnTrans').style.display = 'block'
+            document.querySelector('#btnVend').style.display = 'block'
+            document.querySelector('#btnImp').style.display = 'block'
 
             main_data.viewLocal.fillItens()
 

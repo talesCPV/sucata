@@ -68,7 +68,7 @@ $query_db = array(
         AND MOT.id_local = LOCAL.id
         AND USR.hash = "x00"
         AND USR.user = "x01";' ,
-    "29" => 'SELECT ITEM.*, ROUND(SUM(ITEM.qtd),2) as qtd_tot, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND(ITEM.qtd * ITEM.val_unit ,2) as total, ROUND(PROD.preco * (1 + PROD.margem/100) ,2) as val_venda
+    "29" => 'SELECT ITEM.*, ROUND(SUM(ITEM.qtd),2) as qtd_tot, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND(ITEM.qtd * ITEM.val_unit ,2) as total, ROUND(PROD.margem,2) as val_venda
         FROM tb_item_estoque AS ITEM 
         INNER JOIN tb_prod AS PROD
         ON PROD.id = ITEM.id_prod
@@ -99,7 +99,7 @@ $query_db = array(
                 AND ITEM.id_prod=x00   
                 GROUP BY LOCAL.id) AS SEL
             WHERE qtd_tot > 0;',
-    "40" => 'SELECT *, 0 as qtd_tot, ROUND(preco * (1+margem/100) ,2) AS venda FROM tb_prod 
+    "40" => 'SELECT *, 0 as qtd_tot, ROUND(margem ,2) AS venda FROM tb_prod 
         WHERE id NOT IN (
         SELECT ITEM.id_prod FROM tb_item_estoque AS ITEM
         INNER JOIN tb_viagem AS VIA
@@ -108,7 +108,7 @@ $query_db = array(
         AND nome LIKE "%x00%" 
         AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10,1)
     UNION ALL
-        SELECT PROD.*, ROUND(SUM(ITEM.qtd),2) as qtd_tot, ROUND(preco * (1+margem/100) ,2) AS venda FROM tb_prod AS PROD
+        SELECT PROD.*, ROUND(SUM(ITEM.qtd),2) as qtd_tot, ROUND(margem ,2) AS venda FROM tb_prod AS PROD
         INNER JOIN tb_viagem AS VIA
         INNER JOIN tb_item_estoque AS ITEM
         ON VIA.id = ITEM.id_viagem
@@ -144,13 +144,13 @@ $query_db = array(
         ON DUPLICATE KEY UPDATE   id_compra="x01", id_prod="x02", qtd="x03", und="x04", val_unit="x05";',
     "46" => 'DELETE FROM tb_item_compra WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "47" => 'SELECT TOTAL.* FROM 
-	    (SELECT PROD.*, ROUND(SUM(ITEM.qtd),2) AS qtd_tot, ROUND(PROD.preco * (1+PROD.margem/100),2) as venda
+	    (SELECT PROD.*, ROUND(SUM(ITEM.qtd),2) AS qtd_tot, ROUND(PROD.margem,2) as venda
 		    FROM tb_item_estoque AS ITEM
             INNER JOIN tb_prod AS PROD
             ON ITEM.id_prod=PROD.ID	
             GROUP BY ITEM.id_prod
         UNION ALL 
-            SELECT *, 0 AS qtd_tot, ROUND(preco * (1+margem/100),2) as venda
+            SELECT *, 0 AS qtd_tot, ROUND(margem,2) as venda
             FROM tb_prod
         ) AS TOTAL
         WHERE TOTAL.nome LIKE "%x00%"

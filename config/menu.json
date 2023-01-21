@@ -16,7 +16,7 @@
 					"itens"  : []
 				},
 				{
-					"modulo" : "Motoristas",
+					"modulo" : "Comprador",
 					"script" : "javascript:openHTML('motoristas.html','content-screen')",
 					"access" : [10],
 					"class"  : "",

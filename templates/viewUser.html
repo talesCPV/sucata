@@ -46,7 +46,7 @@
         <div class="inline">
             <label for="edtAccess">Tipo:</label>
             <select id="cmbAccess">
-                <option value="1">Motorista</option>
+                <option value="1">Comprador</option>
                 <option value="10">Administrador</option>
             </select>
 <!--            <input type="text" id="edtAccess" readonly>   -->
@@ -76,12 +76,12 @@
 
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
-        if(checkField(['edtUser','edtPass','edtNome']) && checkRepass(['edtPass','edtRepass'])){
-
+        if(checkField(['edtUser','edtNome']) && checkRepass(['edtPass','edtRepass'])){
+            const newusr = main_data.viewUser.data.mode == 'new'
             const pass = document.querySelector('#edtPass').value.trim()
-            const hash =  pass =='' ? main_data.viewUser.data.mode == 'user' ? localStorage.getItem('hash') : main_data.viewUser.data.hash : pass.getHash(30)
+            const hash =  pass =='' ? main_data.viewUser.data.mode == 'user' ? localStorage.getItem('hash') : main_data.viewUser.data.hash : newusr ? alert('Favor preenche o campo password') : pass.getHash(30)
             const params = new Object;
-                params.id = main_data.viewUser.data.mode == 'new' ? 'DEFAULT' : main_data.viewUser.data.id
+                params.id = newusr ? 'DEFAULT' : main_data.viewUser.data.id
                 params.user = document.querySelector('#edtUser').value.trim()
                 params.hash = hash
                 params.class = document.querySelector('#cmbAccess').value

@@ -1,26 +1,25 @@
-
-19/01/2023 14:31:57 sassu -> Conversão de 20Kg de ALUMINIO PERFIL 1° em ALUMINIO PERFIL 2°
-19/01/2023 14:32:49 sassu -> Conversão de 20Kg de ALUMINIO PERFIL 2° em ALUMINIO PERFIL 1°
-19/01/2023 14:51:32 sassu -> Compra 200Kg de AÇO INOX por R$25.3 de ABCD APELIDO  
-19/01/2023 14:51:32 sassu -> Compra 30Kg de ALUMÍNIO BLOCO 50% por R$32 de ABCD APELIDO  
-19/01/2023 14:55:14 adriano -> Compra 500Kg de ALUMÍNIO BLOCO LIMPO por R$12 de ALTIERI GENEROSO LEITE  
-19/01/2023 14:55:14 adriano -> Compra 300Kg de ALUMÍNIO TUBINHO por R$12.5 de ALTIERI GENEROSO LEITE  
-19/01/2023 15:00:17 adriano -> Venda 300Kg de ALUMÍNIO BLOCO LIMPO por R$24  de VALDEMIR DE PAULA 
-19/01/2023 15:00:17 adriano -> Venda 150Kg de ALUMÍNIO TUBINHO por R$15.6  de VALDEMIR DE PAULA 
-19/01/2023 15:08:18 sassu -> Edição de Saldo, de 47Kg p/ 37Kg de METAL
-19/01/2023 15:14:19 sassu -> Alteracao de Etq, de 46Kg p/ 50Kg de COBRE MISTO
-19/01/2023 15:14:52 sassu -> Tranferencia de material 1.2Kg de ALUMINIO PERFIL 1° para GALPÃO DA V. PARAISO
-19/01/2023 15:14:52 sassu -> Tranferencia de material 50Kg de COBRE MISTO para GALPÃO DA V. PARAISO
-19/01/2023 16:26:52 sassu -> Alteracao de Etq, de 13Kg p/ 13Kg de ALUMÍNIO PANELA em MONTANA
-19/01/2023 16:29:21 sassu -> Alteração de preço de compra pelo Admin: ALUMÍNIO CHAPA, de R$17.00 p/ R$18.00 em MONTANA
-19/01/2023 16:41:26 sassu -> Compra 50Kg de ALUMÍNIO BLOCO 50% por R$12 de ABCD APELIDO  
-19/01/2023 16:41:26 sassu -> Compra 15Kg de ALUMÍNIO CHAPA por R$18 de ABCD APELIDO  
-19/01/2023 16:43:31 adriano -> Alteração de preço de compra pelo Admin: ALUMÍNIO BLOCO 50%, de R$10.00 p/ R$9.50 em undefined
-19/01/2023 16:45:45 adriano -> Compra 10Kg de AÇO INOX por R$10 de ANA GABRIELLY  
-19/01/2023 16:45:45 adriano -> Compra 20Kg de ALUMÍNIO BLOCO 50% por R$9.5 de ANA GABRIELLY  
-20/01/2023 00:26:02 sassu -> Alteração de preço de compra pelo Admin: BRONZE, de R$0.00 p/ R$99.00 em MONTANA
-20/01/2023 00:44:15 adriano -> Alteração de preço de compra pelo Admin: BRONZE, de R$25.00 p/ R$25.00 em undefined
-20/01/2023 00:44:31 adriano -> Alteração de preço de compra pelo Admin: BRONZE, de R$25.00 p/ R$23.00 em undefined
-20/01/2023 00:46:59 adriano -> Alteração de preço de compra pelo Admin: ALUMINIO PERFIL 1°, de R$0.00 p/ R$0.00 em undefined
-20/01/2023 08:12:32 sassu -> Alteracao de Etq, de 33Kg p/ 33Kg de METAL em MONTANA
-20/01/2023 08:16:54 sassu -> Alteração de preço de compra pelo Admin: METAL, de R$2.00 p/ R$3.00 em MONTANA
+20/01/2023 21:23:17 sassu -> Tranferencia de material 75Kg de ALUMÍNIO CABO de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:23:17 sassu -> Tranferencia de material 75Kg de ALUMÍNIO CABO de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 250Kg de AÇO INOX de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 30Kg de ALUMÍNIO BLOCO 50% de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 15Kg de ALUMÍNIO BLOCO LIMPO de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 18Kg de ALUMÍNIO CHAPA de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 900Kg de ALUMÍNIO LATA de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 90Kg de METAL de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 126.45Kg de ALUMINIO PERFIL 1° de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 502Kg de COBRE VERMELHO de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 250Kg de COBRE MISTO de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 21Kg de RAC - RAD. AL COBRE de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+﻿20/01/2023 21:29:46 sassu -> Tranferencia de material 75Kg de ALUMÍNIO CABO de CAMINHAO AMARELO para GALPÃO DA V. PARAISO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 250Kg de AÃO INOX de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 30Kg de ALUMÃNIO BLOCO 50% de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 15Kg de ALUMÃNIO BLOCO LIMPO de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 18Kg de ALUMÃNIO CHAPA de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 900Kg de ALUMÃNIO LATA de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 90Kg de METAL de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 126.45Kg de ALUMINIO PERFIL 1Â° de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 502Kg de COBRE VERMELHO de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 250Kg de COBRE MISTO de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 21Kg de RAC - RAD. AL COBRE de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:32:09 sassu -> Tranferencia de material 75Kg de ALUMÃNIO CABO de GALPÃO DA V. PARAISO para CAMINHAO AMARELO
+20/01/2023 21:34:43 sassu -> ConversÃ£o de 52Kg de COBRE MISTO em ALUMÃNIO PANELA
