@@ -82,6 +82,8 @@
                 document.querySelector('#via-nome').innerHTML = json[0].modelo.toUpperCase()
                 document.querySelector('#via-tipo').innerHTML = json[0].placa.toUpperCase()
                 document.querySelector('#lblTipo').innerHTML = 'Placa'
+                main_data.viewLocal.data.modelo = json[0].modelo.toUpperCase()
+
 
                 main_data.viewLocal.fillItens()
             })
@@ -165,7 +167,7 @@
                 const myPromisse = queryDB(params,48);                               
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
-                        setLog(`Alteracao de Etq, de ${qtd_ant}Kg p/ ${document.querySelector('#edtQtd').value}Kg de ${main_data.edtProd.data.nome} em ${main_data.viewLocal.data.modelo}`)
+                        setLog(`Alteracao de estoque, de ${qtd_ant}Kg p/ ${document.querySelector('#edtQtd').value}Kg de ${main_data.edtProd.data.nome} em ${main_data.viewLocal.data.modelo}`)
                         main_data.viewLocal.fillItens()
                         closeModal('edtProd')
                     }  
