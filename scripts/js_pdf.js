@@ -248,10 +248,10 @@ function print_compra(data){
 
     }else{
         if(data.callby == 'viewComp_detal'){
-            doc.text('Compra: '+ data.id.padStart(6,'0')+' '+data.saida , 10,50);
+            doc.text('Compra: '+ data.id.padStart(6,'0')+' realizada dia '+data.saida , 10,50);
             outfile = `Compra_${data.id.padStart(6,'0')}.pdf`
         }else{
-            doc.text('Venda: '+ data.id.padStart(6,'0')+' '+data.saida, 10,50);
+            doc.text('Venda: '+ data.id.padStart(6,'0')+' realizada dia '+data.saida, 10,50);
             outfile = `Venda_${data.id.padStart(6,'0')}.pdf`
         }
         doc.text('Cliente: '+ data.nome, 10,55);
