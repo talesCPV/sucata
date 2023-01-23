@@ -206,8 +206,10 @@ function print_compra(data){
         headStyles: { fillColor: [37, 68, 65] },
     })
 
+    const now = new Date()
     let tbl_body = []
     let total = 0
+    let outfile = `Viagem_${data.id.padStart(6,'0')}.pdf`
     for(let i=0; i<data.itens.length; i++){
         tbl_body.push([data.itens[i].nome,data.itens[i].und,data.itens[i].qtd,viewMoneyBR(parseFloat(data.itens[i].val_unit).toFixed(2)),viewMoneyBR(data.itens[i].total)])
         total += parseFloat(data.itens[i].total)
@@ -228,36 +230,53 @@ function print_compra(data){
 
     doc.setFontSize(10)
 //    doc.setFont(undefined, 'NORMAL')
-    if(data.callby == 'viewViagem'){
-        doc.text('Viagem: '+ data.saida, 10,50);
-        doc.text('Motorista: '+ data.nome, 10,55);        
-        doc.text('Veículo: '+data.modelo, 10,60);
-        doc.text('Placa: '+data.placa, 10,65);
-        doc.text('Obs: '+data.obs, 10,70);
+    if(data.callby == 'viewLocal'){
+        if(data.local == 'FIXO'){
+            doc.text('Relatório de Estoque - '+ now.getFormatBR() +' as '+now.getFullTime() , 10,50);
+            doc.text('Local: '+data.modelo, 10,55);
+            doc.text('Peso Total Estimado: '+data.peso, 10,60);
+            txt.y = 70
+    
+        }else{
+            doc.text('Relatório de Estoque - '+ now.getFormatBR() +' as '+now.getFullTime() , 10,50);
+            doc.text('Veículo: '+data.modelo, 10,55);
+            doc.text('Tipo: '+ data.tipo , 10,60);
+            doc.text('Placa: '+data.placa, 10,65);
+            doc.text('Peso Total Estimado: '+data.peso, 10,70);
+            txt.y = 80
+        }
 
     }else{
-        doc.text('Cliente: '+ data.nome, 10,50);
-        if(data.tipo == 'JUR'){
-            doc.text('CNPJ: '+ data.cnpj_cpf, 10,55);
+        if(data.callby == 'viewComp_detal'){
+            doc.text('Compra: '+ data.id.padStart(6,'0')+' '+data.saida , 10,50);
+            outfile = `Compra_${data.id.padStart(6,'0')}.pdf`
         }else{
-            doc.text('CPF: '+ data.cnpj_cpf, 10,55);
+            doc.text('Venda: '+ data.id.padStart(6,'0')+' '+data.saida, 10,50);
+            outfile = `Venda_${data.id.padStart(6,'0')}.pdf`
         }
-        doc.text('End.: '+data.endereco+','+data.num, 10,60);
-        doc.text('Bairro: '+data.bairro+' - '+data.cidade+'-'+data.estado, 10,65);
-        doc.text('Fone: '+data.tel + ' CEP:'+data.cep, 10,70);
-        doc.text('Banco: '+data.bco_nome+' AG:'+data.bco_ag+' C/C:'+data.bco_cc, 10,75);
-        doc.text('Chave PIX: '+data.bco_pix, 10,80);
+        doc.text('Cliente: '+ data.nome, 10,55);
+        if(data.tipo == 'JUR'){
+            doc.text('CNPJ: '+ data.cnpj_cpf, 10,60);
+        }else{
+            doc.text('CPF: '+ data.cnpj_cpf, 10,60);
+        }
+        doc.text('End.: '+data.endereco+','+data.num, 10,65);
+        doc.text('Bairro: '+data.bairro+' - '+data.cidade+'-'+data.estado, 10,70);
+        doc.text('Fone: '+data.tel + ' CEP:'+data.cep, 10,75);
+        doc.text('Banco: '+data.bco_nome+' AG:'+data.bco_ag+' C/C:'+data.bco_cc, 10,80);
+        doc.text('Chave PIX: '+data.bco_pix, 10,85);
+        txt.y = 95
     }
 
 
-    txt.y = 90
+    
 
     doc.autoTable({
         head: [["Discriminação",'Und.','Qtd.',"Valor Unit.","Total"]],
         body: tbl_body,
         startY: txt.y      
     });
-
-    doc.save('Compra.pdf')
+    
+    doc.save(outfile)
 }
 

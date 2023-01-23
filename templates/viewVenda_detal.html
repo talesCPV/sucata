@@ -19,6 +19,7 @@
         <table id="tblViagem">
             <tr><th>Cliente</th><td id="via-cli"></td></tr>
             <tr><th>Vendedor</th><td id="via-vend"></td></tr>
+            <tr><th>Venda Num.</th><td id="via-num"></td></tr>
             <tr><th>Data</th><td id="via-data"></td></tr>
             <tr><th>Valor R$</th><td id="via-valor"></td></tr>
         </table>
@@ -51,6 +52,7 @@
 
         document.querySelector('#via-cli').innerHTML = main_data.viewVenda_detal.data.nome.toUpperCase()
         document.querySelector('#via-vend').innerHTML = main_data.viewVenda_detal.data.nome_vend.toUpperCase()
+        document.querySelector('#via-num').innerHTML = main_data.viewVenda_detal.data.id.padStart(6,'0')
         document.querySelector('#via-data').innerHTML = main_data.viewVenda_detal.data.saida
         document.querySelector('#via-valor').innerHTML = ''
         main_data.viewVenda_detal.fillItens()

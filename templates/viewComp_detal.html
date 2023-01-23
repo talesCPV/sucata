@@ -19,6 +19,7 @@
         <table id="tblViagem">
             <tr><th>Fornecedor</th><td id="via-cli"></td></tr>
             <tr><th>Comprador</th><td id="via-comp"></td></tr>
+            <tr><th>Compra Num.</th><td id="via-num"></td></tr>
             <tr><th>Data</th><td id="via-data"></td></tr>
             <tr><th>Valor R$</th><td id="via-valor"></td></tr>
         </table>
@@ -48,6 +49,7 @@
 
         document.querySelector('#via-cli').innerHTML = main_data.viewComp_detal.data.nome.toUpperCase()
         document.querySelector('#via-comp').innerHTML = main_data.viewComp_detal.data.nome_comp.toUpperCase()
+        document.querySelector('#via-num').innerHTML = main_data.viewComp_detal.data.id.padStart(6,'0')
         document.querySelector('#via-data').innerHTML = main_data.viewComp_detal.data.saida
         document.querySelector('#via-valor').innerHTML = ''
         main_data.viewComp_detal.fillItens()
@@ -72,7 +74,7 @@
                 tot.val += parseFloat(main_data.viewComp_detal.data.itens[i].total)
                 tot.peso += parseFloat(main_data.viewComp_detal.data.itens[i].qtd_tot)
             }
-            tbl.plot(tot,'blank,blank|mobHide,blank,label,val','str,str,str,Upp,R$.')
+            tbl.plot(tot,'blank|mobHide,blank,blank|mobHide,label,val','str,str,str,Upp,R$.')
             document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
 //            document.querySelector('#via-peso').innerHTML = tot.peso.toFixed(2)+' Kg'
         })
@@ -177,7 +179,7 @@
     })
 
     document.querySelector('#btnImp').addEventListener('click',()=>{
-
+        main_data.viewComp_detal.data.callby = 'viewComp_detal'
         print_compra(main_data.viewComp_detal.data)
 
     })

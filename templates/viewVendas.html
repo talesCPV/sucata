@@ -22,6 +22,7 @@
                     <option value="VEND.id" signal=">=" val="0" selected>Todos</option>
                     <option value="USR.nome" signal="LIKE">Vendedor</option>
                     <option value="CLI.nome" signal="LIKE">Cliente</option>
+                    <option value="VEND.id" signal="IN">Número</option>
                 </select>
                 <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
 
@@ -81,16 +82,16 @@
                 const json = JSON.parse(resolve);                             
                 let total = 0
                 tbl.innerHTML=''
-                json.length > 0 ? tbl.head('Data,Cliente,Vendedor|mobHide,Valor') : 0
+                json.length > 0 ? tbl.head('Num.|mobHide,Data,Cliente,Vendedor|mobHide,Valor') : 0
                 const tot = new Object
                 tot.blank = ''
                 tot.lblTot = 'TOTAL'
                 tot.val = 0                   
                 for(let i=0; i<json.length;i++){                                       
                     tot.val +=  parseFloat(json[i].valor) // ACUMULA O TOTAL
-                    tbl.plot(json[i],'data,fantasia,nome_vend|mobHide,valor','date,Upp,Upp,R$.',true)                    
+                    tbl.plot(json[i],'id|mobHide,data,fantasia,nome_vend|mobHide,valor','str,date,Upp,Upp,R$.',true)                    
                 }    
-                tbl.plot(tot,'blank,blank|mobHide,lblTot,val','str,str,Upp,R$.')             
+                tbl.plot(tot,'blank,blank|mobHide,blank|mobHide,lblTot,val','str,str,str,Upp,R$.')             
             }        
         })
 

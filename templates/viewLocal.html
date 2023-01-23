@@ -197,6 +197,7 @@
 
     document.querySelector('#btnImp').addEventListener('click',()=>{
         main_data.viewLocal.data.callby = 'viewLocal'
+        main_data.viewLocal.data.peso = document.querySelector('#via-peso').innerHTML
         print_compra(main_data.viewLocal.data)
 
     })
