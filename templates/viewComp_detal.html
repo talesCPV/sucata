@@ -74,7 +74,7 @@
                 tot.val += parseFloat(main_data.viewComp_detal.data.itens[i].total)
                 tot.peso += parseFloat(main_data.viewComp_detal.data.itens[i].qtd_tot)
             }
-            tbl.plot(tot,'blank|mobHide,blank,blank|mobHide,label,val','str,str,str,Upp,R$.')
+            tbl.plot(tot,'blank|mobHide,blank,blank,label,val','str,str,str,Upp,R$.')
             document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
 //            document.querySelector('#via-peso').innerHTML = tot.peso.toFixed(2)+' Kg'
         })
