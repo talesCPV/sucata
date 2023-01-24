@@ -104,7 +104,7 @@
             myPromisse.then((resolve)=>{
                 const myPromisse_1 = queryDB(params,49); // DELETA A COMPRA
                 myPromisse_1.then((resolve)=>{
-                    setLog(`Compra deletada, Cliente:${main_data.viewComp_detal.data.fantasia}, valor R$${parseFloat(main_data.viewComp_detal.data.valor).toFixed(2)}, data da compra:${main_data.viewComp_detal.data.saida}`)
+                    setLog(`Compra deletada, Fornecedor:${main_data.viewComp_detal.data.fantasia}, valor R$${parseFloat(main_data.viewComp_detal.data.valor).toFixed(2)}, data da compra:${main_data.viewComp_detal.data.saida}`)
                     main_data.viewCompras.busca()
                     closeModal('viewComp_detal')
                 })
