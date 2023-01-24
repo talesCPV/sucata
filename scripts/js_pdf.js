@@ -154,17 +154,15 @@ function block_text(T=''){
     print()
 }
 
-function header_pdf(lin_h = 5, font_size = 12){
-    ini_y = 13
+function header_pdf(lin_h = 5, font_size = 15){
+    const ini_y = txt.y
     logo([14,15,45,10])
     //  CABEÇALHO
     doc.setFontSize(font_size)
-    doc.setFont(undefined, 'normal')
-    doc.text('nome da rua, 2070', 88,ini_y);
-    doc.text('bairro - Cidade-SP - CEP 12.283-020', 88,ini_y+lin_h);
-    doc.text('email@empresa.com.br | (12) 3653-2230', 88,ini_y + (lin_h*2));
-    doc.text('CNPJ 00.111.222/0003-04', 88,ini_y+(lin_h*3));    
-
+    doc.setFont(undefined, 'bold')
+    txt.y = 20
+    center_text('CALDEIRÃO SUCATAS',[50,200])
+    txt.y = ini_y
 }
 
 
@@ -226,19 +224,17 @@ function print_compra(data){
 
     doc.setFontSize(12)
     doc.setFont(undefined, 'bold')
-    center_text('CALDEIRÃO SUCATAS')
 
     doc.setFontSize(10)
 //    doc.setFont(undefined, 'NORMAL')
     if(data.callby == 'viewLocal'){
+        doc.text('Relatório de Estoque - '+ now.getFormatBR() +' as '+now.getFullTime() , 10,50);
         if(data.local == 'FIXO'){
-            doc.text('Relatório de Estoque - '+ now.getFormatBR() +' as '+now.getFullTime() , 10,50);
             doc.text('Local: '+data.modelo, 10,55);
             doc.text('Peso Total Estimado: '+data.peso, 10,60);
             txt.y = 70
     
         }else{
-            doc.text('Relatório de Estoque - '+ now.getFormatBR() +' as '+now.getFullTime() , 10,50);
             doc.text('Veículo: '+data.modelo, 10,55);
             doc.text('Tipo: '+ data.tipo , 10,60);
             doc.text('Placa: '+data.placa, 10,65);
@@ -247,12 +243,21 @@ function print_compra(data){
         }
 
     }else{
+        txt.y = 35
+        doc.setFontSize(15)
+        doc.setTextColor(255,0,0);
+        center_text('NÃO VALE COMO RECIBO')
+        doc.setFontSize(12)
+        doc.setTextColor(0);
+
         if(data.callby == 'viewComp_detal'){
-            doc.text('Compra: '+ data.id.padStart(6,'0')+' realizada dia '+data.saida , 10,50);
-            outfile = `Compra_${data.id.padStart(6,'0')}.pdf`
+            doc.text('Compra: '+ data.id.padStart(6,'0') , 10,45);
+            doc.text('Data: '+ data.saida , 10,50);
+            outfile = `Boleta_CP_${data.id.padStart(6,'0')}.pdf`
         }else{
-            doc.text('Venda: '+ data.id.padStart(6,'0')+' realizada dia '+data.saida, 10,50);
-            outfile = `Venda_${data.id.padStart(6,'0')}.pdf`
+            doc.text('Venda: '+ data.id.padStart(6,'0')+' realizada dia '+data.saida, 10,45);
+            doc.text('Data: '+ data.saida , 10,50);
+            outfile = `Boleta_VD_${data.id.padStart(6,'0')}.pdf`
         }
         doc.text('Cliente: '+ data.nome, 10,55);
         if(data.tipo == 'JUR'){

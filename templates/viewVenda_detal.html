@@ -42,6 +42,58 @@
 </template>
 <script>
 
+    function edtData(){
+
+        const data = document.querySelector('#via-data')
+        const dia = main_data.viewVenda_detal.data.saida
+
+        data.innerHTML=''
+
+        const day = document.createElement('input')
+        day.id='edtDia'
+        day.type = 'date'
+        day.value = dia.substr(6,4)+'-'+dia.substr(3,2)+'-'+dia.substr(0,2)
+        data.appendChild(day)
+
+        const hour = document.createElement('input')
+        hour.id='edtHora'
+        hour.type = 'time'
+        hour.value = dia.substr(11,2)+':'+dia.substr(14,2)
+        data.appendChild(hour)
+
+        const a = document.createElement('a')
+        a.innerHTML = 'Salvar'
+        a.href='#'
+
+        a.addEventListener('click',()=>{
+            
+            const dt = document.querySelector("#edtDia").value + ' ' + document.querySelector("#edtHora").value+':00'
+            const now = new Date()
+
+            const params = new Object;
+                params.id = main_data.viewVenda_detal.data.id
+                params.id_cliente = main_data.viewVenda_detal.data.id_cliente
+                params.id_resp = main_data.viewVenda_detal.data.id_resp
+                params.status = main_data.viewVenda_detal.data.status
+                params.obs = main_data.viewVenda_detal.data.obs+ ` Editado-> ${localStorage.getItem('nome')} ${now.getFullDate()}`
+                params.data = dt
+
+            if(document.querySelector("#edtDia").value.trim() != ''){
+                const myPromisse = queryDB(params,11); 
+                myPromisse.then((resolve)=>{
+                    main_data.viewVendas.busca()
+                    alert('Nova data aplicada')
+                    setLog(`Venda (data editada), de ${main_data.viewVenda_detal.data.saida} p/ ${dt}`)
+                    main_data.viewVenda_detal.data.saida = dt
+                })
+            }else{
+                alert('Data preenchida incorretamente!')
+                document.querySelector("#edtDia").focus()
+            }
+        })
+        data.appendChild(a)    
+    }
+
     main_data.viewVenda_detal.open = function open(){
         
         if(localStorage.getItem('access')!='10'){
@@ -90,9 +142,11 @@
         if(document.querySelector('#btnDel').disabled){  
             document.querySelector('#btnDel').disabled = false
             document.querySelector('#btnAdd').disabled = false
+            edtData()
         }else{
             document.querySelector('#btnDel').disabled = true
             document.querySelector('#btnAdd').disabled = true
+            document.querySelector('#via-data').innerHTML = main_data.viewVenda_detal.data.saida
         }
     
     
