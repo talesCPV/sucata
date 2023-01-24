@@ -35,9 +35,9 @@
     </div>
     <div class="inline">
         <label for="edtQtd">Qtd</label>
-        <input type="text" id="edtQtd" inputmode="numeric" onkeyup="return valFloat(this)" value="0">
+        <input type="text" id="edtQtd" inputmode="numeric" pattern="[0-9]+([\.,][0-9]+)?" onkeyup="return valFloat(this)" value="0">
         <label for="edtPreco">Preço R$</label>
-        <input type="text" id="edtPreco" inputmode="numeric" onkeyup="return valFloat(this)" value="0">
+        <input type="text" id="edtPreco" inputmode="numeric" pattern="[0-9]+([\.,][0-9]+)?" onkeyup="return valFloat(this)" value="0">
     </div>
     <button id="btnAdicionar">OK</button>
 </fieldset>
