@@ -99,7 +99,9 @@
     //                    document.documentElement.requestFullscreen();
                                       
                     }
-                    if(notfound && i==databases.length-1){
+                    if(!notfound){
+                        return
+                    }else if(notfound && i==databases.length-1){
                         alert("Usuário ou senha inválido!");
                         localStorage.clear();  
                     }                         
