@@ -321,6 +321,7 @@ function queryDB(params,cod){
     const data = new URLSearchParams();        
         data.append("cod", cod);
         data.append("params", JSON.stringify(params));
+        data.append("storage", localStorage.getItem("storage"));
 
     const myRequest = new Request("backend/query_db.php",{
         method : "POST",
@@ -436,6 +437,7 @@ function openMenu(){
     var drop = 0
     const data = new URLSearchParams();        
         data.append("hash", localStorage.getItem('hash'));
+        data.append("storage", localStorage.getItem("storage"));
 
     const myRequest = new Request("backend/openMenu.php",{
         method : "POST",

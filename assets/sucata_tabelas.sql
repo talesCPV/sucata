@@ -7,9 +7,13 @@ CREATE TABLE tb_usuario (
     nome varchar(40) DEFAULT NULL,
     email varchar(70) DEFAULT NULL,
     cel varchar(14) DEFAULT NULL,
+    db varchar(50) DEFAULT NULL,
 	UNIQUE KEY (user),
     PRIMARY KEY (id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_usuario
+ADD COLUMN db varchar(50) DEFAULT NULL;
 
 INSERT INTO tb_usuario VALUES (DEFAULT,"sassu","$~N~3Z69*~<x6r0l*f$`?Z9T3N-H'B",10,null,null,null);
 
@@ -70,8 +74,13 @@ CREATE TABLE tb_prod(
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
+ALTER TABLE tb_prod DROP COLUMN mat;
+
 ALTER TABLE tb_prod
-ADD COLUMN mat int(11) NOT NULL DEFAULT 0;
+ADD COLUMN id_mat int(11) NOT NULL DEFAULT 1;
+
+ALTER TABLE tb_prod
+ADD FOREIGN KEY (id_mat) REFERENCES tb_material(id);
 
 /*DROP TABLE tb_venda;*/
 CREATE TABLE tb_venda(
@@ -150,11 +159,15 @@ CREATE TABLE tb_motorista(
     rg  VARCHAR(12) NOT NULL DEFAULT "",
     cnh VARCHAR(12) NOT NULL DEFAULT "",
     tipo VARCHAR(2) NOT NULL DEFAULT "",
+    limite BOOLEAN NOT NULL DEFAULT 1,
     FOREIGN KEY (id_usuario) REFERENCES tb_usuario(id),
     FOREIGN KEY (id_local) REFERENCES tb_local(id),
 	validade date DEFAULT NULL,
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_motorista
+ADD COLUMN limite BOOLEAN NOT NULL DEFAULT 0;
 
 /*drop table tb_viagem;*/
 CREATE TABLE tb_viagem(
