@@ -72,41 +72,52 @@
         const databases = ['twcf"c-jDKIP!%cqgFcdiw70(cvx;H?Fqlht[c)xtcDyN*XI','0w03L0TyDKFPKN0@4Z016d7.O0EG;A?ph9xt^0P3C0IyFQXI']
 
         if(checkField(['edtUser','edtPass'])){
-            let notfound = true
+            let notfound = true            
             let user = document.querySelector('#edtUser').value
             let hash = document.querySelector('#edtPass').value.getHash(30)
             const params = new Object;
                 params.user = user;
                 params.hash = hash;
 
-            for(let i=0; i<databases.length; i++){
-                localStorage.setItem("storage",databases[i]);
-                const myPromisse = queryDB(params,0,databases[i])
+//            for(let i=0; i<databases.length; i++){
 
-                myPromisse.then((resolve)=>{
-                    const json = JSON.parse(resolve);
-                    if(json.length > 0){
-                        notfound = false
-                        localStorage.setItem("id_user",json[0].id);
-                        localStorage.setItem("username",json[0].user);
-                        localStorage.setItem("hash",json[0].hash);
-                        localStorage.setItem("access",json[0].class);
-                        localStorage.setItem("nome",json[0].nome);
-                        localStorage.setItem("cel",json[0].cel);
-                        localStorage.setItem("email",json[0].email);
-                        localStorage.setItem("storage",databases[i]);                    
-                        openHTML('dashboard.html','main-screen')
-    //                    document.documentElement.requestFullscreen();
-                                      
-                    }
-                    if(!notfound){
-                        return
-                    }else if(notfound && i==databases.length-1){
+
+        login(0)
+
+        function login(i){
+
+            localStorage.setItem("storage",databases[i]);
+            const myPromisse = queryDB(params,0,databases[i])
+
+            myPromisse.then((resolve)=>{
+                const json = JSON.parse(resolve);
+                if(json.length > 0){
+                    notfound = false
+                    localStorage.setItem("id_user",json[0].id);
+                    localStorage.setItem("username",json[0].user);
+                    localStorage.setItem("hash",json[0].hash);
+                    localStorage.setItem("access",json[0].class);
+                    localStorage.setItem("nome",json[0].nome);
+                    localStorage.setItem("cel",json[0].cel);
+                    localStorage.setItem("email",json[0].email);
+                    localStorage.setItem("storage",databases[i]);                    
+                    openHTML('dashboard.html','main-screen')
+//                    document.documentElement.requestFullscreen();
+                                    
+                }else{
+                    if( i<databases.length-1){
+                        login(i+1)
+                    }else{
                         alert("Usuário ou senha inválido!");
                         localStorage.clear();  
-                    }                         
-                });
-            }
+                    }
+                }                
+            });
+        }
+
+
+
+//            }
 
         }
     })

@@ -1,10 +1,6 @@
 
 <template>
     <style>
-        #tblSize{
-            max-height: 250px;
-            overflow: scroll;
-        }
 
         .center{
             width: 100%;
@@ -13,12 +9,31 @@
             font-size: 1.5em;
         }
 
+        #edtFiltro{
+            width: 98%;
+        }
+        
+        .showTable{
+            max-height: 200px;
+            overflow: scroll;
+        }
+
+        @media all and (max-width : 768px) {
+            #edtFiltro{
+                width: 95%;
+            }
+        }
+
+
     </style>
 
 <fieldset >
     <legend>Selecione o Produto</legend>
-    <div id="tblSize">
-        <table id="tblAddProd"></table>
+    <div id="stblSize">
+        <input type="text" id="edtFiltro">
+        <div class="showTable">
+            <table id="tblAddProd"></table>
+        </div>
     </div>
 
 </fieldset>
@@ -48,7 +63,7 @@
         const tbl = document.getElementById('tblAddProd')
         tbl.innerHTML = ''
         const params = new Object;
-            params.nome = ''
+            params.nome = document.querySelector('#edtFiltro').value.trim()
             params.hash = localStorage.getItem('hash');
 
         const myPromisse = queryDB(params,7);
@@ -126,5 +141,9 @@
         }        
     })
 
+
+    document.querySelector('#edtFiltro').addEventListener('keyup',()=>{
+        busca()
+    })
 
 </script>

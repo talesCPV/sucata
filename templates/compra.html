@@ -2,6 +2,16 @@
 <template>
     <style>
 
+        @media all and (max-width : 768px) {
+
+            #btnAdd{
+                background-color: crimson;
+                color: floralwhite;
+                border-radius: 7px;
+            }
+        }
+
+
     </style>
  
         <h1>Compra de Material</h1>
@@ -15,8 +25,8 @@
             </div>
             <table id="tbl-itens_compra"></table>
             <div class="inline">
-                <button id="btnClear">Limpar Lista</button>
                 <button id="btnAdd">Adicionar Produtos</button>
+                <button id="btnClear">Limpar Lista</button>
                 <button id="btnCompra">Gerar Compra</button>
             </div>
         </fieldset>

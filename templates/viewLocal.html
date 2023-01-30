@@ -15,6 +15,15 @@
             display: none;
         }
 
+        @media all and (max-width : 768px) {
+
+            #btnComp{
+                background-color: crimson;
+                color: floralwhite;
+                border-radius: 7px;
+            }
+        }
+
     </style>
     
     <fieldset id="fdsComp">
@@ -29,16 +38,16 @@
             <button id="btnEdit" class="btnHide">Editar</button>
             <button id="btnDel" class="btnHide" >Deletar</button>
         </div>
-
-    </fieldset>
-    <fieldset>
-        <legend>Ítens</legend>
-        <table id="tblItens-viagem"></table>
         <div class="inline">
             <button id="btnComp">Comprar</button>
             <button id="btnVend" class="btnHide">Vender</button>
             <button id="btnTrans" class="btnHide">Transferir</button>
         </div>
+
+    </fieldset>
+    <fieldset>
+        <legend>Ítens</legend>
+        <table id="tblItens-viagem"></table>
         <button id="btnImp" class="btnHide">Imprimir</button>
 
 
