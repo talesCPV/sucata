@@ -110,7 +110,7 @@ Date.prototype.getCod = function(){
 }
 
 /* TABLE */
-HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false){
+HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=false){
 
     fields = fields.split(',')
     type = type=='' ? '' : type.split(',')
@@ -185,6 +185,9 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false){
         tr.appendChild(td)
     }
     tr.data = obj
+    if(mark){
+        tr.style.background = 'rgb(201, 99, 99)'
+    }
     this.appendChild(tr)
 }
 
@@ -350,7 +353,7 @@ function NFeConf(dados='',file='NFe.json'){
         data.append("file", file);
     }        
 
-    const myRequest = new Request("backend/nfe_POST.php",{
+    const myRequest = new Request("backend/setFile.php",{
         method : "POST",
         body : data
     });
@@ -587,11 +590,11 @@ function uploadImage(fileID,path,filename){
     return myPromisse
 }
 
-function listNF(folder,ext='txt'){
+function listNF(dir,ext='txt'){
 
     const data = new URLSearchParams();        
-        data.append("folder",folder);
-    const myRequest = new Request("backend/nfe_LIST.php",{
+        data.append("dir",'assets/'+dir);
+    const myRequest = new Request("backend/lookDir.php",{
         method : "POST",
         body : data
     });

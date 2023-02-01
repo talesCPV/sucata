@@ -14,6 +14,7 @@ CREATE TABLE tb_usuario (
 
 ALTER TABLE tb_usuario
 ADD COLUMN db varchar(50) DEFAULT NULL;
+UPDATE tb_usuario SET db="d2soft98_sucata_2" WHERE id=1;
 
 INSERT INTO tb_usuario VALUES (DEFAULT,"sassu","$~N~3Z69*~<x6r0l*f$`?Z9T3N-H'B",10,null,null,null);
 
@@ -112,14 +113,19 @@ CREATE TABLE tb_item_venda(
 CREATE TABLE tb_compra(
     id INT NOT NULL AUTO_INCREMENT,
     id_cliente int(11) NOT NULL,
+    id_local int(11) NOT NULL,
 	id_resp int(11) NOT NULL,
     status varchar(10) NOT NULL DEFAULT "FECHADO",
     obs varchar(255) DEFAULT NULL,
 	data datetime DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
+    FOREIGN KEY (id_local) REFERENCES tb_local(id),
     FOREIGN KEY (id_resp) REFERENCES tb_usuario(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_compra
+ADD COLUMN id_local int(11) NOT NULL DEFAULT 3;
 
 /*DROP TABLE tb_item_compra;*/
 CREATE TABLE tb_item_compra(
@@ -129,10 +135,14 @@ CREATE TABLE tb_item_compra(
     qtd double NOT NULL DEFAULT 0,
     und  VARCHAR(10) NOT NULL,
     val_unit double NOT NULL DEFAULT 0,
+    estorno double DEFAULT 0,
     FOREIGN KEY (id_compra) REFERENCES tb_compra(id),
     FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_item_compra
+MODIFY estorno double DEFAULT 0;
 
 /*DROP TABLES tb_local;*/
 CREATE TABLE tb_local(
@@ -203,7 +213,13 @@ CREATE TABLE tb_item_temp(
     qtd double NOT NULL DEFAULT 0,
     und  VARCHAR(10) NOT NULL,
     val_venda double NOT NULL DEFAULT 0,
+    id_item_compra int(11) DEFAULT 0,
     FOREIGN KEY (id_local) REFERENCES tb_local(id),
     FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_item_temp
+ADD COLUMN id_item_compra int(11) DEFAULT 0;
+ALTER TABLE tb_item_temp
+ADD COLUMN qtd_orig double DEFAULT 0;

@@ -126,6 +126,23 @@
 			"itens"  : []
 		},
 		{
+			"modulo" : "Financeiro",
+			"script" : "#",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : [
+				{
+					"modulo" : "NFe",
+					"script" : "javascript:openHTML('nfe.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				}				
+			]
+		},		
+		{
 			"modulo" : "Logout",
 			"script" : "javascript:localStorage.clear();this.location.reload(true);",
 			"access" : [10,1],

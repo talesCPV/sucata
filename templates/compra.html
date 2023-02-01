@@ -144,6 +144,7 @@
                     params.status = 'FECHADO'
                     params.obs = `Compra realizada dia ${now.getFullDate()} pelo usuário ${localStorage.getItem('username')}.`
                     params.data = now.getFullDateTime()
+                    params.id_local = main_data.viewLocal.data.id
                 const myPromisse = queryDB(params,41);
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){

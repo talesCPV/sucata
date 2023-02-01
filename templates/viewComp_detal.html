@@ -26,6 +26,7 @@
         <div class="inline edtButtons">
             <button id="btnEdit">Editar</button>
             <button id="btnDel" disabled>Deletar</button>
+            <button id="btnEst" disabled>Estorno</button>
         </div>
 
     </fieldset>
@@ -91,6 +92,9 @@
         data.appendChild(a)    
     }
 
+    document.querySelector('#btnEst').addEventListener('click',()=>{
+        openHTML('estorno.html','pop-up','Estorno de Material',main_data.viewComp_detal.data,[100,30])
+    })    
 
     main_data.viewComp_detal.open = function open(){
         
@@ -123,7 +127,7 @@
                 tot.val = 0
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
             for(let i=0; i<main_data.viewComp_detal.data.itens.length;i++){
-                tbl.plot(main_data.viewComp_detal.data.itens[i],'nome,und|mobHide,qtd,val_unit,total','Upp,Upp,str,R$.,R$.')
+                tbl.plot(main_data.viewComp_detal.data.itens[i],'nome,und|mobHide,qtd_tot,val_unit,total','Upp,Upp,str,R$.,R$.',false,main_data.viewComp_detal.data.itens[i].estorno > 0 ? true : false)
                 tot.val += parseFloat(main_data.viewComp_detal.data.itens[i].total)
                 tot.peso += parseFloat(main_data.viewComp_detal.data.itens[i].qtd_tot)
             }
@@ -139,10 +143,12 @@
 
         if(document.querySelector('#btnDel').disabled){  
             document.querySelector('#btnDel').disabled = false
+            document.querySelector('#btnEst').disabled = false
             document.querySelector('#btnAdd').disabled = false
             edtData()
         }else{
             document.querySelector('#btnDel').disabled = true
+            document.querySelector('#btnEst').disabled = true
             document.querySelector('#btnAdd').disabled = true
             document.querySelector('#via-data').innerHTML = main_data.viewComp_detal.data.saida
         }
@@ -191,6 +197,20 @@
 
     })
     
+    document.querySelector('#tblItens').addEventListener('contextmenu',(e)=>{
+    
+        const data = e.target.parentNode.data
+        alert(`\r\n
+        ${data.nome}\r\n
+        Compra Num.: ${data.id_compra}\r\n
+        Quantidade: ${data.qtd} ${data.und}\r\n
+        Estorno: ${data.estorno} ${data.und}\r\n
+        Valor Unitário: ${viewMoneyBR(parseFloat(data.val_unit).toFixed(2))}\r\n
+        Total: ${viewMoneyBR(parseFloat(data.total).toFixed(2))}`)
+        e.preventDefault();
+    
+    })
+
     document.querySelector('#tblItens').addEventListener('click',(e)=>{
         if(!document.querySelector('#btnDel').disabled){
             const data = e.target.parentNode.data

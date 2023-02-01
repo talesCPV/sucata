@@ -1,0 +1,229 @@
+
+<template>
+    <style>
+
+    </style>
+ 
+        <h1>Devolução de Material</h1>
+
+        <fieldset>
+            <legend>Material Disponível</legend>
+            <table id="tbl-itens_etq"></table>
+            <button id="btnAddAll">Adicionar Todos</button>
+        </fieldset>
+    
+
+        <fieldset>
+            <legend>Estorno</legend>
+            <div class="inline">
+                <label for="cmbLocal">Local</label>
+                <select id="cmbLocal"></select>
+            </div>            
+            <table id="tbl-itens_venda"></table>
+            <button id="btnClear">Limpar Lista</button>
+            <button id="btnEstorno">Estornar</button>
+        </fieldset>
+
+
+
+</template>
+<script>
+
+    const params_local = new Object;
+        params_local.hash = localStorage.getItem('hash')
+        params_local.field = 'id'
+        params_local.signal = '>='
+        params_local.value = '0'
+    fillCombo('cmbLocal',params_local,20,['id','modelo'], main_data.estorno.data.id_local)
+
+    clearItens()
+
+    main_data.estorno.fillItens = ()=>{
+        
+        clearItens().then(()=>{
+            const tbl = document.querySelector('#tbl-itens_etq')
+            tbl.head('Descrição,Und.|mobHide,Qtd.,Preço,Sub Total|mobHide')            
+            for(let i=0; i<main_data.estorno.data.itens.length;i++){
+                tbl.plot(main_data.estorno.data.itens[i],'nome,und|mobHide,qtd,val_unit,total|mobHide','Upp,Upp,str,R$.,R$.')
+            }
+
+        })
+    }
+ 
+    main_data.estorno.fillTemp = ()=>{
+        const params = new Object;
+            params.id_local = 100 + parseInt(localStorage.getItem('id_user'))      
+        const myPromisse = queryDB(params,35);
+        myPromisse.then((resolve)=>{
+            main_data.estorno.data.itens_temp = JSON.parse(resolve)
+            const tbl = document.querySelector('#tbl-itens_venda')
+            const tot = new Object
+                tot.blank = ''
+                tot.lblTot = 'TOTAL'
+                tot.lblPeso = 'PESO TOTAL'
+                tot.peso = 0
+                tot.val = 0  
+            tbl.head('Descrição,Und.|mobHide,Qtd.,Preço,Sub-Total')            
+            for(let i=0; i<main_data.estorno.data.itens_temp.length;i++){
+                tbl.plot(main_data.estorno.data.itens_temp[i],'nome,und|mobHide,qtd,val_venda,total','Upp,Upp,str,R$.,R$.')
+                tot.val += parseFloat(main_data.estorno.data.itens_temp[i].total)
+                tot.peso += parseFloat(main_data.estorno.data.itens_temp[i].qtd) 
+            }
+            tot.peso = tot.peso.toFixed(2)+' Kg'
+            tbl.plot(tot,'blank|mobHide,lblPeso,peso,lblTot,val','str,str,str,Upp,R$.')
+        })
+    }
+
+    main_data.estorno.fillItens()
+    main_data.estorno.fillTemp()
+
+    document.querySelector('#tbl-itens_etq').addEventListener('click',(e)=>{
+        const data = e.target.parentNode.data
+        console.log(data)
+        const qtd = prompt(`Digite a quantidade desejada`,data.qtd)
+        data.qtd_estorn = qtd != null ? getFloat(qtd) : 0
+        if(parseFloat(data.qtd_estorn) > parseFloat(data.qtd)){
+            alert('A quantidade estornada não pode ser maior que a comprada')
+        }else if(data.qtd_estorn > 0){
+            const params = new Object;
+                params.id = 'DEFAULT'
+                params.id_local = 100 + parseInt(localStorage.getItem('id_user'))
+                params.id_prod = data.id_prod
+                params.nome = data.nome
+                params.qtd = data.qtd_estorn
+                params.und = data.und
+                params.val_venda = data.val_unit
+                params.id_item_compra = data.id
+                params.qtd_orig = data.estorno
+            const myPromisse = queryDB(params,36); 
+            myPromisse.then((resolve)=>{
+                main_data.estorno.fillTemp()
+            }) 
+        }
+    })
+
+    document.querySelector('#tbl-itens_venda').addEventListener('click',(e)=>{
+        
+        const data = e.target.parentNode.data
+        
+        data.edtItem = function(){
+            const params = new Object;
+                params.id = main_data.edtProd.data.id 
+                params.id_local = main_data.edtProd.data.id_local
+                params.id_prod = main_data.edtProd.data.id_prod
+                params.nome = main_data.edtProd.data.nome
+                params.qtd = document.querySelector('#edtQtd').value
+                params.und = main_data.edtProd.data.und
+                params.preco = document.querySelector('#edtPreco').value
+            const myPromisse = queryDB(params,36);
+                            
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    main_data.estorno.fillTemp()
+                    closeModal('edtProd')
+                }  
+            })                                
+        }
+
+        data.delItem = function(){               
+            const params = new Object;
+                params.id = main_data.edtProd.data.id
+                params.hash = localStorage.getItem('hash')                
+            const myPromisse = queryDB(params,37);
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    main_data.estorno.fillTemp()
+                    closeModal('edtProd')
+                }  
+            }) 
+        }
+
+        data.max = 0
+        for(let i=0; i<main_data.estorno.data.itens.length; i++){
+            if(data.id_prod == main_data.estorno.data.itens[i].id_prod){
+                data.max = main_data.estorno.data.itens[i].qtd
+            }
+        }
+
+        data.callby = 'estorno'
+        data.edtVal = data.val_venda
+        if(data.id != undefined){
+            openHTML('edtProd.html','pop-up','Alteração de Ítem',data)
+        }
+        
+    })
+
+    document.querySelector('#btnEstorno').addEventListener('click',()=>{
+
+        if(document.querySelector('#cmbLocal').value.trim() != ''){
+            if (confirm('Confirma o estorno do(s) ítens acima?')) {
+                const sel = document.querySelector('#cmbLocal')
+                for(let i=0; i<main_data.estorno.data.itens_temp.length; i++){
+                    
+                    const params_less = new Object // retira estoque                                
+                    params_less.id_local = document.querySelector('#cmbLocal').value
+                    params_less.id_prod = main_data.estorno.data.itens_temp[i].id_prod
+                    params_less.qtd = parseFloat(main_data.estorno.data.itens_temp[i].qtd) - parseFloat(main_data.estorno.data.itens_temp[i].qtd_orig)                                                                                                        
+                    const myPromisse_update_2 = queryDB(params_less,38);
+
+
+                    const params = new Object;
+                        params.id = main_data.estorno.data.itens_temp[i].id_item_compra 
+                        params.estorno = main_data.estorno.data.itens_temp[i].qtd
+                    const myPromisse = queryDB(params,51);
+                    myPromisse.then((resolve)=>{
+                        if(resolve.trim() != ""){
+                            setLog(`Estorno de material: ${main_data.estorno.data.itens_temp[i].qtd} ${main_data.estorno.data.itens_temp[i].und} de ${main_data.estorno.data.itens_temp[i].nome} em ${sel.options[sel.selectedIndex].text}`)                            
+                            main_data.viewComp_detal.fillItens()
+                            closeModal('estorno')
+                        }  
+                    }) 
+                }               
+            }
+        }else{
+            alert('Por favor, selecione um local de estorno.')
+            document.querySelector('#cmbLocal').focus()
+        }
+    })
+
+    function clearItens(){
+        const params = new Object; // deleta venda temporaria
+            params.id_local = 100 + parseInt(localStorage.getItem('id_user'))
+            params.hash = localStorage.getItem('hash')
+        return queryDB(params,37)
+    }
+
+    document.querySelector('#btnClear').addEventListener('click',()=>{
+        if (confirm('Deseja eliminar todos os ítens da lista?')) {
+            clearItens().then(()=>{
+                main_data.estorno.fillTemp()
+            })
+        }
+    })
+
+    document.querySelector('#btnAddAll').addEventListener('click',()=>{
+        if (confirm('Deseja adicionar todos os ítens disponíveis?')) {
+            clearItens().then(()=>{
+
+                for(let i=0; i<main_data.estorno.data.itens.length; i++){
+                    const params = new Object;
+                        params.id = 'DEFAULT'
+                        params.id_local = 100 + parseInt(localStorage.getItem('id_user'))
+                        params.id_prod = main_data.estorno.data.itens[i].id_prod
+                        params.nome = main_data.estorno.data.itens[i].nome
+                        params.qtd = main_data.estorno.data.itens[i].qtd
+                        params.und = main_data.estorno.data.itens[i].und
+                        params.val_venda = main_data.estorno.data.itens[i].val_unit
+                        params.id_item_compra = main_data.estorno.data.itens[i].id
+                        params.qtd_orig = main_data.estorno.data.itens[i].estorno                        
+                    const myPromisse = queryDB(params,36); 
+                    myPromisse.then(()=>{
+                        main_data.estorno.fillTemp()
+                    })
+                }
+                
+            })
+        }
+    })
+
+</script>
