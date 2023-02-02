@@ -230,7 +230,7 @@
                                 <option value="COMP.id" signal="IN">Número</option>
                             </optgroup>
                             <optgroup label="Venda">
-                                <option value="VEND.id" signal=">=" val="0" selected>Todos</option>
+                                <option value="VEND.id" signal=">=" val="0">Todos</option>
                                 <option value="USR.nome" signal="LIKE">Vendedor</option>
                                 <option value="CLI.nome" signal="LIKE">Cliente</option>
                                 <option value="VEND.id" signal="IN">Número</option>
@@ -304,7 +304,7 @@
                         <label> Sigla da UF </label>
                         <input type="text" id="UF" maxlength="2" style="width: 70px ;"/>                        
                     </div>
-                    <button id="btnBuscaIBGE"> Buscar no IBGE</button>
+                    <button id="btnBuscaIBGE"> Buscar Cod. Mun. no IBGE</button>
                     <div class="inline">
                         <label> País </label>
                         <input type="text" id="xPais" maxlength="15"/>                        
@@ -381,11 +381,7 @@
                         <legend>TXT</legend>
                         <select id="txtFiles" size="20"></select>
                     </fieldset>
-                    <fieldset>
-                        <legend>XML</legend>
-                        <select id="xmlFiles" size="20"></select>
-                    </fieldset>
-                    <button id="btnAssina">Assina XML</button>
+
             </div>                
         </div>   
     </div>
@@ -403,45 +399,6 @@
     document.querySelector('#edtFin').value =  today.finMonth()
 
 /* FUNÇÔES */    
-
-    document.querySelector('#btnAssina').addEventListener('click',()=>{
-
-        let filename = document.querySelector('#xmlFiles').value.split('/')
-        filename = filename[filename.length-1].split('.')[0]      
-        
-        
-        
-        console.log()
-
-        if(filename.substring(11,15) == ''){
-            const data = new URLSearchParams();        
-                data.append("filename",filename);
-            const myRequest = new Request("backend/signNFe.php",{
-                method : "POST",
-                body : data
-            });
-            const myPromisse = new Promise((resolve,reject) =>{
-
-                fetch(myRequest)
-                .then(function (response){
-                    if (response.status === 200) { 
-                        resolve(response.text());             
-                    } else { 
-                        reject(new Error("Houve algum erro na comunicação com o servidor"));                    
-                    } 
-                })
-                .then(function (response){
-                    listNF('NFe/xml','xml')
-                })
-            })            
-        }else{
-            alert('XML já foi assinado!')
-        }
-
-
-
-    })
-
 
     main_data.nfe.row_edit = function(obj){
         main_data.nfe.row_item.cells[1].innerHTML = obj.descricao
@@ -517,6 +474,8 @@
     }
 
     function uploadNFe(txt, filename){
+        console.log(txt)  
+        console.log(filename)          
         const data = new URLSearchParams();        
             data.append("txt",txt);
             data.append("filename",filename);
@@ -527,27 +486,9 @@
             body : data
         });
         fetch(myRequest).then(()=>{
-            const myRequest2 = new Request("backend/nfe_TXT2XML.php",{
-                method : "POST",
-                body : data
-            })
-            fetch(myRequest2).then(()=>{
-                alert('NFe exportada com sucesso!!')
-                listNF('NFe/txt')
-                listNF('NFe/xml','xml')
-                if (confirm(`Deseja lançar od boletos?`)) {
-                    for(let i=0; i<main_data.NFe.Y07.length; i++){
-                        const pgto = new Object            
-                        pgto.sac = main_data.NFe.E.xNome.split(' ')[0]
-                        pgto.nf = main_data.NFe.B.nNF
-                        pgto.ref =  (i+1).toString().padStart(2,"0") +'/'+ (main_data.NFe.Y07.length).toString().padStart(2,"0")
-                        pgto.venc = main_data.NFe.Y07[i].Y07.date
-                        pgto.val = main_data.NFe.Y07[i].Y07.valor
-                        addBoleto(pgto)
-                    }
-                }
-                document.querySelector('#tab-export').click()
-            })            
+            alert('NFe exportada com sucesso!!')
+            listNF('NFe/txt')
+            document.querySelector('#tab-export').click()
         })
     }
 
@@ -555,26 +496,27 @@
         const tblItens = document.querySelector('#tblItens').rows
         main_data.NFe.H = []
         for(let i=1; i< tblItens.length; i++){
+console.log(tblItens[i].data)            
             const item = new Object
             item.H = new Object
             item.H.nItem = i
             item.H.infAdProd = ''
 // I|cProd|cEAN|xProd|NCM|cBenef|EXTIPI|CFOP|uCom|qCom|vUnCom|vProd|cEANTrib|uTrib|qTrib|vUnTrib| vFrete|vSeg|vDesc|vOutro| indTot| xPed|nItemPed|nFCI|
             item.I = new Object
-            item.I.cProd = tblItens[i].data.cod_prod
+            item.I.cProd = tblItens[i].data.id_prod
             item.I.cEAN = '|'
-            item.I.xProd = tblItens[i].data.descricao.trim()
+            item.I.xProd = tblItens[i].data.nome.trim()
             item.I.NCM = tblItens[i].data.ncm
             item.I.cBenef = ''
             item.I.CFOP = tblItens[i].data.cfop
             item.I.uCom = tblItens[i].data.und.split('\r')[0]
-            item.I.qCom = parseFloat(tblItens[i].data.qtd).toFixed(4)
-            item.I.vUnCom = parseFloat(tblItens[i].data.preco).toFixed(10)
+            item.I.qCom = parseFloat(tblItens[i].data.qtd_tot).toFixed(4)
+            item.I.vUnCom = parseFloat(tblItens[i].data.val_unit).toFixed(10)
             item.I.vProd = parseFloat(tblItens[i].data.total).toFixed(2)
             item.I.cEANTrib =  '|'
             item.I.uTrib = tblItens[i].data.und.split('\r')[0]
-            item.I.qTrib = parseFloat(tblItens[i].data.qtd).toFixed(4)
-            item.I.vUnTrib = parseFloat(tblItens[i].data.preco).toFixed(10)
+            item.I.qTrib = parseFloat(tblItens[i].data.qtd_tot).toFixed(4)
+            item.I.vUnTrib = parseFloat(tblItens[i].data.val_unit).toFixed(10)
             item.I.vFrete = ''
             item.I.vSeg = ''
             item.I.vDesc = ''
@@ -819,6 +761,7 @@
 
         data = e.target.parentNode.data
         data.mode = 'edtItens'
+console.log(data)        
         main_data.nfe.row_item = e.target.parentNode
         openHTML('viewNFeItens.html','pop-up','Edição de Ítem de NFe',data)
 
@@ -828,14 +771,14 @@
         data = e.target.parentNode.data
         data.mode = 'NFe'
 
-        if (confirm(`Carregar Ped.${data.num_ped} de ${data.fantasia.toUpperCase()}?`)) {
+        if (confirm(`Carregar Ped.${data.id} de ${data.fantasia.toUpperCase()}?`)) {
             function addCli(){
                 const cliente = document.querySelector('#cliente')
-                cliente.querySelector('#xNome').value = data.nome_emp.trim().toUpperCase()
+                cliente.querySelector('#xNome').value = data.nome.trim().toUpperCase()
                 cliente.querySelector('#indIEDest').value = (data.ie==null || data.ie.trim() == '') ? 2 : 1
                 cliente.querySelector('#IE').value = data.ie!=null ? getIE(data.ie) : ''
                 cliente.querySelector('#IM').value = data.im!=null ? data.im.trim().toUpperCase() : ''
-                cliente.querySelector('#CNPJ').value = getCNPJ(data.cnpj)
+                cliente.querySelector('#CNPJ').value = data.tipo=='JUR' ? getCNPJ(data.cnpj_cpf) : getCPF(data.cnpj_cpf)
                 cliente.querySelector('#xLgr').value = data.endereco!=null ? data.endereco.trim().toUpperCase() : ''
                 cliente.querySelector('#nro').value = data.num!=null ? data.num.trim().toUpperCase() : ''
                 cliente.querySelector('#XCpl').value = ''
@@ -852,10 +795,17 @@
             }    
 
             const params = new Object;
-                params.ped_id = data.id
-            const myPromisse = queryDB(params,30);
+                if(document.querySelector('#selBuscaPed').selectedIndex >= 4 ){
+                    params.table = 'tb_item_venda'
+                    params.id_venda = data.id
+                }else{
+                    params.table = 'tb_item_compra'
+                    params.id_compra = data.id
+                }
+                params.hash = localStorage.getItem('hash')
+            const myPromisse = queryDB(params,52);
             myPromisse.then((resolve)=>{
-                const json = JSON.parse(resolve)
+                const json = JSON.parse(resolve)             
                 const tbl = document.querySelector('#tblItens')
                 let total
                 if(tbl.rows.length > 0){
@@ -871,7 +821,7 @@
                 }else{
                     document.querySelector('#hdnPed').value = data.num_ped
                     total = 0
-                    tbl.head('Cod.|mobHide,Descrição,Qtd.,Preço Unit.,Sub Total,CFOP') 
+                    tbl.head('Cod.|mobHide,Descrição,Qtd.,Preço Unit.,Sub Total R$,CFOP') 
                     addCli()           
                 }
 
@@ -892,10 +842,10 @@
 
                     json[i].cfop = CFOP
 
-                    tbl.plot(json[i],'cod_prod|mobHide,descricao,qtd,preco,total,cfop','str,Upp,str,float,float,str')
+                    tbl.plot(json[i],'id_prod|mobHide,nome,qtd_tot,val_unit,total,cfop','str,Upp,str,float,float,str')
                 }
                 document.querySelector('#edtValorNF').value = total.toFixed(2)
-                document.querySelector('#txaTextoCompl').value = `DOC. EMITIDO POR ME OU EPP OPTANTE S.NACIONAL, NÃO GERA DIREITO A CREDITO FISCAL DE ISSQN E IPI, PERMITE O APROVEITAMENTO DE CREDITO DO ICMS NO VALOR DE  R$${(total*0.0282).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 2,82% NOS TERMOS DO ARTIGO 23 DA LC 123. Aprovado conforme pedido(s) ${document.querySelector('#hdnPed').value}`
+                document.querySelector('#txaTextoCompl').value = `DOC. EMITIDO POR ME OU EPP OPTANTE S.NACIONAL, NÃO GERA DIREITO A CREDITO FISCAL DE ISSQN E IPI, PERMITE O APROVEITAMENTO DE CREDITO DO ICMS NO VALOR DE  R$${(total*0.0282).toFixed(2)} CORRESPONDENTE A ALIQUOTA DE 2,82% NOS TERMOS DO ARTIGO 23 DA LC 123. Aprovado conforme pedido(s) ${data.id}`
                 document.querySelector('#tab-cliente').click()
             })
 
@@ -972,19 +922,6 @@
 
     })
 
-    document.querySelector('#xmlFiles').addEventListener('dblclick',()=>{
-
-        const file = document.getElementById('xmlFiles').value
-        const path = 'assets/NFe/xml/' + file;
-        var link = document.createElement("a");
-            link.download = file;
-            link.href = path;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            delete link; 
-    })
-
     document.getElementById('btnSaveEmit').addEventListener('click',(event)=>{
         const emitente = document.querySelector('#emitente')
         main_data.NFe.C.xNome = emitente.querySelector('#xNome').value.trim().toUpperCase()
@@ -1025,9 +962,11 @@
         main_data.NFe.B.mod = fiscal.querySelector('#mod').value.trim()
         main_data.NFe.B.serie = fiscal.querySelector('#serie').value
         now.setHours(7)
-        main_data.NFe.B.dhEmi = now.getFullDateTime()
+//        main_data.NFe.B.dhEmi = now.getFullDateTime()
+        main_data.NFe.B.dhEmi = document.querySelector('#dhEmi').value+'T:'+now.getFullHour()+'-03:00'
         now.setHours(16)
-        main_data.NFe.B.dhSaiEnt = now.getFullDateTime()
+//        main_data.NFe.B.dhSaiEnt = now.getFullDateTime()
+        main_data.NFe.B.dhSaiEnt = document.querySelector('#dhSaiEnt').value+'T:'+now.getFullHour()+'-03:00'
         main_data.NFe.B.tpNF = fiscal.querySelector('#tpNF').value
         main_data.NFe.B.idDest = fiscal.querySelector('#idDest').value
         main_data.NFe.B.cMunFG = getNum(emitente.querySelector('#cMun').value)
@@ -1075,7 +1014,7 @@
             document.getElementById('btnSaveFiscal').click()
             geraNFeItens()
             const txt = getTXT()
-            const filename = 'NFe-'+(main_data.NFe.B.nNF).padStart(6,'0')
+            const filename = 'NFe-'+(main_data.NFe.B.nNF).padStart(6,'0')          
             uploadNFe(txt, filename)
 
         }else{

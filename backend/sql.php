@@ -159,6 +159,18 @@ $query_db = array(
     "49" => 'DELETE FROM tb_compra WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "50" => 'DELETE FROM tb_item_compra WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "51" => 'UPDATE tb_item_compra SET y01="x01" WHERE id=x00;',
+    "52" => 'SELECT ITEM.*, MAT.ncm, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND((ITEM.qtd - ITEM.estorno) * ITEM.val_unit ,2) as total, ROUND(ITEM.qtd - ITEM.estorno ,2) as qtd_tot 
+        FROM x00 AS ITEM 
+        INNER JOIN tb_prod AS PROD
+        INNER JOIN tb_material AS MAT
+        ON PROD.id = ITEM.id_prod
+        AND PROD.id_mat =  MAT.id
+        AND y01="x01" 
+        AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x02") IN (10);',
+    "53" => 'SELECT * FROM tb_mail WHERE para=x00;',
+    "54" => 'INSERT INTO tb_mail (id, de, para, txt) VALUES(DEFAULT, x00, x01, "x02");',
+    "55" => 'UPDATE tb_mail  SET nao_lida=FALSE  WHERE id=x00;',
+
 
     );
 

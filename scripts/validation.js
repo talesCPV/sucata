@@ -144,17 +144,15 @@ function getPIS(V){
 }
 
 function getCPF(V){
-    const ok_chr = ['1','2','3','4','5','6','7','8','9','0'];
+    V = getNum(V)
     let out = ''
     for(let i=0; i< V.length; i++){
-        if(ok_chr.includes(V[i])){
-            if(i==3 || i==6){
-                out+='.'
-            }else if(i==9){
-                out+='-'
-            }
-            out+=V[i]            
+        if(i==3 || i==6){
+            out+='.'
+        }else if(i==9){
+            out+='-'
         }
+        out+=V[i]            
     }
     return out
 }
@@ -176,33 +174,29 @@ function getRG(V){
 }
 
 function getCNPJ(V){
-    const ok_chr = ['1','2','3','4','5','6','7','8','9','0'];
+    V = getNum(V)
     let out = ''
     for(let i=0; i< V.length; i++){
-        if(ok_chr.includes(V[i])){
-            if(i==2 || i==5){
-                out+='.'
-            }else if(i==8){
-                out+='/'
-            }else if(i==12){
-                out+='-'
-            }
-            out+=V[i]            
+        if(i==2 || i==5){
+            out+='.'
+        }else if(i==8){
+            out+='/'
+        }else if(i==12){
+            out+='-'
         }
+        out+=V[i]            
     }
     return out
 }
 
 function getIE(V){
-    const ok_chr = ['1','2','3','4','5','6','7','8','9','0'];
+    V = getNum(V)
     let out = ''
     for(let i=0; i< V.length; i++){
-        if(ok_chr.includes(V[i])){
-            if(i==3 || i==6 || i==9){
-                out+='.'
-            }
-            out+=V[i]
+        if(i==3 || i==6 || i==9){
+            out+='.'
         }
+        out+=V[i]
     }    
     return out
 }
