@@ -452,7 +452,7 @@ function openMenu(){
         fetch(myRequest)
         .then(function (response){
             if (response.status === 200) { 
-                document.querySelector('#usr-name').innerHTML = '<span id="badge" class="w3-badge w3-red"></span> '+localStorage.getItem('username').toUpperCase()
+                document.querySelector('#usr-name').innerHTML = '<span id="badge" class="badge"></span> '+localStorage.getItem('username').toUpperCase()
                 resolve(response.text()); 
                 checkMail()                   
             } else { 

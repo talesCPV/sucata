@@ -143,7 +143,7 @@
 			]
 		},		
 		{
-			"modulo" : "Mensagens <span id='badge_mobile' class='w3-badge w3-red'></span>",
+			"modulo" : "Mensagens <span id='badge_mobile' class='badge'></span>",
 			"script" : "javascript:openHTML('mail.html','pop-up')",
 			"access" : [10,1],
 			"class"  : "hideMenu",

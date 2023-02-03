@@ -130,6 +130,19 @@
         font-size: 1.5em;
     }
 
+    /* BADGES */
+    .badge{
+        display: inline-block;
+        padding: 0;
+        border-radius: 50%;
+        background-color: rgb(201, 42, 42);
+        width: 30px;
+        height: 30px;
+    } 
+    .badge:empty{
+
+        background-color: rgba(0, 0, 0, 0);
+    }
 
     /* CLASSES */
 
@@ -223,6 +236,10 @@
 
         table{
             font-size: small;
+        }
+
+        .badge{
+            padding-left: 10px;
         }
 
         .form-base{
