@@ -15,6 +15,7 @@
         <legend>Recebidas</legend>
         <select id="cmbMail" size="10"></select>
         <div class="inline">
+            <button id="btnLer">Ler</button>
             <button id="btnDel">Deletar</button>
         </div>
     </fieldset>          
@@ -87,16 +88,28 @@
 
     })
 
-    document.querySelector('#cmbMail').addEventListener('dblclick',()=>{
+    function readMail(){
         const sel = document.querySelector('#cmbMail')
-        const data = sel.options[sel.selectedIndex].data     
-        alert(data.txt)
-        const params = new Object;
-            params.id = data.id
-        const myPromisse = queryDB(params,55)
-        myPromisse.then(()=>{
-            checkMail()
-        })
+        if(sel.value != ''){
+            const data = sel.options[sel.selectedIndex].data     
+            alert(data.txt)
+            const params = new Object;
+                params.id = data.id
+            const myPromisse = queryDB(params,55)
+            myPromisse.then(()=>{
+                checkMail()
+            })
+        }else{
+            alert('Nenhuma mensagem foi selecionada!')
+        }
+    }
+
+    document.querySelector('#cmbMail').addEventListener('dblclick',()=>{
+        readMail()
+    })
+
+    document.querySelector('#btnLer').addEventListener('click',()=>{
+        readMail()
     })
 
     document.querySelector('#btnDel').addEventListener('click',()=>{
