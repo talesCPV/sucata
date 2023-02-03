@@ -117,7 +117,7 @@ nav ul ul {
 	display: none;
 	position: absolute; 
 	/* has to be the same number as the "line-height" of "nav a" */
-	top: 60px; 
+	/*top: 60px; */
 }
 	
 /* Display Dropdowns on Hover */
