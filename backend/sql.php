@@ -167,10 +167,16 @@ $query_db = array(
         AND PROD.id_mat =  MAT.id
         AND y01="x01" 
         AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x02") IN (10);',
-    "53" => 'SELECT * FROM tb_mail WHERE para=x00;',
+    "53" => 'SELECT MAIL.*, USER.nome AS remetente
+        FROM tb_mail AS MAIL 
+        INNER JOIN tb_usuario AS USER
+        ON MAIL.de=USER.id
+        AND MAIL.para=x00
+        ORDER BY MAIL.id DESC;',
     "54" => 'INSERT INTO tb_mail (id, de, para, txt) VALUES(DEFAULT, x00, x01, "x02");',
     "55" => 'UPDATE tb_mail  SET nao_lida=FALSE  WHERE id=x00;',
-
+    "56" => 'SELECT id, nome FROM tb_usuario WHERE id NOT IN (x00) ORDER BY nome;',
+    "57" => 'DELETE FROM tb_mail WHERE para=x00 AND y01 x02 x01;',
 
     );
 

@@ -14,6 +14,9 @@
     <fieldset>
         <legend>Recebidas</legend>
         <select id="cmbMail" size="10"></select>
+        <div class="inline">
+            <button id="btnDel">Deletar</button>
+        </div>
     </fieldset>          
         
     <fieldset>
@@ -32,8 +35,8 @@
 
     main_data.mail.fillUsers = ()=>{
         const params = new Object;
-            params.hash = localStorage.getItem('hash')
-        fillCombo('cmbUser',params,26,['id','nome'], '#')
+            params.hash = localStorage.getItem('id_user')
+        fillCombo('cmbUser',params,56,['id','nome'], '#')
     }
 
     main_data.mail.fillMail = ()=>{
@@ -43,12 +46,14 @@
         myPromisse.then((txt)=>{
             const json = JSON.parse(txt)
             const sel = document.querySelector('#cmbMail')
+            sel.innerHTML = ''
             let unread = 0
             for(let i=0; i<json.length; i++){
+                const dt = new Date(json[i].data)
                 unread += parseInt(json[i].nao_lida)
                 const op = document.createElement('option')
                 op.value = json[i].id
-                op.innerHTML = json[i].txt.substr(0,60)
+                op.innerHTML =`${dt.getFormatBR()} as ${dt.getFullHour()} (${json[i].remetente.substr(0,20).trim()}) -> ${json[i].txt.substr(0,40).trim()}`
                 op.style = json[i].nao_lida == '1' ? 'font-weight: 900;' : 'font-weight: 200;'
                 op.data = json[i]
                 sel.appendChild(op)
@@ -92,9 +97,26 @@
         myPromisse.then(()=>{
             checkMail()
         })
-
-
     })
+
+    document.querySelector('#btnDel').addEventListener('click',()=>{
+        const sel = document.querySelector('#cmbMail')
+        if(sel.value != ''){
+            if (confirm('Após deletada, essa mensagem não poderá ser recuperada, deseja prosseguir?')) {
+                const params = new Object;
+                    params.para = localStorage.getItem('id_user')
+                    params.id = sel.value
+                    params.signal = '='
+                const myPromisse = queryDB(params,57)
+                myPromisse.then(()=>{
+                    main_data.mail.fillMail()
+                })
+            }
+        }else{
+            alert('Nenhuma mensagem foi selecionada!')
+        }
+    })
+
 
 
 </script>

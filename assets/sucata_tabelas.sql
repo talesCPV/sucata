@@ -224,13 +224,14 @@ ADD COLUMN id_item_compra int(11) DEFAULT 0;
 ALTER TABLE tb_item_temp
 ADD COLUMN qtd_orig double DEFAULT 0;
 
-/* drop table tb_mail;*/
+/*drop table tb_mail;*/
 CREATE TABLE tb_mail(
     id INT NOT NULL AUTO_INCREMENT,
     de int(11) NOT NULL,
     para int(11) NOT NULL,
-    lida BOOLEAN DEFAULT FALSE,
+    nao_lida BOOLEAN DEFAULT TRUE,
     txt VARCHAR(255) NOT NULL DEFAULT "",
+    data datetime DEFAULT CURRENT_TIMESTAMP, 
     FOREIGN KEY (de) REFERENCES tb_usuario(id),
     FOREIGN KEY (para) REFERENCES tb_usuario(id),
     PRIMARY KEY(id)
