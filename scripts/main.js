@@ -223,6 +223,7 @@ function closeModal(id='all'){
         delete main_data[id]
     }
     mod_main.style.display = (mod_main.querySelectorAll('.modal').length < 1) ? "none" : 'block'
+    checkMail()
 }
 
 function newModal(title, content, pos, id){
@@ -542,7 +543,8 @@ function checkMail(){
         for(let i=0; i<json.length; i++){
             unread += parseInt(json[i].nao_lida)
         }     
-        document.querySelector('#badge').innerHTML = unread > 0 ? unread : ''            
+        document.querySelector('#badge').innerHTML = unread > 0 ? unread : '' 
+        document.querySelector('#badge_mobile').innerHTML = unread > 0 ? unread : ''                   
     })
 }
 
