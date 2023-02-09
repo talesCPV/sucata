@@ -148,7 +148,8 @@
                 const myPromisse = queryDB(params,41);
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
-                        const sel = document.querySelector('#cmbCli_compra')                          
+                        const sel = document.querySelector('#cmbCli_compra')
+                        let total = 0
                         for(let i=0; i<main_data.compra.data.itens_temp.length; i++){
                             const params_itens = new Object; // adiciona item compra
                                 params_itens.id = 'DEFAULT' 
@@ -168,6 +169,16 @@
                             const myPromisse_update = queryDB(params_update,30);  
                             setLog(`Compra ${main_data.compra.data.itens_temp[i].qtd}Kg de ${main_data.compra.data.itens_temp[i].nome} por R$${main_data.compra.data.itens_temp[i].val_venda} para ${sel.options[sel.selectedIndex].text}  `)
                         }
+
+                        const params_saldo = new Object // atualiza saldo
+                            params_saldo.id = 'DEFAULT'
+                            params_saldo.id_cliente = document.querySelector('#cmbCli_compra').value
+                            params_saldo.data = now.getFullDateTime()
+                            params_saldo.valor = parseFloat(main_data.compra.data.itens_temp[i].val_venda)
+                            params_saldo.tipo = 'PAGAR'
+                            params_saldo.quitado = false
+                            params_saldo.obs = params.obs
+                        const myPromisse_saldo = queryDB(params_saldo,58); 
 
                         const params_del_temp = new Object; // deleta venda temporaria
                             params_del_temp.id_local = main_data.viewLocal.data.id

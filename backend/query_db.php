@@ -22,7 +22,7 @@
             $i++;
         }
 
-//    echo $query;
+//    echo $query; 
 
             $result = mysqli_query($conexao, $query);
             if(is_object($result)){

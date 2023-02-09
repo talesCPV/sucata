@@ -236,3 +236,16 @@ CREATE TABLE tb_mail(
     FOREIGN KEY (para) REFERENCES tb_usuario(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+/*drop table tb_saldo;*/
+CREATE TABLE tb_saldo(
+    id INT NOT NULL AUTO_INCREMENT,
+    id_cliente int(11) NOT NULL,
+    data date DEFAULT CURRENT_DATE, 
+    valor double NOT NULL DEFAULT 0,
+    tipo VARCHAR(7) NOT NULL DEFAULT "PAGAR",
+    quitado BOOLEAN DEFAULT FALSE,
+    obs VARCHAR(255) NOT NULL DEFAULT "",
+	FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
+    PRIMARY KEY(id)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

@@ -1,0 +1,117 @@
+
+<template>
+    <style>
+
+        .frm{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .inline label{
+            width:  120px;
+        }
+
+        .inline select{
+            width: 100%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+
+    </style>
+  
+    <fieldset class="frm">
+        <legend>Lançamento</legend>
+        <div class="inline">
+            <label for="cmbCli">Cliente</label>
+            <select id="cmbCli"></select>   
+        </div>
+        <div class="inline">
+            <label for="edtData">Data</label>
+            <input type="date" id="edtData">
+            <label for="edtVal">Valor R$</label>
+            <input type="text" id="edtVal" onkeyup="valFloat(this)">
+            <label for="cmbTipo">Tipo</label>
+            <select id="cmbTipo">
+                <option value="PAGAR">A PAGAR</option>
+                <option value="RECEBER">A RECEBER</option>
+                <option value="VALE">ADIANTAMENTO</option>
+            </select>
+        </div>
+        <div class="inline">
+            <label for="cmbQuit">Estado</label>
+            <select id="cmbQuit">
+                <option value="0">Aberto</option>
+                <option value="1">Quitado</option>
+            </select>
+<!--            <input type="text" id="edtAccess" readonly>   -->
+        </div>
+        <div class="inline">
+            <label for="edtObs">Obs</label>
+            <textarea id="edtObs" cols="30" rows="10"></textarea>
+        </div>
+
+        <button id="btnSave">Salvar</button>
+        <button id="btnDel">Deletar</button>
+    </fieldset>
+
+</template>
+<script>
+
+    main_data.viewSaldo.fillClientes = ()=>{
+        const params_cli = new Object;
+            params_cli.field = 'id'
+            params_cli.signal = '>='
+            params_cli.value = '0' 
+        fillCombo('cmbCli',params_cli,1,['id','fantasia'], main_data.viewSaldo.data.id_cliente)
+    }
+
+    if(main_data.viewSaldo.data.mode == 'edit'){
+//        main_data.viewSaldo.fillClientes()
+        document.querySelector('#edtData').value = main_data.viewSaldo.data.data.substr(0,10)
+        document.querySelector('#edtVal').value = parseFloat(main_data.viewSaldo.data.valor).toFixed(2)
+        document.querySelector('#cmbTipo').value = main_data.viewSaldo.data.tipo
+        document.querySelector('#cmbQuit').value = main_data.viewSaldo.data.quitado
+        document.querySelector('#edtObs').value = main_data.viewSaldo.data.obs
+    }else{
+        document.querySelector('#edtData').value =  today.getFormatDate()
+        document.querySelector('#edtVal').value = 0
+        document.querySelector('#btnDel').style.display = 'none'
+    }
+
+    main_data.viewSaldo.fillClientes()
+
+    document.querySelector('#btnSave').addEventListener('click',()=>{
+        if (main_data.viewSaldo.data.mode != 'edit' || confirm('Deseja alterar este pagamento?')) {
+            const params = new Object; 
+                params.id = main_data.viewSaldo.data.mode == 'edit' ? main_data.viewSaldo.data.id : 'DEFAULT'
+                params.id_cliente = document.querySelector('#cmbCli').value
+                params.data = document.querySelector('#edtData').value+' 00:00:00'
+                params.valor = document.querySelector('#edtVal').value
+                params.tipo = document.querySelector('#cmbTipo').value
+                params.quitado = document.querySelector('#cmbQuit').value
+                params.obs = document.querySelector('#edtObs').value
+            const myPromisse = queryDB(params,58);
+            myPromisse.then((resolve)=>{
+                alert('Pagamento alterado com sucesso!')
+                main_data.cont_pagar.busca()
+                closeModal('viewSaldo')
+            })
+        }
+    })
+    
+    document.querySelector('#btnDel').addEventListener('click',()=>{
+        if (confirm('Deseja deletar este pagamento?')) {
+            const params = new Object; 
+                params.id = main_data.viewSaldo.data.id
+                params.hash = localStorage.getItem('hash')
+            const myPromisse = queryDB(params,60);
+            myPromisse.then((resolve)=>{
+                main_data.cont_pagar.busca()
+                closeModal('viewSaldo')
+            })
+
+        }
+    })
+
+</script>
