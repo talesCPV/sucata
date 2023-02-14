@@ -76,6 +76,7 @@
     }else{
         document.querySelector('#edtData').value =  today.getFormatDate()
         document.querySelector('#edtVal').value = 0
+        document.querySelector('#cmbTipo').value = main_data.viewSaldo.data.mode
         document.querySelector('#btnDel').style.display = 'none'
     }
 
@@ -92,7 +93,7 @@
                 params.quitado = document.querySelector('#cmbQuit').value
                 params.obs = document.querySelector('#edtObs').value
                 params.id_origem = main_data.viewSaldo.data.id_origem
-                params.tb_origem = main_data.viewSaldo.data.tb_origem
+                params.tb_origem = main_data.viewSaldo.data.mode == 'edit' ? main_data.viewSaldo.data.tb_origem : main_data.viewSaldo.data.mode == 'PAGAR' ? 'tb_compra' : 'tb_venda'
             
             const myPromisse = queryDB(params,58);
             myPromisse.then((resolve)=>{
