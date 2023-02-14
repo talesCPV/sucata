@@ -87,13 +87,16 @@
                 params.id = main_data.viewSaldo.data.mode == 'edit' ? main_data.viewSaldo.data.id : 'DEFAULT'
                 params.id_cliente = document.querySelector('#cmbCli').value
                 params.data = document.querySelector('#edtData').value+' 00:00:00'
-                params.valor = document.querySelector('#edtVal').value
+                params.valor = Math.abs(parseFloat(document.querySelector('#edtVal').value))
                 params.tipo = document.querySelector('#cmbTipo').value
                 params.quitado = document.querySelector('#cmbQuit').value
                 params.obs = document.querySelector('#edtObs').value
+                params.id_origem = main_data.viewSaldo.data.id_origem
+                params.tb_origem = main_data.viewSaldo.data.tb_origem
+            
             const myPromisse = queryDB(params,58);
             myPromisse.then((resolve)=>{
-                alert('Pagamento alterado com sucesso!')
+                alert(`Pagamento ${main_data.viewSaldo.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
                 main_data.cont_pagar.busca()
                 closeModal('viewSaldo')
             })

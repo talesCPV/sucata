@@ -45,9 +45,9 @@
     </div>
     <div class="inline">
         <label for="edtQtd">Qtd</label>
-        <input type="text" id="edtQtd" inputmode="numeric" onkeyup="return valFloat(this)" value="0">
+        <input type="text" id="edtQtd" inputmode="decimal" onkeyup="return valFloat(this)" value="0">
         <label for="edtPreco">Preço R$</label>
-        <input type="text" id="edtPreco" inputmode="numeric" onkeyup="return valFloat(this)" value="0">
+        <input type="text" id="edtPreco" inputmode="decimal" onkeyup="return valFloat(this)" value="0">
     </div>
     <button id="btnAdicionar">OK</button>
 </fieldset>
@@ -85,9 +85,7 @@
         main_data.addProd.select = e.target.parentNode.data
 
         document.querySelector('#lblProd').innerHTML = main_data.addProd.select.nome
-
-        console.log(main_data.addProd.select)
-
+        document.querySelector('#edtQtd').focus()
     })
 
     function check(){

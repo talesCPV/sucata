@@ -177,15 +177,16 @@ $query_db = array(
     "55" => 'UPDATE tb_mail  SET nao_lida=FALSE  WHERE id=x00;',
     "56" => 'SELECT id, nome FROM tb_usuario WHERE id NOT IN (x00) ORDER BY nome;',
     "57" => 'DELETE FROM tb_mail WHERE para=x00 AND y01 x02 x01;',
-    "58" => 'INSERT INTO tb_saldo (id, id_cliente, data, valor, tipo, quitado, obs) VALUES(x00, x01, "x02", "x03", "x04", "x05", "x06") 
-        ON DUPLICATE KEY UPDATE   id_cliente="x01", data="x02", valor="x03", tipo="x04", quitado="x05", obs="x06";',
+    "58" => 'INSERT INTO tb_saldo (id, id_cliente, data, valor, tipo, quitado, obs, id_origem, tb_origem) VALUES(x00, x01, "x02", "x03", "x04", "x05", "x06", x07, "x08") 
+        ON DUPLICATE KEY UPDATE id_cliente="x01", data="x02", valor="x03", tipo="x04", quitado="x05", obs="x06", id_origem="x07", tb_origem="x08";',
     "59" => 'SELECT SAL.*, CLI.fantasia
         FROM tb_saldo AS SAL
         INNER JOIN tb_clientes AS CLI
         ON SAL.id_cliente = CLI.id
         AND x00 x01 x02
-        AND data >= "x03"
-        AND data <= "x04"
+        AND SAL.tb_origem = "x03"
+        AND data >= "x04"
+        AND data <= "x05"
         ORDER BY SAL.data DESC;',
     "60" => 'DELETE FROM tb_saldo WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
 

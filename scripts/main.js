@@ -147,7 +147,13 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                     html = obj[arr[0]] != null ? obj[arr[0]].toLowerCase().trim() : ''
                     break;
                 case 'R$.':
-                    html = obj[arr[0]] != null ? viewMoneyBR(parseFloat(obj[arr[0]]).toFixed(2)) : ''   //'R$'+ parseFloat(obj[arr[0]]).toFixed(2)
+                    if(parseFloat(obj[arr[0]]).toFixed(2) >=0 ){
+                        html = obj[arr[0]] != null ? viewMoneyBR(parseFloat(obj[arr[0]]).toFixed(2)) : ''   //'R$'+ parseFloat(obj[arr[0]]).toFixed(2)
+                        green = true
+                    }else{
+                        html = obj[arr[0]] != null ? `(${viewMoneyBR(parseFloat(obj[arr[0]]).toFixed(2))})` : ''   //'R$'+ parseFloat(obj[arr[0]]).toFixed(2)
+                        green = false
+                    }
                     break;             
                 case 'cha':
                     op = type[i].split(' ')
@@ -187,6 +193,7 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
     tr.data = obj
     if(mark){
         tr.style.background = green ? 'rgb(99, 201, 99)' : 'rgb(201, 99, 99)'
+        tr.style.color = green ? 'rgb(0,0,0)' : 'rgb(255,255,255)'
     }
     this.appendChild(tr)
 }

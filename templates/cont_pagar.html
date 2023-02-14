@@ -9,6 +9,14 @@
             display: none;
         }
 
+        #tblComp tr:nth-child(even) {
+            filter: brightness(80%);
+        }    
+
+        #tblComp tr:nth-child(odd) {
+            filter: brightness(90%);
+        }  
+        
     </style>
 
     <div class="form-base">
@@ -20,7 +28,8 @@
                 <label for="edtBusca">por:</label>
                 <select id="cmbBusca">
                     <option value="SAL.id" signal=">=" val="0" selected>Todos</option>
-                    <option value="CLI.fantasia" signal="LIKE">Cliente</option>
+                    <option value="CLI.cnpj_cpf" signal="LIKE">CNPJ/CPF</option>
+                    <option value="CLI.fantasia" signal="LIKE">Nome Cliente</option>
                     <option value="SAL.quitado" signal="=" val="1">Pago</option>
                     <option value="SAL.quitado" signal="=" val="0">Aberto</option>
                 </select>
@@ -55,15 +64,18 @@
         document.querySelector('#edtBusca').value = localStorage.getItem('nome')
     }
 
-
-
     main_data.cont_pagar.busca = function (){
 
         const sel = document.querySelector('#cmbBusca')
-        const field = sel.value
+        let field = sel.value
         const signal = sel.options[sel.selectedIndex].getAttribute('signal')
         let value = sel.options[sel.selectedIndex].hasAttribute('val') ? sel.options[sel.selectedIndex].getAttribute('val') : document.querySelector('#edtBusca').value.trim()
         value = signal=='LIKE' ? `"%${value}%"` : signal=='IN' ? `(${value})` : sel.value=='true'? sel.value : `"${value}"`
+
+        if(sel.value == 'CLI.cnpj_cpf'){
+            field = '(' + field
+            value = `"${getCPF(document.querySelector('#edtBusca').value)}%" OR CLI.cnpj_cpf LIKE "${getCNPJ(document.querySelector('#edtBusca').value)}%")`
+        }
 
         const date_fin = new Date(document.querySelector('#edtFin').value)
         date_fin.change(2)
@@ -74,6 +86,7 @@
             params.field = field
             params.signal = signal
             params.value = value
+            params.td_origem = 'tb_compra'
             params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
             params.fin = ckb ? date_fin.getFormatDate() : '2100-12-31';        
 
@@ -90,20 +103,20 @@
                 tot.val = 0   
                 for(let i=0; i<json.length;i++){
                     if(json[i].tipo=='PAGAR'){
-                        tot.val -= json[i].quitado=='0' ? parseFloat(json[i].valor) : 0 // SUBTRAI DO TOTAL
-                        tbl.plot(json[i],'data,fantasia,tipo|mobHide,quitado,valor','date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, true, true)                    
-                    }else{
+                        json[i].valor = -1 * parseFloat(json[i].valor)
+                    }
+//                        tot.val -= json[i].quitado=='0' ? parseFloat(json[i].valor) : 0 // SUBTRAI DO TOTAL
+//                        tbl.plot(json[i],'data,fantasia,tipo|mobHide,quitado,valor','date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, !parseInt(json[i].quitado))
+//                    }else{
                         tot.val += json[i].quitado=='0' ? parseFloat(json[i].valor) : 0 // ACUMULA NO TOTAL
-                        tbl.plot(json[i],'data,fantasia,tipo|mobHide,quitado,valor','date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, true)                    
-                    }  
-                }
+                        tbl.plot(json[i],'data,fantasia,tipo|mobHide,quitado,valor','date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, !parseInt(json[i].quitado))
+//                    }
+//                    console.log(json[i])
+                }                
                 tbl.plot(tot,'blank,blank,blank|mobHide,lblTot,val','str,str,str,Upp,R$.')                
             }        
         })
-
     }
-
-
 
     document.querySelector('#btnBusca').addEventListener('click',()=>{
         main_data.cont_pagar.busca()

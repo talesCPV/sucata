@@ -10,9 +10,9 @@
 
     <div class="inline">
         <label for="edtQtd">Qtd</label>
-        <input type="text" id="edtQtd" inputmode="numeric" onkeyup="return valFloat(this)" onkeypress="return getEnter(event, 'btnSaveItem')">
+        <input type="text" id="edtQtd" inputmode="decimal" onkeyup="return valFloat(this)" onkeypress="return getEnter(event, 'btnSaveItem')">
         <label for="edtPreco">Preço</label>
-        <input type="text" id="edtPreco" inputmode="numeric" onkeyup="return valFloat(this)" onkeypress="return getEnter(event, 'btnSaveItem')">
+        <input type="text" id="edtPreco" inputmode="decimal" onkeyup="return valFloat(this)" onkeypress="return getEnter(event, 'btnSaveItem')">
     </div>
     <div class="inline">
         <button id="btnSaveItem">Salvar</button>
@@ -27,7 +27,7 @@
     localStorage.setItem('limite',parseFloat(main_data.edtProd.data.edtVal).toFixed(2))
 
     document.querySelector('#lgdItem').innerHTML = main_data.edtProd.data.nome
-    document.querySelector('#edtQtd').value = main_data.edtProd.data.qtd
+    document.querySelector('#edtQtd').value = parseFloat(main_data.edtProd.data.qtd).toFixed(2)
     document.querySelector('#edtPreco').value = parseFloat(main_data.edtProd.data.edtVal).toFixed(2)
 
     document.querySelector('#btnSaveItem').addEventListener('click',()=>{

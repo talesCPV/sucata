@@ -154,14 +154,14 @@ function block_text(T=''){
     print()
 }
 
-function header_pdf(lin_h = 5, font_size = 15){
+function header_pdf(lin_h = 5, font_size = 20){
     const ini_y = txt.y
     logo([14,15,45,10])
     //  CABEÇALHO
     doc.setFontSize(font_size)
     doc.setFont(undefined, 'bold')
     txt.y = 20
-    center_text('CALDEIRÃO SUCATAS',[50,200])
+    center_text('CALDEIRÃO SUCATAS',[35,200])
     txt.y = ini_y
 }
 
@@ -244,22 +244,23 @@ function print_compra(data){
 
     }else{
         txt.y = 35
-        doc.setFontSize(15)
+/*        doc.setFontSize(15)
         doc.setTextColor(255,0,0);
         center_text('NÃO VALE COMO RECIBO')
-        doc.setFontSize(12)
+*/      doc.setFontSize(12)
         doc.setTextColor(0);
 
         if(data.callby == 'viewComp_detal'){
-            doc.text('Compra: '+ data.id.padStart(6,'0') , 10,45);
-            doc.text('Data: '+ data.saida , 10,50);
+            doc.text('Compra: '+ data.id.padStart(6,'0') , 10,35);
+            doc.text('Data: '+ data.saida , 10,40);
             outfile = `Boleta_CP_${data.id.padStart(6,'0')}.pdf`
         }else{
-            doc.text('Venda: '+ data.id.padStart(6,'0')+' realizada dia '+data.saida, 10,45);
-            doc.text('Data: '+ data.saida , 10,50);
+            doc.text('Venda: '+ data.id.padStart(6,'0')+' realizada dia '+data.saida, 10,35);
+            doc.text('Data: '+ data.saida , 10,40);
             outfile = `Boleta_VD_${data.id.padStart(6,'0')}.pdf`
         }
-        doc.text('Cliente: '+ data.nome, 10,55);
+        doc.text('Cliente: '+ data.nome, 10,45);
+/*        
         if(data.tipo == 'JUR'){
             doc.text('CNPJ: '+ data.cnpj_cpf, 10,60);
         }else{
@@ -270,11 +271,9 @@ function print_compra(data){
         doc.text('Fone: '+data.tel + ' CEP:'+data.cep, 10,75);
         doc.text('Banco: '+data.bco_nome+' AG:'+data.bco_ag+' C/C:'+data.bco_cc, 10,80);
         doc.text('Chave PIX: '+data.bco_pix, 10,85);
-        txt.y = 95
-    }
-
-
-    
+*/        
+        txt.y = 60
+    }    
 
     doc.autoTable({
         head: [["Discriminação",'Und.','Qtd.',"Valor Unit.","Total"]],
@@ -282,6 +281,15 @@ function print_compra(data){
         startY: txt.y      
     });
     
+    txt.y = doc.previousAutoTable.finalY + 10
+
+
+    if(data.callby == 'viewComp_detal'){
+        doc.setFontSize(15)
+        doc.setTextColor(255,0,0);
+        center_text('NÃO VALE COMO RECIBO')
+    }
+
     doc.save(outfile)
 }
 

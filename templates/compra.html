@@ -23,12 +23,12 @@
                 <select id="cmbCli_compra"></select>
                 <button id="btnNovoCli" class="btnAdd" >+</button>
             </div>
-            <table id="tbl-itens_compra"></table>
             <div class="inline">
                 <button id="btnAdd">Adicionar Produtos</button>
                 <button id="btnClear">Limpar Lista</button>
                 <button id="btnCompra">Gerar Compra</button>
             </div>
+            <table id="tbl-itens_compra"></table>
         </fieldset>
 
 
@@ -151,6 +151,9 @@
                         const sel = document.querySelector('#cmbCli_compra')
                         let total = 0
                         for(let i=0; i<main_data.compra.data.itens_temp.length; i++){
+
+                            total += parseFloat(main_data.compra.data.itens_temp[i].val_venda)
+
                             const params_itens = new Object; // adiciona item compra
                                 params_itens.id = 'DEFAULT' 
                                 params_itens.id_compra = '(SELECT MAX(id) FROM tb_compra)'
@@ -174,10 +177,13 @@
                             params_saldo.id = 'DEFAULT'
                             params_saldo.id_cliente = document.querySelector('#cmbCli_compra').value
                             params_saldo.data = now.getFullDateTime()
-                            params_saldo.valor = parseFloat(main_data.compra.data.itens_temp[i].val_venda)
+                            params_saldo.valor = total
                             params_saldo.tipo = 'PAGAR'
                             params_saldo.quitado = false
                             params_saldo.obs = params.obs
+                            params_saldo.id_origem = '(SELECT MAX(id) FROM tb_compra)'
+                            params_saldo.tb_origem = 'tb_compra'
+                           
                         const myPromisse_saldo = queryDB(params_saldo,58); 
 
                         const params_del_temp = new Object; // deleta venda temporaria

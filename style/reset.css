@@ -65,7 +65,13 @@
 
     tr:nth-child(even) {
         background-color: #dddddd;
+/*        filter: brightness(90%);*/
     }    
+/*
+    tr:nth-child(odd) {
+        filter: brightness(90%);
+    }    
+*/        
 
     fieldset{
         border-radius: 10px;
@@ -213,7 +219,7 @@
     .control-size *{
         min-width: auto !important;
     }
-
+/*
     .path:nth-child(even) {
         background-color: #79a04779 !important;
     }    
@@ -221,7 +227,7 @@
     .path:nth-child(odd) {
         background-color: #a3d66179 !important;
     }    
-
+*/
 /*  MOBILE  */
 
     @media all and (max-width : 768px) {
