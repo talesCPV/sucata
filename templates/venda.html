@@ -180,7 +180,11 @@
                 myPromisse.then((resolve)=>{
                     if(resolve.trim() != ""){
                         const sel = document.querySelector('#cmbCli_venda') 
+                        let total = 0
                         for(let i=0; i<main_data.venda.data.itens_temp.length; i++){
+
+                            total += parseFloat(main_data.venda.data.itens_temp[i].val_venda)
+
                             const params_itens = new Object; // adiciona item venda
                                 params_itens.id = 'DEFAULT' 
                                 params_itens.id_venda = '(SELECT MAX(id) FROM tb_venda)'
@@ -199,10 +203,24 @@
                             setLog(`Venda ${main_data.venda.data.itens_temp[i].qtd}Kg de ${main_data.venda.data.itens_temp[i].nome} por R$${main_data.venda.data.itens_temp[i].val_venda}  para ${sel.options[sel.selectedIndex].text} `)
                         }
 
+                        const params_saldo = new Object // atualiza saldo
+                            params_saldo.id = 'DEFAULT'
+                            params_saldo.id_cliente = document.querySelector('#cmbCli_venda').value
+                            params_saldo.data = now.getFullDateTime()
+                            params_saldo.valor = total
+                            params_saldo.tipo = 'RECEBER'
+                            params_saldo.quitado = false
+                            params_saldo.obs = params.obs
+                            params_saldo.id_origem = '(SELECT MAX(id) FROM tb_venda)'
+                            params_saldo.tb_origem = 'tb_venda'
+                           
+                        const myPromisse_saldo = queryDB(params_saldo,58); 
+
                         const params_del_temp = new Object; // deleta venda temporaria
                             params_del_temp.id_local = main_data.viewLocal.data.id
                             params_del_temp.hash = localStorage.getItem('hash')
                         const myPromisse_del_itens = queryDB(params_del_temp,37);
+                        
                         myPromisse_del_itens.then((resolve)=>{
                             alert('Venda Realizada com sucesso!')
                             main_data.viewLocal.fillItens()

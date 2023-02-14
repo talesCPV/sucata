@@ -1,0 +1,134 @@
+
+<template>
+    <style>
+        #btnRelat{
+            display: none;
+        }
+
+        #divBusca{
+            display: none;
+        }
+
+        #tblComp tr:nth-child(even) {
+            filter: brightness(80%);
+        }    
+
+        #tblComp tr:nth-child(odd) {
+            filter: brightness(90%);
+        }  
+        
+    </style>
+
+    <div class="form-base">
+        <h1>Contas a Receber</h1>
+
+        <fieldset>
+            <legend>Busca</legend>
+            <div id="divBusca" class="inline">
+                <label for="edtBusca">por:</label>
+                <select id="cmbBusca">
+                    <option value="SAL.id" signal=">=" val="0" selected>Todos</option>
+                    <option value="CLI.cnpj_cpf" signal="LIKE">CNPJ/CPF</option>
+                    <option value="CLI.fantasia" signal="LIKE">Nome Cliente</option>
+                    <option value="SAL.quitado" signal="=" val="1">Pago</option>
+                    <option value="SAL.quitado" signal="=" val="0">Aberto</option>
+                </select>
+                <input type="text" id="edtBusca" onkeypress="return getEnter(event, 'btnBusca')">
+                <button id="btnNovo" class="btnAdd" >+</button>
+            </div>            
+            <div class="inline center-itens">
+                <div class="ckBOX">
+                    <label for="ckbData">Início/Final</label>
+                    <input type="checkbox" id="ckbData" checked>
+                </div>
+                <input type="date" id="edtIni">
+                <input type="date" id="edtFin">
+                <button id="btnBusca">Busca</button>
+            </div>  
+            <table id="tblComp"></table>
+        </fieldset>
+    
+    </div>
+
+
+</template>
+<script>
+  
+    document.querySelector('#edtIni').value =  today.iniMonth()
+    document.querySelector('#edtFin').value =  today.finMonth()
+
+    if(localStorage.getItem('access')=='10'){
+        document.querySelector('#divBusca').style.display = 'flex'
+    }else{
+        document.querySelector('#cmbBusca').value = 'USR.nome'
+        document.querySelector('#edtBusca').value = localStorage.getItem('nome')
+    }
+
+    main_data.cont_receber.busca = function (){
+
+        const sel = document.querySelector('#cmbBusca')
+        let field = sel.value
+        const signal = sel.options[sel.selectedIndex].getAttribute('signal')
+        let value = sel.options[sel.selectedIndex].hasAttribute('val') ? sel.options[sel.selectedIndex].getAttribute('val') : document.querySelector('#edtBusca').value.trim()
+        value = signal=='LIKE' ? `"%${value}%"` : signal=='IN' ? `(${value})` : sel.value=='true'? sel.value : `"${value}"`
+
+        if(sel.value == 'CLI.cnpj_cpf'){
+            field = '(' + field
+            value = `"${getCPF(document.querySelector('#edtBusca').value)}%" OR CLI.cnpj_cpf LIKE "${getCNPJ(document.querySelector('#edtBusca').value)}%")`
+        }
+
+        const date_fin = new Date(document.querySelector('#edtFin').value)
+        date_fin.change(2)
+
+        const ckb = document.querySelector('#ckbData').checked
+        const tbl = document.getElementById('tblComp')
+        const params = new Object;
+            params.field = field
+            params.signal = signal
+            params.value = value
+            params.td_origem = 'tb_venda'
+            params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
+            params.fin = ckb ? date_fin.getFormatDate() : '2100-12-31';        
+
+        const myPromisse = queryDB(params,59);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);                             
+                tbl.innerHTML=''
+                json.length > 0 ? tbl.head('Data,Cliente,Tipo|mobHide,Status,Saldo') : 0
+                const tot = new Object
+                tot.blank = ''
+                tot.lblTot = 'TOTAL'
+                tot.val = 0   
+                for(let i=0; i<json.length;i++){
+                    if(json[i].tipo=='PAGAR'){
+                        json[i].valor = -1 * parseFloat(json[i].valor)
+                    }
+                    tot.val += json[i].quitado=='0' ? parseFloat(json[i].valor) : 0 // ACUMULA NO TOTAL
+                    tbl.plot(json[i],'data,fantasia,tipo|mobHide,quitado,valor','date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, !parseInt(json[i].quitado))
+                }                
+                tbl.plot(tot,'blank,blank,blank|mobHide,lblTot,val','str,str,str,Upp,R$.')                
+            }        
+        })
+    }
+
+    document.querySelector('#btnBusca').addEventListener('click',()=>{
+        main_data.cont_receber.busca()
+    })
+   
+
+    document.querySelector('#tblComp').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
+        openHTML('viewSaldo.html','pop-up',data.saida,data)
+    })
+
+    document.querySelector('#btnNovo').addEventListener('click',()=>{
+        openHTML('viewSaldo.html','pop-up','Lançamento Financeiro','{mode:"new"}')
+
+    })
+
+
+</script>
