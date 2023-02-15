@@ -121,6 +121,7 @@
     document.querySelector('#tblComp').addEventListener('click',(e)=>{
         data = e.target.parentNode.data
         data.mode = 'edit'
+        data.origem = 'RECEBER'
         data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
         openHTML('viewSaldo.html','pop-up',data.saida,data)
     })

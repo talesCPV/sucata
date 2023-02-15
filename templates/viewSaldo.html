@@ -92,13 +92,13 @@
                 params.tipo = document.querySelector('#cmbTipo').value
                 params.quitado = document.querySelector('#cmbQuit').value
                 params.obs = document.querySelector('#edtObs').value
-                params.id_origem = main_data.viewSaldo.data.id_origem
+                params.id_origem = main_data.viewSaldo.data.mode == 'edit' ? main_data.viewSaldo.data.id_origem : 0
                 params.tb_origem = main_data.viewSaldo.data.mode == 'edit' ? main_data.viewSaldo.data.tb_origem : main_data.viewSaldo.data.mode == 'PAGAR' ? 'tb_compra' : 'tb_venda'
             
             const myPromisse = queryDB(params,58);
             myPromisse.then((resolve)=>{
                 alert(`Pagamento ${main_data.viewSaldo.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
-                main_data.cont_pagar.busca()
+                main_data.viewSaldo.data.mode == 'PAGAR' || main_data.viewSaldo.data.origem == 'PAGAR' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
                 closeModal('viewSaldo')
             })
         }
@@ -111,7 +111,7 @@
                 params.hash = localStorage.getItem('hash')
             const myPromisse = queryDB(params,60);
             myPromisse.then((resolve)=>{
-                main_data.cont_pagar.busca()
+                main_data.viewSaldo.data.mode == 'PAGAR' || main_data.viewSaldo.data.origem == 'PAGAR' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
                 closeModal('viewSaldo')
             })
 
