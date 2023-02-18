@@ -1,0 +1,70 @@
+
+<template>
+    <style>
+        button{
+            width: 98%;
+        }
+
+        #scroll{
+            max-height: 200px;
+            overflow: hidden;
+            overflow-y: scroll;
+        }
+
+    </style>
+  
+    <div class="form-base">
+        <h1>Contas Bancárias</h1>
+        <fieldset>
+            <legend>Contas</legend>
+            <div id="scroll">
+                <table id="tblConta"></table>
+            </div>
+            <button id="btnNovaConta">Novo</button>
+        </fieldset>          
+         
+    </div>
+
+</template>
+<script>
+
+    main_data.banco.fillConta =  function (){
+        const tbl = document.getElementById('tblConta')
+        tbl.innerHTML = ''
+        const params = new Object;
+            params.hash = localStorage.getItem('hash');
+
+        const myPromisse = queryDB(params,64);
+
+        myPromisse.then((resolve)=>{
+            if(resolve.trim() != ""){
+                const json = JSON.parse(resolve);
+                tbl.head('Banco,Ag.,C/C')
+                for(let i=0; i<json.length;i++){
+                    tbl.plot(json[i],'banco,bco_ag,bco_cc','Upp,Upp,Upp')
+                }                
+            } 
+        })
+    }
+
+
+
+
+    main_data.banco.fillConta()
+
+    document.querySelector('#tblConta').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        openHTML('viewBanco.html','pop-up','Editar Conta Bancária',data)
+    })
+
+    document.querySelector('#btnNovaConta').addEventListener('click',()=>{
+        const data = new Object
+        data.mode = 'new'
+        openHTML('viewBanco.html','pop-up','Nova Conta Bancária',data)
+
+    })
+
+
+
+</script>

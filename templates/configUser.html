@@ -19,6 +19,20 @@
 
   </fieldset>
 
+  <fieldset>
+    <legend>Barra de Menu</legend>
+    <div class="inline">
+        <label for="edtBarColor">Cor de Fundo</label>
+        <input type="color" id="edtBarColor">
+    </div>
+    <div class="inline">
+        <label for="edtBarFontColor">Cor da Fonte</label>
+        <input type="color" id="edtBarFontColor">
+    </div>
+    <button id="btnSaveBar">Salvar</button>
+
+  </fieldset>
+
 </template>
 <script>
 
@@ -31,6 +45,19 @@
             console.log('clear wallpaper')
         }            
     }
+
+    document.querySelector('#btnSaveBar').addEventListener('click',()=>{
+        try{
+            getConfig(localStorage.getItem('username'),'config.json','bar-back-color',document.querySelector('#edtBarColor').value)
+            getConfig(localStorage.getItem('username'),'config.json','bar-font-color',document.querySelector('#edtBarFontColor').value)
+            getConfig(localStorage.getItem('username'),'config.json').then((txt)=>{
+                console.log(txt)
+            })
+        }catch{
+            console.log('clear wallpaper')
+        }        
+
+    })
 
     document.querySelector('#btnUserUp').addEventListener('click',()=>{
             const obj = new Object

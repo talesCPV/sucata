@@ -189,6 +189,17 @@ $query_db = array(
         AND data <= "x05"
         ORDER BY SAL.data DESC;',
     "60" => 'DELETE FROM tb_saldo WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+    "61"  => 'SELECT * FROM tb_calendario WHERE y00=x00 AND data_agd>="x01" AND data_agd<="x02";',
+    "62"  => 'INSERT INTO tb_calendario (id_user, data_agd, obs) VALUES(x00, "x01", "x02") ON DUPLICATE KEY UPDATE obs="x02";',         
+    "63"  => 'DELETE FROM tb_calendario WHERE id_user="x00" AND data_agd="x01";',
+    "64"  => 'SELECT * FROM tb_banco WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY banco;' ,
+    "65"  => 'INSERT INTO tb_banco (id, banco, bco_ag, bco_cc, bco_pix) VALUES(x00, "x01", "x02", "x03", "x04") 
+        ON DUPLICATE KEY UPDATE banco="x01", bco_ag="x02", bco_cc="x03", bco_pix="x04";',
+    "66"  => 'DELETE FROM tb_banco WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+    "67"  => 'SELECT * FROM tb_lanc_bancario WHERE(SELECT U.class FROM tb_usuario AS U WHERE hash="x00") IN (10) ORDER BY banco;' ,
+    "68"  => 'INSERT INTO tb_lanc_bancario (id, id_banco, id_cliente, data, valor, forma, ref, obs) VALUES(x00, "x01", "x02", "x03", "x04", "x05", "x06", "x07") 
+        ON DUPLICATE KEY UPDATE id_banco="x01", data="x03", valor="x04", forma="x05", obs="x07";',
+    "69"  => 'DELETE FROM tb_lanc_bancario WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
 
 
     );

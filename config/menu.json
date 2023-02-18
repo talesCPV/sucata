@@ -24,6 +24,14 @@
 					"itens"  : []
 				},
 				{
+					"modulo" : "Contas Bancárias",
+					"script" : "javascript:openHTML('banco.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},
+				{
 					"modulo" : "Usuários",
 					"script" : "javascript:openHTML('usuarios.html','content-screen')",
 					"access" : [10],

@@ -180,7 +180,10 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                         html +=  obj[campo[j]] 
                         html += j<campo.length-1 ? op[1] : ''
                     }
-                    break;                     
+                    break; 
+                case '***':                            
+                    html = `<input type="checkbox" id="tblCkb_${this.rows.length-1}" class="tbl-ckb" ${parseInt(obj[arr[0]])? '' : 'checked'}>`
+                    break;                    
                 default:
                   html = obj[arr[0]] != null ? obj[arr[0]] :''
             }            

@@ -17,6 +17,10 @@
             filter: brightness(90%);
         }  
         
+        #btnPagar{
+            display: none;
+        }        
+
     </style>
 
     <div class="form-base">
@@ -46,6 +50,7 @@
                 <button id="btnBusca">Busca</button>
             </div>  
             <table id="tblComp"></table>
+            <button id="btnPagar">Baixar</button>
         </fieldset>
     
     </div>
@@ -54,6 +59,13 @@
 </template>
 <script>
   
+    function hideCkb(hide){
+        const ckb = document.querySelectorAll('.ckb-hide')
+        for(let i=0; i<ckb.length; i++){
+            ckb[i].style.display = hide ? 'none' : 'block'
+        }
+    }
+
     document.querySelector('#edtIni').value =  today.iniMonth()
     document.querySelector('#edtFin').value =  today.finMonth()
 
@@ -96,19 +108,27 @@
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);                             
                 tbl.innerHTML=''
-                json.length > 0 ? tbl.head('Data,Cliente,Tipo|mobHide,Status,Saldo') : 0
+                json.length > 0 ? tbl.head('Pg.|ckb-hide,Data,Cliente,Tipo|mobHide,Status,Saldo') : 0
                 const tot = new Object
                 tot.blank = ''
                 tot.lblTot = 'TOTAL'
-                tot.val = 0   
+                tot.val = 0 
+                tot.id_cli = json[0].id_cliente
+                document.querySelector('#btnPagar').style.display = 'block'
+                let hide = false  
                 for(let i=0; i<json.length;i++){
+                    if(json[i].id_cliente != tot.id_cli){
+                        document.querySelector('#btnPagar').style.display = 'none'
+                        hide = true
+                    }                    
                     if(json[i].tipo=='PAGAR'){
                         json[i].valor = -1 * parseFloat(json[i].valor)
                     }
                     tot.val += json[i].quitado=='0' ? parseFloat(json[i].valor) : 0 // ACUMULA NO TOTAL
-                    tbl.plot(json[i],'data,fantasia,tipo|mobHide,quitado,valor','date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, !parseInt(json[i].quitado))
+                    tbl.plot(json[i],'quitado|ckb-hide,data,fantasia,tipo|mobHide,quitado,valor','***,date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, !parseInt(json[i].quitado))
                 }                
-                tbl.plot(tot,'blank,blank,blank|mobHide,lblTot,val','str,str,str,Upp,R$.')                
+                tbl.plot(tot,'blank|ckb-hide,blank,blank,blank|mobHide,lblTot,val','str,str,str,str,Upp,R$.')
+                hideCkb(hide)                
             }        
         })
     }
@@ -119,11 +139,22 @@
    
 
     document.querySelector('#tblComp').addEventListener('click',(e)=>{
-        data = e.target.parentNode.data
-        data.mode = 'edit'
-        data.origem = 'RECEBER'
-        data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
-        openHTML('viewSaldo.html','pop-up',data.saida,data)
+        const index = Array.from(e.target.parentNode.children).indexOf(e.target)
+        if(index > 0){
+            data = e.target.parentNode.data
+            data.mode = 'edit'
+            data.origem = 'RECEBER'
+            data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
+            openHTML('viewSaldo.html','pop-up',data.saida,data)
+        }else{
+            try{
+                quit = e.target.parentNode.data.quitado                
+                e.target.children[0].checked = quit=='0' ? !e.target.children[0].checked : 0
+            }catch{
+                quit = e.target.parentNode.parentNode.data.quitado
+                e.target.checked = quit=='0' ? !e.target.checked : 0
+            }    
+        }            
     })
 
     document.querySelector('#btnNovo').addEventListener('click',()=>{
@@ -131,5 +162,36 @@
 
     })
 
+    document.querySelector('#btnPagar').addEventListener('click',()=>{
+
+        tbl = document.querySelector('#tblComp')
+        main_data.cont_receber.data = new Object                
+            main_data.cont_receber.data.id_cli = tbl.rows[1].data.id_cliente
+            main_data.cont_receber.data.nome = tbl.rows[1].data.fantasia
+            main_data.cont_receber.data.tbl = []
+        let total = 0
+        let go = false
+        for(let i=1; i<tbl.rows.length-1; i++){
+            const check = tbl.rows[i].cells[0].children[0].checked
+            const data = tbl.rows[i].data
+
+            if(check){                
+                total += tbl.rows[i].data.quitado == '0' ? parseFloat(tbl.rows[i].data.valor) : 0
+                main_data.cont_receber.data.tbl.push(data)
+                if(total != 0){
+                    go = true
+                }                
+            }
+
+        }
+
+        main_data.cont_receber.data.total = Math.abs(total)
+        main_data.cont_receber.data.mode = 'receber'
+        if(go){
+            openHTML('lanc_finan.html','pop-up','Lançamento Financeiro',main_data.cont_receber.data)
+        }else{
+            alert('Favor selecionar algum pagamento em aberto para prosseguir')
+        }
+    })    
 
 </script>

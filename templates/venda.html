@@ -183,8 +183,6 @@
                         let total = 0
                         for(let i=0; i<main_data.venda.data.itens_temp.length; i++){
 
-                            total += parseFloat(main_data.venda.data.itens_temp[i].val_venda)
-
                             const params_itens = new Object; // adiciona item venda
                                 params_itens.id = 'DEFAULT' 
                                 params_itens.id_venda = '(SELECT MAX(id) FROM tb_venda)'
@@ -193,6 +191,8 @@
                                 params_itens.und = main_data.venda.data.itens_temp[i].und
                                 params_itens.val_unit = main_data.venda.data.itens_temp[i].val_venda
                             const myPromisse_itens = queryDB(params_itens,14);
+
+                            total += (parseFloat(params_itens.qtd) * parseFloat(params_itens.val_unit))
 
                             const params_update = new Object // atualiza estoque                                
                                 params_update.id_local = main_data.viewLocal.data.id

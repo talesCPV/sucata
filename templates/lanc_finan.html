@@ -1,0 +1,143 @@
+
+<template>
+    <style>
+
+        .frm{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .inline label{
+            width:  120px;
+        }
+
+        .inline select{
+            width: 100%;
+            padding: 10px;
+            margin: 10px;
+        }
+
+
+    </style>
+  
+    
+    <fieldset class="frm">
+        <legend>Pagamento</legend>
+
+        <div class="inline">
+            <label for="lblCli">Cliente</label>
+            <label id="lblCli"></label>
+        </div>    
+
+        <div class="inline">
+            <label for="cmbBco">Banco</label>
+            <select id="cmbBco"></select>   
+        </div>
+
+        <div class="inline">
+            <label for="edtData">Data</label>
+            <input type="date" id="edtData">
+            <label for="edtVal">Valor R$</label>
+            <input type="text" id="edtVal" onkeyup="valFloat(this)">
+            <label for="cmbForma">Forma Pgto.</label>
+            <select id="cmbForma">
+                <option value="CHEQUE" selected>Cheque</option>
+                <option value="DINHEIRO">Dinheiro</option>
+                <option value="PIX">Pix</option>
+                <option value="DOC">DOC</option>
+                <option value="TED">TED</option>
+            </select>
+        </div>
+
+        <div class="inline">
+            <label for="edtObs">Obs</label>
+            <textarea id="edtObs" cols="30" rows="10" maxlength="255"></textarea>
+        </div>
+
+        <button id="btnSave">Salvar</button>
+        <button id="btnDel">Deletar</button>
+    </fieldset>
+
+</template>
+<script>
+
+    document.querySelector('#lblCli').innerHTML = main_data.lanc_finan.data.nome
+
+    main_data.lanc_finan.fillBanco= ()=>{
+        const params_bco = new Object;
+        params_bco.hash = localStorage.getItem('hash')
+        fillCombo('cmbBco',params_bco,64,['id','banco'])
+    }
+
+    if(main_data.lanc_finan.data.mode == 'edit'){
+        document.querySelector('#edtData').value = main_data.lanc_finan.data.data.substr(0,10)
+        document.querySelector('#edtVal').value = parseFloat(main_data.lanc_finan.data.valor).toFixed(2)
+        document.querySelector('#cmbForma').value = main_data.lanc_finan.data.forma
+        document.querySelector('#cmbBco').value = main_data.lanc_finan.data.banco
+        document.querySelector('#edtObs').value = main_data.lanc_finan.data.obs
+    }else{
+        document.querySelector('#edtData').value =  today.getFormatDate()
+        document.querySelector('#edtVal').value = main_data.lanc_finan.data.total.toFixed(2)
+        document.querySelector('#btnDel').style.display = 'none'
+    }
+
+    main_data.lanc_finan.fillBanco()
+
+    document.querySelector('#btnSave').addEventListener('click',()=>{
+        let valor = Math.abs(parseFloat(document.querySelector('#edtVal').value)) 
+        if(main_data.lanc_finan.data.mode == 'pagar'){
+            valor *= -1
+        } 
+
+        if (main_data.lanc_finan.data.mode != 'edit' && confirm('Deseja alterar este lançamento?')) {
+            const params = new Object; 
+                params.id = main_data.lanc_finan.data.mode == 'edit' ? main_data.lanc_finan.data.id : 'DEFAULT'
+                params.id_banco = document.querySelector('#cmbBco').value
+                params.id_cliente = main_data.lanc_finan.data.id_cli
+                params.data = document.querySelector('#edtData').value
+                params.valor = valor
+                params.forma = document.querySelector('#cmbForma').value
+                params.ref = main_data.lanc_finan.data.mode == 'pagar' ? 'PAGAMENTO AO FORNECEDOR' : 'RECEBIMENTO DE CLIENTE'
+                params.obs = document.querySelector('#edtObs').value
+            
+            const myPromisse = queryDB(params,68);
+            myPromisse.then((resolve)=>{
+
+                for(let i=0; i<main_data.lanc_finan.data.tbl.length; i++){                    
+                    const params_saldo = new Object; 
+                    params_saldo.id = main_data.lanc_finan.data.tbl[i].id
+                    params_saldo.id_cliente = main_data.lanc_finan.data.tbl[i].id_cliente
+                    params_saldo.data = main_data.lanc_finan.data.tbl[i].data
+                    params_saldo.valor = main_data.lanc_finan.data.tbl[i].valor
+                    params_saldo.tipo = main_data.lanc_finan.data.tbl[i].tipo
+                    params_saldo.quitado = 1
+                    params_saldo.obs = main_data.lanc_finan.data.tbl[i].obs
+                    params_saldo.id_origem = main_data.lanc_finan.data.tbl[i].id_origem
+                    params_saldo.tb_origem = main_data.lanc_finan.data.tbl[i].tb_origem
+            
+                    const myPromisse_saldo = queryDB(params_saldo,58);
+
+                }
+
+                alert(`Lançamento ${main_data.lanc_finan.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
+                main_data.lanc_finan.data.mode == 'pagar' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
+                closeModal('lanc_finan')
+            })
+        }
+    })
+    
+    document.querySelector('#btnDel').addEventListener('click',()=>{
+        if (confirm('Deseja deletar este pagamento?')) {
+            const params = new Object; 
+                params.id = main_data.lanc_finan.data.id
+                params.hash = localStorage.getItem('hash')
+            const myPromisse = queryDB(params,69);
+            myPromisse.then((resolve)=>{
+                main_data.lanc_finan.data.mode == 'PAGAR' || main_data.lanc_finan.data.origem == 'PAGAR' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
+                closeModal('lanc_finan')
+            })
+
+        }
+    })
+
+</script>

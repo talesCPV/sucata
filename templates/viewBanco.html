@@ -1,0 +1,79 @@
+<template>
+    <style>
+
+        .frm{
+            display: flex;
+            flex-direction: column;
+        }
+     
+    </style>
+  
+    <fieldset class="frm">
+        <legend>Conta</legend>
+        <div class="inline">
+            <label for="edtBanco">Banco:*</label>
+            <input type="text" id="edtBanco" placeholder="Banco" maxlength="30">
+        </div>
+        <div class="inline">
+            <label for="edtAg">Ag:</label>
+            <input type="text" id="edtAg" placeholder="Agência" maxlength="6">
+            <label for="edtCc">C/C:</label>
+            <input type="text" id="edtCc" placeholder="Conta Corrente" maxlength="15">
+            <label for="edtPix">Chave Pix:</label>
+            <input type="text" id="edtPix" placeholder="Chave Pix" maxlength="40">
+
+        </div>
+        <div class="inline">
+            <button id="btnSave">Salvar</button>
+            <button id="btnDel">Deletar</button>    
+        </div>
+    </fieldset>
+
+</template>
+<script>
+
+    if(main_data.viewBanco.data.mode == 'edit'){
+        document.querySelector('#edtBanco').value = main_data.viewBanco.data.banco
+        document.querySelector('#edtAg').value = main_data.viewBanco.data.bco_ag
+        document.querySelector('#edtCc').value = main_data.viewBanco.data.bco_cc
+        document.querySelector('#edtPix').value = main_data.viewBanco.data.bco_pix
+    }else{
+        document.querySelector('#btnDel').style.display = 'none'
+    }
+
+    document.querySelector('#btnSave').addEventListener('click',()=>{
+        if(checkField(['edtBanco']) ){
+
+            const params = new Object;
+                params.id = main_data.viewBanco.data.mode == 'new' ? 'DEFAULT' : main_data.viewBanco.data.id
+                params.banco = document.querySelector('#edtBanco').value.trim()
+                params.bco_ag = document.querySelector('#edtAg').value.trim()
+                params.bco_cc = document.querySelector('#edtCc').value.trim()
+                params.bco_pix = document.querySelector('#edtPix').value.trim()
+
+            const myPromisse = queryDB(params,65);
+
+            myPromisse.then((resolve)=>{
+                main_data.banco.fillConta()
+                closeModal('viewBanco')
+            })
+        }        
+    })
+
+    document.querySelector('#btnDel').addEventListener('click',()=>{
+
+        if (confirm('Deseja realmente deletar esta conta bancária?')) {
+            const params = new Object;
+                params.id = main_data.viewBanco.data.id
+                params.hash = localStorage.getItem('hash')
+
+            const myPromisse = queryDB(params,66);
+            myPromisse.then((resolve)=>{
+                main_data.banco.fillConta()
+                closeModal('viewBanco')                
+            })
+        }
+    })
+
+
+</script>

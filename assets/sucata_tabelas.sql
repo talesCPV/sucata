@@ -241,11 +241,35 @@ CREATE TABLE tb_mail(
 CREATE TABLE tb_saldo(
     id INT NOT NULL AUTO_INCREMENT,
     id_cliente int(11) NOT NULL,
-    data date DEFAULT CURRENT_DATE, 
+    data datetime DEFAULT CURRENT_TIMESTAMP, 
     valor double NOT NULL DEFAULT 0,
     tipo VARCHAR(7) NOT NULL DEFAULT "PAGAR",
     quitado BOOLEAN DEFAULT FALSE,
     obs VARCHAR(255) NOT NULL DEFAULT "",
 	FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
+    PRIMARY KEY(id)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE tb_banco(
+    id INT NOT NULL AUTO_INCREMENT,
+    banco VARCHAR(30) NOT NULL,
+	bco_ag varchar(6) DEFAULT NULL,
+    bco_cc varchar(15) DEFAULT NULL,
+	bco_pix varchar(40) DEFAULT NULL,
+    PRIMARY KEY(id)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+/*drop table tb_lanc_bancario;*/
+CREATE TABLE tb_lanc_bancario(
+    id INT NOT NULL AUTO_INCREMENT,
+    id_banco INT NOT NULL,
+    id_cliente INT NOT NULL,
+    data date NOT NULL, 
+    valor double NOT NULL,
+    forma VARCHAR(10) DEFAULT NULL,
+    ref VARCHAR(40) DEFAULT NULL,
+    obs VARCHAR(255) DEFAULT NULL,
+	FOREIGN KEY (id_banco) REFERENCES tb_banco(id),
+    FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
