@@ -158,17 +158,18 @@
                         params_saldo.id_origem = main_data.lanc_finan.data.tbl[i].id_origem
                         params_saldo.tb_origem = main_data.lanc_finan.data.tbl[i].tb_origem                
                         const myPromisse_saldo = queryDB(params_saldo,58);
-                        setLog(`${params_saldo.tb_origem == 'tb_compra' ? 'COMPRA' : 'VENDA' + main_data.lanc_finan.data.tbl[i].id_origem} - ${document.querySelector('#lblCli').innerHTML} QUITADA:`)
+                        setLog(`${params_saldo.tb_origem == 'tb_compra' ? 'COMPRA ' : 'VENDA ' + main_data.lanc_finan.data.tbl[i].id_origem} - ${document.querySelector('#lblCli').innerHTML} QUITADA:`)
                     }
                 }
                 alert(`Lançamento ${main_data.lanc_finan.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
                 if(main_data.lanc_finan.data.mode == 'edit'){
-                    setLog(`EDIÇÃO - CONTAS A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+                    setLog(`EDIÇÃO - LANÇAMENTO BANCÁRIO A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.extrato.busca() 
                 } else if(main_data.lanc_finan.data.mode == 'fix'){
+                    setLog(`ACERTO DE SALDO PELO USUARIO, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, DATA:, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.extrato.busca()
                 }else{
-                    setLog(`CONTAS A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+                    setLog(`LANÇAMENTO BANCÁRIO A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.lanc_finan.data.mode == 'pagar' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
                 }
                 closeModal('lanc_finan')
