@@ -163,12 +163,12 @@
                 }
                 alert(`Lançamento ${main_data.lanc_finan.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
                 if(main_data.lanc_finan.data.mode == 'edit'){
-                    setLog(`EDIÇÃO - CONTAS A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor.substr(0,1) == '-' ?'('+valor.toFixed(2)+')'  :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+                    setLog(`EDIÇÃO - CONTAS A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.extrato.busca() 
                 } else if(main_data.lanc_finan.data.mode == 'fix'){
                     main_data.extrato.busca()
                 }else{
-                    setLog(`CONTAS A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor.substr(0,1) == '-' ?'('+valor.toFixed(2)+')'  :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+                    setLog(`CONTAS A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.lanc_finan.data.mode == 'pagar' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
                 }
                 closeModal('lanc_finan')
