@@ -149,10 +149,10 @@
         }else{            
             try{
                 quit = e.target.parentNode.data.quitado                
-                e.target.children[0].checked = quit=='0' ? !e.target.children[0].checked : 0
+                e.target.children[0].checked = quit=='0' ? !e.target.children[0].checked : false
             }catch{
                 quit = e.target.parentNode.parentNode.data.quitado
-                e.target.checked = quit=='0' ? !e.target.checked : 0
+                e.target.checked = quit=='0' ? e.target.checked : false
             }    
         }
     })
