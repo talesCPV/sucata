@@ -18,7 +18,8 @@
             <legend>Extrato Bancário</legend>
             <div class="inline">
                 <label for="cmbBanco">Banco</label>
-                <select id="cmbBanco"></select>   
+                <select id="cmbBanco"></select> 
+                <button id="btnaddExt" class="btnAdd" >+</button>  
             </div>            
         
             <div class="inline center-itens">
@@ -73,7 +74,7 @@
 
             myPromisse.then((resolve)=>{
                 if(resolve.trim() != ""){
-                    const json = JSON.parse(resolve);                             
+                    const json = JSON.parse(resolve);                                               
                     tbl.innerHTML=''
                     json.length > 0 ? tbl.head('Data,Referência,Forma Pgto,Valor,Saldo') : 0
                     ckb ? tbl.plot(tot,'data_ini,ref,blank,blank,saldo','date,Upp,Upp,R$.,R$.') : 0
@@ -100,10 +101,21 @@
    
 
     document.querySelector('#tblExtrato').addEventListener('click',(e)=>{
-        data = e.target.parentNode.data
+        data = e.target.parentNode.data        
         data.mode = 'edit'
-        data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
-        openHTML('lanc_finan.html','pop-up',data.saida,data)
+        try{
+            data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
+            openHTML('lanc_finan.html','pop-up',data.saida,data)
+        }catch{
+            return
+        }
     })
+
+    document.querySelector('#btnaddExt').addEventListener('click',()=>{
+        const data = new Object
+        data.mode = 'fix'
+        openHTML('lanc_finan.html','pop-up','Acerto de Saldo',data)
+    })
+
 
 </script>

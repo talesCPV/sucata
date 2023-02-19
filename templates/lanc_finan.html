@@ -25,7 +25,7 @@
         <legend id="lgdFieldset">Pagamento</legend>
 
         <div class="inline">
-            <label for="lblCli">Cliente</label>
+            <label id="lblLabelCli" for="lblCli">Cliente</label>
             <label id="lblCli"></label>
         </div>    
 
@@ -39,13 +39,17 @@
             <input type="date" id="edtData">
             <label for="edtVal">Valor R$</label>
             <input type="text" id="edtVal" onkeyup="valFloat(this)" readonly>
-            <label for="cmbForma">Forma Pgto.</label>
+            <label id="lblForma" for="cmbForma">Forma Pgto.</label>
             <select id="cmbForma">
                 <option value="CHEQUE" selected>Cheque</option>
                 <option value="DINHEIRO">Dinheiro</option>
                 <option value="PIX">Pix</option>
                 <option value="DOC">DOC</option>
                 <option value="TED">TED</option>
+            </select>
+            <select id="cmbTipo" style="display: none;">
+                <option value="1">SOMAR NO SALDO</option>
+                <option value="-1">SUBTRAIR DO SALDO</option>
             </select>
         </div>
 
@@ -67,8 +71,29 @@
         fillCombo('cmbBco',params_bco,64,['id','banco'],main_data.lanc_finan.data.mode == 'edit' ? main_data.lanc_finan.data.id_banco : '')        
     }
 
+    main_data.lanc_finan.getCli= ()=>{
+        const id_cli = main_data.lanc_finan.data.id_cliente
+        if(id_cli=='0'){
+            document.querySelector('#lblCli').innerHTML = localStorage.getItem('nome')
+            main_data.lanc_finan.data.fantasia = localStorage.getItem('nome')
+        }else{
+            const params = new Object;
+            params.field = 'id'
+            params.signal = '='
+            params.value = `"${id_cli}"`
+
+            queryDB(params,1).then((response)=>{
+                const json = JSON.parse(response)              
+                main_data.lanc_finan.data.fantasia = json[0].fantasia
+                document.querySelector('#lblCli').innerHTML = json[0].fantasia
+            })
+
+        }
+    }
+
     if(main_data.lanc_finan.data.mode == 'edit'){
-        document.querySelector('#lblCli').innerHTML = main_data.lanc_finan.data.fantasia
+        main_data.lanc_finan.getCli()
+//        document.querySelector('#lblCli').innerHTML = main_data.lanc_finan.data.id_cliente
         document.querySelector('#lgdFieldset').innerHTML = main_data.lanc_finan.data.ref
         document.querySelector('#edtData').value = main_data.lanc_finan.data.data.substr(0,10)
         document.querySelector('#edtVal').value = Math.abs(parseFloat(main_data.lanc_finan.data.valor)).toFixed(2)
@@ -76,6 +101,18 @@
         document.querySelector('#cmbBco').value = main_data.lanc_finan.data.banco
         document.querySelector('#edtObs').value = main_data.lanc_finan.data.obs
         document.querySelector('#edtVal').readOnly = false
+    }else if(main_data.lanc_finan.data.mode == 'fix'){
+        document.querySelector('#lgdFieldset').innerHTML = 'Acerto de Saldo'
+        document.querySelector('#lblLabelCli').innerHTML = 'Responsável'
+        document.querySelector('#lblCli').innerHTML = localStorage.getItem('nome')
+        document.querySelector('#edtData').value =  today.getFormatDate()
+        document.querySelector('#edtVal').value = '0'
+        document.querySelector('#btnDel').style.display = 'none'
+        document.querySelector('#edtVal').readOnly = false
+        document.querySelector('#cmbForma').style.display = 'none'
+        document.querySelector('#cmbTipo').style.display = 'block'
+        document.querySelector('#lblForma').innerHTML = '+/-'
+        main_data.lanc_finan.data.id_cliente = 0
     }else{
         document.querySelector('#lblCli').innerHTML = main_data.lanc_finan.data.nome
         document.querySelector('#edtData').value =  today.getFormatDate()
@@ -89,6 +126,8 @@
         let valor = Math.abs(parseFloat(document.querySelector('#edtVal').value)) 
         if(main_data.lanc_finan.data.mode == 'pagar' || (main_data.lanc_finan.data.mode == 'edit' && parseFloat(main_data.lanc_finan.data.valor) < 0 )){
             valor *= -1
+        }else if(main_data.lanc_finan.data.mode == 'fix'){
+            valor = valor * parseInt(document.querySelector('#cmbTipo').value)
         }
 
         if ((main_data.lanc_finan.data.mode == 'edit' && confirm('Deseja alterar este lançamento?')) || main_data.lanc_finan.data.mode != 'edit' && confirm('Deseja efetuar este lançamento?') ) {
@@ -99,14 +138,14 @@
                 params.id_cliente = main_data.lanc_finan.data.id_cliente
                 params.data = document.querySelector('#edtData').value +' '+ now.getFullHour()
                 params.valor = valor
-                params.forma = document.querySelector('#cmbForma').value
-                params.ref = main_data.lanc_finan.data.mode == 'pagar' ? 'PAGAMENTO AO FORNECEDOR' : 'RECEBIMENTO DE CLIENTE'
+                params.forma = main_data.lanc_finan.data.mode == 'fix' ? 'ACERTO' :document.querySelector('#cmbForma').value
+                params.ref = main_data.lanc_finan.data.mode == 'fix' ? 'ACERTO DE SALDO PELO USUARIO' : main_data.lanc_finan.data.mode == 'pagar' ? 'PAGAMENTO AO FORNECEDOR' : 'RECEBIMENTO DE CLIENTE'
                 params.obs = document.querySelector('#edtObs').value
            
             const myPromisse = queryDB(params,68);
             myPromisse.then((resolve)=>{
 
-                if(main_data.lanc_finan.data.mode != 'edit'){
+                if(main_data.lanc_finan.data.mode != 'edit' && main_data.lanc_finan.data.mode != 'fix'){
                     for(let i=0; i<main_data.lanc_finan.data.tbl.length; i++){                    
                         const params_saldo = new Object; 
                         params_saldo.id = main_data.lanc_finan.data.tbl[i].id
@@ -121,12 +160,13 @@
                         const myPromisse_saldo = queryDB(params_saldo,58);
                         setLog(`${params_saldo.tb_origem == 'tb_compra' ? 'COMPRA' : 'VENDA' + params_saldo.id_origem} - ${document.querySelector('#lblCli').innerHTML} QUITADA:`)
                     }
-
                 }
                 alert(`Lançamento ${main_data.lanc_finan.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
                 if(main_data.lanc_finan.data.mode == 'edit'){
                     setLog(`${main_data.lanc_finan.data.ref} EDITADO -> ${main_data.lanc_finan.data.fantasia}, R$${valor.toFixed(2)}, VENC. ${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.extrato.busca() 
+                } else if(main_data.lanc_finan.data.mode == 'fix'){
+                    main_data.extrato.busca()
                 }else{
                     setLog(`${main_data.lanc_finan.data.ref} ${main_data.lanc_finan.data.fantasia}, R$${valor.toFixed(2)}, VENC. ${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.lanc_finan.data.mode == 'pagar' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
