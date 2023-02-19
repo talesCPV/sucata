@@ -1,0 +1,109 @@
+
+<template>
+    <style>
+        #btnRelat{
+            display: none;
+        }
+
+        #divBusca{
+            display: none;
+        }
+
+    </style>
+
+    <div class="form-base">
+        <h1>Financeiro</h1>
+
+        <fieldset>
+            <legend>Extrato Bancário</legend>
+            <div class="inline">
+                <label for="cmbBanco">Banco</label>
+                <select id="cmbBanco"></select>   
+            </div>            
+        
+            <div class="inline center-itens">
+                <div class="ckBOX">
+                    <label for="ckbData">Início/Final</label>
+                    <input type="checkbox" id="ckbData" checked>
+                </div>
+                <input type="date" id="edtIni">
+                <input type="date" id="edtFin">
+                <button id="btnBusca">Busca</button>
+            </div>  
+            <table id="tblExtrato"></table>
+        </fieldset>
+    
+    </div>
+
+
+</template>
+<script>
+
+    const params_bco = new Object;
+    params_bco.hash = localStorage.getItem('hash')
+    fillCombo('cmbBanco',params_bco,64,['id','banco'])
+
+    document.querySelector('#edtIni').value =  today.iniMonth()
+    document.querySelector('#edtFin').value =  today.finMonth()    
+
+    main_data.extrato.busca = function (){
+
+        const tbl = document.getElementById('tblExtrato')
+        const ckb = document.querySelector('#ckbData').checked
+        const date_fin = new Date(document.querySelector('#edtFin').value)
+        date_fin.change(2)        
+        
+        const params = new Object;
+            params.id_banco = document.querySelector('#cmbBanco').value
+            params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
+            params.fin = ckb ? date_fin.getFormatDate() : '2100-12-31';        
+
+        const myPromisse_saldo_ini = queryDB(params,70);
+
+        myPromisse_saldo_ini.then((resp)=>{
+            const tot = new Object
+                    tot.blank = ''
+                    tot.lblTot = 'TOTAL'
+                    tot.ref = 'SALDO ANTERIOR AO PERÍODO'
+                    tot.val = 0
+                    tot.data_ini = document.querySelector('#edtIni').value
+                    tot.saldo = JSON.parse(resp)[0].saldo_ini == null ? 0 : parseFloat(JSON.parse(resp)[0].saldo_ini) 
+
+            const myPromisse = queryDB(params,67);
+
+            myPromisse.then((resolve)=>{
+                if(resolve.trim() != ""){
+                    const json = JSON.parse(resolve);                             
+                    tbl.innerHTML=''
+                    json.length > 0 ? tbl.head('Data,Referência,Forma Pgto,Valor,Saldo') : 0
+                    ckb ? tbl.plot(tot,'data_ini,ref,blank,blank,saldo','date,Upp,Upp,R$.,R$.') : 0
+                    for(let i=0; i<json.length;i++){                                       
+                        tot.val +=  parseFloat(json[i].valor) 
+                        tot.saldo +=  parseFloat(json[i].valor)
+                        json[i].saldo = tot.saldo 
+                        tbl.plot(json[i],'data,ref,forma,valor,saldo','date,Upp,Upp,R$.,R$.')                    
+                    }
+                    tbl.plot(tot,'blank,blank,lblTot,val,saldo','str,str,Upp,R$.,R$.')
+                }        
+            })
+
+
+        })
+
+    }
+
+
+
+    document.querySelector('#btnBusca').addEventListener('click',()=>{
+        main_data.extrato.busca()
+    })
+   
+
+    document.querySelector('#tblExtrato').addEventListener('click',(e)=>{
+        data = e.target.parentNode.data
+        data.mode = 'edit'
+        data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
+        openHTML('lanc_finan.html','pop-up',data.saida,data)
+    })
+
+</script>

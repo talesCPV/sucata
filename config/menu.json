@@ -155,7 +155,15 @@
 					"class"  : "",
 					"icone"  : "fa fa-industry",
 					"itens"  : []
-				},				
+				},	
+				{
+					"modulo" : "Extrato Bancário",
+					"script" : "javascript:openHTML('extrato.html','content-screen')",
+					"access" : [10],
+					"class"  : "",
+					"icone"  : "fa fa-industry",
+					"itens"  : []
+				},								
 				{
 					"modulo" : "NFe",
 					"script" : "javascript:openHTML('nfe.html','content-screen')",
