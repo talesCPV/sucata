@@ -24,14 +24,6 @@
 					"itens"  : []
 				},
 				{
-					"modulo" : "Contas Bancárias",
-					"script" : "javascript:openHTML('banco.html','content-screen')",
-					"access" : [10],
-					"class"  : "",
-					"icone"  : "fa fa-industry",
-					"itens"  : []
-				},
-				{
 					"modulo" : "Usuários",
 					"script" : "javascript:openHTML('usuarios.html','content-screen')",
 					"access" : [10],
@@ -155,15 +147,41 @@
 					"class"  : "",
 					"icone"  : "fa fa-industry",
 					"itens"  : []
-				},	
+				},
 				{
-					"modulo" : "Extrato Bancário",
-					"script" : "javascript:openHTML('extrato.html','content-screen')",
+					"modulo" : "Banco",
+					"script" : "#",
 					"access" : [10],
 					"class"  : "",
 					"icone"  : "fa fa-industry",
-					"itens"  : []
-				},								
+					"itens"  : [
+						{
+							"modulo" : "Contas",
+							"script" : "javascript:openHTML('banco.html','content-screen')",
+							"access" : [10],
+							"class"  : "",
+							"icone"  : "fa fa-industry",
+							"itens"  : []
+						},
+						{
+							"modulo" : "Extrato",
+							"script" : "javascript:openHTML('extrato.html','content-screen')",
+							"access" : [10],
+							"class"  : "",
+							"icone"  : "fa fa-industry",
+							"itens"  : []
+						}
+					]
+				}
+			]
+		},	
+		{
+			"modulo" : "Fiscal",
+			"script" : "javascript:openHTML('mail.html','pop-up')",
+			"access" : [10],
+			"class"  : "",
+			"icone"  : "fa fa-industry",
+			"itens"  : [
 				{
 					"modulo" : "NFe",
 					"script" : "javascript:openHTML('nfe.html','content-screen')",
@@ -173,7 +191,7 @@
 					"itens"  : []
 				}				
 			]
-		},		
+		},			
 		{
 			"modulo" : "Mensagens <span id='badge_mobile' class='badge'></span>",
 			"script" : "javascript:openHTML('mail.html','pop-up')",
