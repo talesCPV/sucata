@@ -197,15 +197,12 @@ $query_db = array(
         ON DUPLICATE KEY UPDATE banco="x01", bco_ag="x02", bco_cc="x03", bco_pix="x04";',
     "66"  => 'DELETE FROM tb_banco WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "67"  => 'SELECT * FROM tb_lanc_bancario  
-        WHERE id_banco = "x00" 
-        AND  data >= "x01" AND data <= "x02"
-        ORDER BY data DESC;' ,
+        WHERE id_banco = "x00" AND  data >= "x01 00:00:00" AND data <= "x02 23:59:59" ORDER BY data ASC;' ,
     "68"  => 'INSERT INTO tb_lanc_bancario (id, id_banco, id_cliente, data, valor, forma, ref, obs) VALUES(x00, "x01", "x02", "x03", "x04", "x05", "x06", "x07") 
         ON DUPLICATE KEY UPDATE id_banco="x01", data="x03", valor="x04", forma="x05", obs="x07";',
     "69"  => 'DELETE FROM tb_lanc_bancario WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "70"  => 'SELECT ROUND(SUM(valor),2) AS saldo_ini FROM tb_lanc_bancario 
-        WHERE id_banco = "x00" 
-        AND data < "x01 00:00:00" ;',
+        WHERE id_banco = "x00" AND data < "x01" ;',
 
     );
 

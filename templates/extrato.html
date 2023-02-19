@@ -51,40 +51,37 @@
 
         const tbl = document.getElementById('tblExtrato')
         const ckb = document.querySelector('#ckbData').checked
-        const date_fin = new Date(document.querySelector('#edtFin').value)
-        date_fin.change(2)        
-        
+             
         const params = new Object;
             params.id_banco = document.querySelector('#cmbBanco').value
-            params.ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
-            params.fin = ckb ? date_fin.getFormatDate() : '2100-12-31';        
-
+            params.dt_ini = ckb ? document.querySelector('#edtIni').value : '0000-00-00';
         const myPromisse_saldo_ini = queryDB(params,70);
 
         myPromisse_saldo_ini.then((resp)=>{
             const tot = new Object
                     tot.blank = ''
-                    tot.lblTot = 'TOTAL'
+                    tot.lblTot = 'Saldo Final'
                     tot.ref = 'SALDO ANTERIOR AO PERÍODO'
                     tot.val = 0
                     tot.data_ini = document.querySelector('#edtIni').value
                     tot.saldo = JSON.parse(resp)[0].saldo_ini == null ? 0 : parseFloat(JSON.parse(resp)[0].saldo_ini) 
+                params.dt_fin = ckb ? document.querySelector('#edtFin').value: '2100-12-31';        
 
             const myPromisse = queryDB(params,67);
 
             myPromisse.then((resolve)=>{
                 if(resolve.trim() != ""){
-                    const json = JSON.parse(resolve);                                               
+                    const json = JSON.parse(resolve);                                                                 
                     tbl.innerHTML=''
                     json.length > 0 ? tbl.head('Data,Referência,Forma Pgto,Valor,Saldo') : 0
-                    ckb ? tbl.plot(tot,'data_ini,ref,blank,blank,saldo','date,Upp,Upp,R$.,R$.') : 0
+                    ckb ? tbl.plot(tot,'data_ini,ref,blank,blank,saldo','date,Upp,Upp,Upp,R$.') : 0
                     for(let i=0; i<json.length;i++){                                       
                         tot.val +=  parseFloat(json[i].valor) 
                         tot.saldo +=  parseFloat(json[i].valor)
                         json[i].saldo = tot.saldo 
                         tbl.plot(json[i],'data,ref,forma,valor,saldo','date,Upp,Upp,R$.,R$.')                    
                     }
-                    tbl.plot(tot,'blank,blank,lblTot,val,saldo','str,str,Upp,R$.,R$.')
+                    tbl.plot(tot,'blank,blank,blank,lblTot,saldo','str,str,str,Upp,R$.')
                 }        
             })
 
