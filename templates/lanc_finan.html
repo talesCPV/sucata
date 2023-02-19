@@ -125,10 +125,10 @@
                 }
                 alert(`Lançamento ${main_data.lanc_finan.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
                 if(main_data.lanc_finan.data.mode == 'edit'){
-                    setLog(`Lançamento Editado ${main_data.lanc_finan.data.ref} ${main_data.lanc_finan.data.fantasia}, ${Math.abs(valor.toFixed(2))}, VENC. ${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+                    setLog(`${main_data.lanc_finan.data.ref} EDITADO -> ${main_data.lanc_finan.data.fantasia}, R$${valor.toFixed(2)}, VENC. ${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.extrato.busca() 
                 }else{
-                    setLog(`Lançamento ${main_data.lanc_finan.data.ref} ${main_data.lanc_finan.data.fantasia}, ${Math.abs(valor.toFixed(2))}, , VENC. ${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+                    setLog(`${main_data.lanc_finan.data.ref} ${main_data.lanc_finan.data.fantasia}, R$${valor.toFixed(2)}, VENC. ${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
                     main_data.lanc_finan.data.mode == 'pagar' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
                 }
                 closeModal('lanc_finan')
@@ -143,7 +143,7 @@
                 params.hash = localStorage.getItem('hash')
             const myPromisse = queryDB(params,69);
             myPromisse.then((resolve)=>{
-                setLog(`Lançamento DELETADO ${main_data.lanc_finan.data.ref} ${main_data.lanc_finan.data.fantasia} R$ ${parseFloat(main_data.lanc_finan.data.valor).toFixed(2)}, VENC. ${main_data.lanc_finan.data.data}, , Bco ${main_data.lanc_finan.data.id_banco}`)
+                setLog(`${main_data.lanc_finan.data.ref} DELETADO -> ${main_data.lanc_finan.data.fantasia} R$${parseFloat(main_data.lanc_finan.data.valor).toFixed(2)}, VENC. ${main_data.lanc_finan.data.data}, Bco ${main_data.lanc_finan.data.id_banco}`)
                 main_data.extrato.busca()
                 closeModal('lanc_finan')
             })

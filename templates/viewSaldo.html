@@ -97,7 +97,7 @@
             
             const myPromisse = queryDB(params,58);
             myPromisse.then((resolve)=>{
-                setLog(`LANÇAMENTO ${main_data.viewSaldo.data.mode == 'edit' ? 'EDITADO' : ''} ${dataBR(params.data)} ${main_data.viewSaldo.data.fantasia} ${params.tipo} R$${params.valor.toFixed(2)} Status ${main_data.viewSaldo.data.quitado == '0' ? 'ABERTO' : 'QUITADO'}`)
+                setLog(`LANÇAMENTO ${main_data.viewSaldo.data.mode == 'edit' ? 'EDITADO' : ''} ${dataBR(params.data)} ${main_data.viewSaldo.data.fantasia} A ${params.tipo} R$${params.valor.toFixed(2)} Status ${params.quitado == '0' ? 'ABERTO' : 'QUITADO'}`)
                 alert(`Pagamento ${main_data.viewSaldo.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
                 main_data.viewSaldo.data.mode == 'PAGAR' || main_data.viewSaldo.data.origem == 'PAGAR' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
                 closeModal('viewSaldo')

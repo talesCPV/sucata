@@ -39,9 +39,9 @@
         myPromisse.then((resolve)=>{
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);
-                tbl.head('Banco,Ag.,C/C')
+                tbl.head('Cod.,Banco,Ag.,C/C')
                 for(let i=0; i<json.length;i++){
-                    tbl.plot(json[i],'banco,bco_ag,bco_cc','Upp,Upp,Upp')
+                    tbl.plot(json[i],'id,banco,bco_ag,bco_cc','str,Upp,Upp,Upp')
                 }                
             } 
         })
