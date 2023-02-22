@@ -48,6 +48,7 @@
 <script>
 
     openMenu()
+    setBarStyle()
     main_data.dashboard.wallpaper = ()=>{
         getConfig(localStorage.getItem('username')).then((json)=>{
             main_data.dashboard.data = JSON.parse(json)

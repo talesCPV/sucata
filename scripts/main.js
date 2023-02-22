@@ -518,6 +518,7 @@ function openMenu(){
 
             menu.appendChild(li)
         }
+        setBarStyle()
     }
 }
 
@@ -669,3 +670,19 @@ function setLog(line){
     })    
 }
 
+function setBarStyle(){
+    getConfig(localStorage.getItem('username'),'config.json').then((txt)=>{
+        const json = JSON.parse(txt)     
+        document.body.style.setProperty('-top-bar', json.bar_back_color);
+        document.querySelector('nav').style.backgroundColor = json.bar_back_color
+        const ulli = document.querySelectorAll('nav ul li') 
+        for(let i=0; i<ulli.length; i++){
+            ulli[i].style.backgroundColor = json.bar_back_color            
+        }
+        const a = document.querySelectorAll('nav a')
+        for(let i=0; i<a.length; i++){
+            a[i].style.color = json.bar_font_color
+        }
+    })
+
+}

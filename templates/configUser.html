@@ -24,10 +24,12 @@
     <div class="inline">
         <label for="edtBarColor">Cor de Fundo</label>
         <input type="color" id="edtBarColor">
+        <input id="rngBarColor" type="range" min="0" max="255" step="1" value="255">
     </div>
     <div class="inline">
         <label for="edtBarFontColor">Cor da Fonte</label>
         <input type="color" id="edtBarFontColor">
+        <input id="rngFontColor" type="range" min="0" max="255" step="1" value="255">
     </div>
     <button id="btnSaveBar">Salvar</button>
 
@@ -35,6 +37,10 @@
 
 </template>
 <script>
+
+
+    document.querySelector('#edtBarColor').value = main_data.dashboard.data.bar_back_color
+    document.querySelector('#edtBarFontColor').value = main_data.dashboard.data.bar_font_color
 
     const saveBackground = function(filename, path='assets/users/'){ 
         try{
@@ -48,10 +54,12 @@
 
     document.querySelector('#btnSaveBar').addEventListener('click',()=>{
         try{
-            getConfig(localStorage.getItem('username'),'config.json','bar-back-color',document.querySelector('#edtBarColor').value)
-            getConfig(localStorage.getItem('username'),'config.json','bar-font-color',document.querySelector('#edtBarFontColor').value)
+            getConfig(localStorage.getItem('username'),'config.json','bar_back_color',document.querySelector('#edtBarColor').value + parseInt(document.querySelector('#rngBarColor').value).toString(16).padStart(2, "0"))
+            getConfig(localStorage.getItem('username'),'config.json','bar_font_color',document.querySelector('#edtBarFontColor').value + parseInt(document.querySelector('#rngFontColor').value).toString(16).padStart(2, "0"))
             getConfig(localStorage.getItem('username'),'config.json').then((txt)=>{
-                console.log(txt)
+                const json = JSON.parse(txt)
+                document.body.style.setProperty('-top-bar', document.querySelector('#edtBarColor').value);
+                setBarStyle()
             })
         }catch{
             console.log('clear wallpaper')
