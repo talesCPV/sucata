@@ -112,6 +112,10 @@ nav a:hover {
 	background-color: var(--top-bar-hover); 
 }
 
+#menu li{
+	background-color: navy;
+}
+
 /* Hide Dropdowns by Default
  * and giving it a position of absolute */
 nav ul ul {
