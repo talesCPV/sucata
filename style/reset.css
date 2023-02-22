@@ -98,6 +98,20 @@
         width: 98%;
     }
 
+    /* RANGE */
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        background: var(--top-bar);
+        border-radius: 10px;
+        padding: 0;
+        margin: 20px;
+        border: solid 1px black;
+    
+
+    }
+    
+
     /*  ABAS (TAB) */
 
     .tab-bar{

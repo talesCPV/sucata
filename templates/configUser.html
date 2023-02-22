@@ -20,7 +20,7 @@
   </fieldset>
 
   <fieldset>
-    <legend>Barra de Menu</legend>
+    <legend>Menu</legend>
     <div class="inline">
         <label for="edtBarColor">Cor de Fundo</label>
         <input type="color" id="edtBarColor">
@@ -31,16 +31,35 @@
         <input type="color" id="edtBarFontColor">
         <input id="rngFontColor" type="range" min="0" max="255" step="1" value="255">
     </div>
+    <div class="inline">
+        <label for="edtBarMouse">Selecionado</label>
+        <input type="color" id="edtBarMouse">
+        <input id="rngBarMouse" type="range" min="0" max="255" step="1" value="255">
+    </div>
     <button id="btnSaveBar">Salvar</button>
 
   </fieldset>
 
 </template>
 <script>
+// #2C3D3A
 
+    try{
+        document.querySelector('#edtBarColor').value = main_data.dashboard.data.bar_back_color.substr(0,7)
+        document.querySelector('#edtBarFontColor').value = main_data.dashboard.data.bar_font_color.substr(0,7)
+        document.querySelector('#edtBarMouse').value = main_data.dashboard.data.bar_mouse_color.substr(0,7)
+        document.querySelector('#rngBarColor').value = parseInt(main_data.dashboard.data.bar_back_color.substr(7,2),16).toString()
+        document.querySelector('#rngFontColor').value = parseInt(main_data.dashboard.data.bar_font_color.substr(7,2),16).toString()
+        document.querySelector('#rngBarMouse').value = parseInt(main_data.dashboard.data.bar_mouse_color.substr(7,2),16).toString()
+    } catch {
+        document.querySelector('#edtBarColor').value = '#2C3D3A'
+        document.querySelector('#edtBarFontColor').value = '#FFFFFF'
+        document.querySelector('#edtBarMouse').value = '#000000'
+        document.querySelector('#rngBarColor').value = parseInt('3A',16).toString()
+        document.querySelector('#rngFontColor').value = '255'
+        document.querySelector('#rngBarMouse').value = '255'
+    }
 
-    document.querySelector('#edtBarColor').value = main_data.dashboard.data.bar_back_color
-    document.querySelector('#edtBarFontColor').value = main_data.dashboard.data.bar_font_color
 
     const saveBackground = function(filename, path='assets/users/'){ 
         try{
@@ -56,10 +75,14 @@
         try{
             getConfig(localStorage.getItem('username'),'config.json','bar_back_color',document.querySelector('#edtBarColor').value + parseInt(document.querySelector('#rngBarColor').value).toString(16).padStart(2, "0"))
             getConfig(localStorage.getItem('username'),'config.json','bar_font_color',document.querySelector('#edtBarFontColor').value + parseInt(document.querySelector('#rngFontColor').value).toString(16).padStart(2, "0"))
+            getConfig(localStorage.getItem('username'),'config.json','bar_mouse_color',document.querySelector('#edtBarMouse').value + parseInt(document.querySelector('#rngBarMouse').value).toString(16).padStart(2, "0"))
             getConfig(localStorage.getItem('username'),'config.json').then((txt)=>{
                 const json = JSON.parse(txt)
                 document.body.style.setProperty('-top-bar', document.querySelector('#edtBarColor').value);
+                document.body.style.setProperty('--top-bar-hover', document.querySelector('#edtBarMouse').value + parseInt(document.querySelector('#rngBarMouse').value).toString(16).padStart(2, "0")) ;
+
                 setBarStyle()
+                alert('Aparência alterada com sucesso!')
             })
         }catch{
             console.log('clear wallpaper')

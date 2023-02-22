@@ -671,18 +671,34 @@ function setLog(line){
 }
 
 function setBarStyle(){
-    getConfig(localStorage.getItem('username'),'config.json').then((txt)=>{
-        const json = JSON.parse(txt)     
-        document.body.style.setProperty('-top-bar', json.bar_back_color);
-        document.querySelector('nav').style.backgroundColor = json.bar_back_color
-        const ulli = document.querySelectorAll('nav ul li') 
-        for(let i=0; i<ulli.length; i++){
-            ulli[i].style.backgroundColor = json.bar_back_color            
-        }
-        const a = document.querySelectorAll('nav a')
-        for(let i=0; i<a.length; i++){
-            a[i].style.color = json.bar_font_color
-        }
-    })
+
+        getConfig(localStorage.getItem('username'),'config.json').then((txt)=>{
+            try{
+
+                const json = JSON.parse(txt)
+                document.body.style.setProperty('-top-bar', json.bar_back_color)
+                document.body.style.setProperty('--top-bar-hover', json.bar_mouse_color)
+                document.querySelector('nav').style.backgroundColor = json.bar_back_color
+                document.querySelector('#usr-name').style.color = json.bar_font_color
+                                
+                main_data.dashboard.data.bar_back_color = json.bar_back_color
+                main_data.dashboard.data.bar_font_color = json.bar_font_color
+                main_data.dashboard.data.bar_mouse_color = json.bar_mouse_color
+
+                const ulli = document.querySelectorAll('nav ul li') 
+                for(let i=0; i<ulli.length; i++){
+                    ulli[i].style.backgroundColor = json.bar_back_color            
+                }
+                const a = document.querySelectorAll('nav a')
+                for(let i=0; i<a.length; i++){
+                    a[i].style.color = json.bar_font_color
+                }
+            } catch {
+                return
+            }
+    
+        })
+    
+
 
 }
