@@ -676,14 +676,20 @@ function setBarStyle(){
             try{
 
                 const json = JSON.parse(txt)
+
                 document.body.style.setProperty('-top-bar', json.bar_back_color)
                 document.body.style.setProperty('--top-bar-hover', json.bar_mouse_color)
+                document.body.style.setProperty('--win-back', json.win_back_color);
+                document.body.style.setProperty('--win-font', json.win_font_color);
+
                 document.querySelector('nav').style.backgroundColor = json.bar_back_color
                 document.querySelector('#usr-name').style.color = json.bar_font_color
                                 
                 main_data.dashboard.data.bar_back_color = json.bar_back_color
                 main_data.dashboard.data.bar_font_color = json.bar_font_color
                 main_data.dashboard.data.bar_mouse_color = json.bar_mouse_color
+                main_data.dashboard.data.win_back_color = json.win_back_color
+                main_data.dashboard.data.win_font_color = json.win_font_color
 
                 const ulli = document.querySelectorAll('nav ul li ul li') 
                 for(let i=0; i<ulli.length; i++){
