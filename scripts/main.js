@@ -495,9 +495,12 @@ function openMenu(){
                 const lbl = document.createElement('label')
                 lbl.htmlFor = `drop-${drop}`
                 lbl.classList = 'toggle'
-                lbl.innerHTML = obj[i].modulo + ' ▸'                  
+                lbl.innerHTML = obj[i].modulo + ' ▸'  
                 li.appendChild(lbl)
-
+//                const span = document.createElement("span");
+//                span.innerHTML = '▸'
+//                span.classList = 'toggle'
+//                lbl.after(span)
                 li.appendChild(a)
 
                 const ckb = document.createElement('input')

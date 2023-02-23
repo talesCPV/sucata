@@ -105,9 +105,9 @@ nav a {
 	text-decoration:none;
 }
 
-
+/*
 nav ul li ul li:hover { background: #000000; }
-
+*/
 /* Background color change on Hover */
 nav a:hover { 
 	background-color: var(--top-bar-hover); 
@@ -232,16 +232,16 @@ li > a:only-child:after { content: ''; }
 	nav ul ul ul a {
 		padding: 0 80px;
 	}
-
+/*
 	nav a:hover,
  	nav ul ul ul a {
 		background-color: var(--top-bar-hover);
 	}
-  
+*/  
 	nav ul li ul li .toggle,
 	nav ul ul a,
   nav ul ul ul a{
-		padding:14px 20px;	
+		padding:14px 0 14px 100px;	
 		color:#FFF;
 		font-size:14px; 
 	}
@@ -249,7 +249,8 @@ li > a:only-child:after { content: ''; }
   
 	nav ul li ul li .toggle,
 	nav ul ul a {
-		background-color: #212121; 
+/*		background-color: #212121; */
+		padding-left: 50px;
 	}
 
 	/* Hide Dropdowns by Default */
