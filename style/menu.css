@@ -33,6 +33,7 @@ nav {
 	margin:0;
 	padding: 0;
 	background-color: var(--top-bar);
+	z-index: 99;
 }
 
 #logo {
