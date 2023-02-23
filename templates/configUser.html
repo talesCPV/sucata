@@ -63,7 +63,7 @@
 // #2C3D3A
 
     try{
-        document.querySelector('#cmbWallpaper').value = main_data.dashboard.data.wallpaper.substr(7,20)
+        document.querySelector('#cmbWallpaper').value = main_data.dashboard.data.wallpaper.substr(7)        
         document.querySelector('#edtBarColor').value = main_data.dashboard.data.bar_back_color.substr(0,7)
         document.querySelector('#edtBarFontColor').value = main_data.dashboard.data.bar_font_color.substr(0,7)
         document.querySelector('#edtBarMouse').value = main_data.dashboard.data.bar_mouse_color.substr(0,7)
@@ -74,6 +74,13 @@
         document.querySelector('#rngBarMouse').value = parseInt(main_data.dashboard.data.bar_mouse_color.substr(7,2),16).toString()
         document.querySelector('#rngWinColor').value = parseInt(main_data.dashboard.data.win_back_color.substr(7,2),16).toString()
         document.querySelector('#rngWinFontColor').value = parseInt(main_data.dashboard.data.win_font_color.substr(7,2),16).toString()
+        if(document.querySelector('#cmbWallpaper').value == ''){
+            const opt = document.createElement('option')
+            opt.value = main_data.dashboard.data.wallpaper.substr(7)
+            opt.innerHTML = 'Personalizado'
+            document.querySelector('#cmbWallpaper').appendChild(opt)
+            document.querySelector('#cmbWallpaper').value = main_data.dashboard.data.wallpaper.substr(7)
+        }
     } catch {
         document.querySelector('#edtBarColor').value = '#2C3D3A'
         document.querySelector('#edtBarFontColor').value = '#FFFFFF'

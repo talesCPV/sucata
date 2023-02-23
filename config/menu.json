@@ -94,7 +94,7 @@
 		},	
 		{
 			"modulo" : "Comercial",
-			"script" : "",
+			"script" : "#",
 			"access" : [10,1],
 			"class"  : "",
 			"icone"  : "fa fa-industry",
