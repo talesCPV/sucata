@@ -254,7 +254,7 @@ function newModal(title, content, pos, id){
         mod_card.style.position = 'absolute'
         mod_card.style.zIndex = 3+index
         mod_card.style.margin = '0 auto'
-        mod_card.style.top = pos[1] + index*offset+'px'
+        mod_card.style.top = pos[1] + 50 + index*offset+'px'
         mod_card.style.left = pos[0] + index*offset+'px'
         mod_card.style.right = pos[0] - index*offset+'px'
     
