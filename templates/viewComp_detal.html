@@ -90,7 +90,7 @@
                 myPromisse.then((resolve)=>{
                     main_data.viewCompras.busca()
                     alert('Nova data aplicada')
-                    setLog(`Compra (data editada), de ${main_data.viewComp_detal.data.saida} p/ ${dt}`)
+                    setLog(`Compra ${main_data.viewComp_detal.data.id} (data editada), de ${main_data.viewComp_detal.data.saida} p/ ${dt}`)
                     main_data.viewComp_detal.data.saida = dt
                 })
             }else{
@@ -120,7 +120,7 @@
                 myPromisse_saldo.then(()=>{
                     main_data.viewCompras.busca()
                     alert('Cliente alterado com sucesso!!!')
-                    setLog(`Compra -> cliente editado p/ ${document.querySelector('#via-cli').options[document.querySelector('#via-cli').selectedIndex].text}`)
+                    setLog(`Compra ${main_data.viewComp_detal.data.id} (cliente editado) -> ${document.querySelector('#via-cli').options[document.querySelector('#via-cli').selectedIndex].text}`)
                     document.querySelector('#btnEdit').click()
                 })
             })
@@ -153,7 +153,7 @@
                         params_less.qtd = itens[i].qtd
                     const myPromisse_update_2 = queryDB(params_less,38);
                     myPromisse_update_2.then(()=>{
-                        setLog(`Tranferencia de material: ${itens[i].nome} - ${itens[i].qtd}Kg, de ${itens[i].modelo} para ${sel.options[sel.selectedIndex].text}`)
+                        setLog(`Tranferencia de material da compra ${main_data.viewComp_detal.data.id}: ${itens[i].nome} - ${itens[i].qtd}Kg, de ${itens[i].modelo} para ${sel.options[sel.selectedIndex].text}`)
                     })
                 }
             })
@@ -261,7 +261,7 @@
                     params_itens.qtd = qtd
                 const myPromisse_itens = queryDB(params_itens,38)
                 myPromisse_itens.then(()=>{
-                    setLog(`COMPRA DELETADA - RETORNANDO ÍTEM AO ESTOQUE: ${item.nome}, QTD:${qtd.toFixed(2)}, LOCAL:${item.modelo}`)
+                    setLog(`COMPRA ${main_data.viewComp_detal.data.id} DELETADA - RETORNANDO ÍTEM AO ESTOQUE: ${item.nome}, QTD:${qtd.toFixed(2)}, LOCAL:${item.modelo}`)
                 })
             }
 
@@ -272,7 +272,7 @@
             myPromisse.then((resolve)=>{
                 const myPromisse_1 = queryDB(params,49); // DELETA A COMPRA
                 myPromisse_1.then((resolve)=>{
-                    setLog(`Compra deletada, Fornecedor:${main_data.viewComp_detal.data.fantasia}, valor R$${parseFloat(main_data.viewComp_detal.data.valor).toFixed(2)}, data da compra:${main_data.viewComp_detal.data.saida}`)
+                    setLog(`Compra ${main_data.viewComp_detal.data.id} DELETADA, Fornecedor: ${main_data.viewComp_detal.data.fantasia}, R$${parseFloat(main_data.viewComp_detal.data.valor).toFixed(2)}, Data:${main_data.viewComp_detal.data.saida}`)
                     main_data.viewCompras.busca()
                     closeModal('viewComp_detal')
                 })
