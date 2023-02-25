@@ -157,6 +157,7 @@
                                 params_itens.qtd = main_data.compra.data.itens_temp[i].qtd
                                 params_itens.und = main_data.compra.data.itens_temp[i].und
                                 params_itens.val_unit = main_data.compra.data.itens_temp[i].val_venda
+                                params_itens.id_local_origem = main_data.viewLocal.data.id
                             const myPromisse_itens = queryDB(params_itens,42);
 
                             total += (parseFloat(params_itens.qtd) * parseFloat(params_itens.val_unit))

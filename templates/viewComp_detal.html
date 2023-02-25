@@ -8,17 +8,26 @@
         }
 
         .head-item{
-            display: flex;
-            
+            display: flex;              
         }
+
+        .padding_down{
+            padding-top: 12px;            
+        }
+
+        #btnSaveCli, .show_edt{
+            display: none;
+        }
+
 
     </style>
     
     <fieldset id="fdsComp">
         <legend>Compra</legend>
         <table id="tblViagem">
-            <tr><th>Fornecedor</th><td id="via-cli"></td></tr>
+            <tr><th>Fornecedor</th><td class="head-item"><select id="via-cli" disabled></select><a class="padding_down" id="btnSaveCli" href="#">Salvar</a></td></tr>
             <tr><th>Comprador</th><td id="via-comp"></td></tr>
+            <tr><th>Local</th><td class="head-item"><p class="padding_down" id="via-local"></p><div class="show_edt"> <p class="padding_down">-></p>  <select id="cmbLocal"></select> <a class="padding_down" id="btnTranfLocal" href="#">Tranferir</a> </div></td></tr>
             <tr><th>Compra Num.</th><td id="via-num"></td></tr>
             <tr><th>Data</th><td id="via-data"></td></tr>
             <tr><th>Valor R$</th><td id="via-valor"></td></tr>
@@ -92,6 +101,67 @@
         data.appendChild(a)    
     }
 
+    document.querySelector('#btnSaveCli').addEventListener('click',()=>{
+        const now = new Date()
+        const params = new Object;
+            params.id = main_data.viewComp_detal.data.id
+            params.id_cliente = document.querySelector('#via-cli').value
+            params.id_resp = main_data.viewComp_detal.data.id_resp
+            params.status = main_data.viewComp_detal.data.status
+            params.obs = main_data.viewComp_detal.data.obs+ ` Editado-> ${localStorage.getItem('nome')} ${now.getFullDate()}`
+            params.data = main_data.viewComp_detal.data.data
+            const myPromisse = queryDB(params,41); 
+            myPromisse.then((resolve)=>{
+                const params_saldo = new Object
+                    params_saldo.tb_origem = 'tb_compra'
+                    params_saldo.id_origem = main_data.viewComp_detal.data.id
+                    params_saldo.id_cliente = document.querySelector('#via-cli').value
+                const myPromisse_saldo = queryDB(params_saldo,50); 
+                myPromisse_saldo.then(()=>{
+                    main_data.viewCompras.busca()
+                    alert('Cliente alterado com sucesso!!!')
+                    setLog(`Compra -> cliente editado p/ ${document.querySelector('#via-cli').options[document.querySelector('#via-cli').selectedIndex].text}`)
+                    document.querySelector('#btnEdit').click()
+                })
+            })
+    })    
+
+    document.querySelector('#btnTranfLocal').addEventListener('click',()=>{
+
+        const sel = document.querySelector('#cmbLocal')                          
+        const itens = main_data.viewComp_detal.data.itens
+        for(let i=0; i<itens.length; i++){
+
+            const params_item = new Object
+                params_item.id = itens[i].id
+                params_item.id_local_origem = document.querySelector('#cmbLocal').value
+            
+            const myPromisse_itens = queryDB(params_item,51);
+            myPromisse_itens.then(()=>{
+                if(itens[i].id_local_origem !='0'){
+                    const params_add = new Object // adiciona estoque
+                        params_add.id_local = document.querySelector('#cmbLocal').value
+                        params_add.id_prod = itens[i].id_prod
+                        params_add.qtd = itens[i].qtd
+                        params_add.und = itens[i].und
+                        params_add.val_unit = itens[i].val_unit
+                    const myPromisse_update = queryDB(params_add,30);
+
+                    const params_less = new Object // retira estoque                                
+                        params_less.id_local = itens[i].id_local_origem
+                        params_less.id_prod = itens[i].id_prod
+                        params_less.qtd = itens[i].qtd
+                    const myPromisse_update_2 = queryDB(params_less,38);
+                    myPromisse_update_2.then(()=>{
+                        setLog(`Tranferencia de material: ${itens[i].nome} - ${itens[i].qtd}Kg, de ${itens[i].modelo} para ${sel.options[sel.selectedIndex].text}`)
+                    })
+                }
+            })
+        }
+        alert('Transferência realizada com sucesso!!!')
+        document.querySelector('#btnEdit').click()
+    })
+
     document.querySelector('#btnEst').addEventListener('click',()=>{
         openHTML('estorno.html','pop-up','Estorno de Material',main_data.viewComp_detal.data,[100,30])
     })    
@@ -103,12 +173,26 @@
             document.querySelector('#btnDel').style.display = 'none'
             document.querySelector('#btnAdd').style.display = 'none'
         }
+        
+        const params_cli = new Object;
+            params_cli.field = 'modal'
+            params_cli.signal = '!='
+            params_cli.value = '"CLI"' 
+        fillCombo('via-cli',params_cli,1,['id','fantasia'], main_data.viewComp_detal.data.id_cliente)
+    
+        const params_local = new Object;
+            params_local.hash = localStorage.getItem('hash')
+            params_local.field = 'id'
+            params_local.signal = '!='
+            params_local.value = main_data.viewComp_detal.data.id_local
+        fillCombo('cmbLocal',params_local,20,['id','modelo'], '#')
 
-        document.querySelector('#via-cli').innerHTML = main_data.viewComp_detal.data.nome.toUpperCase()
+//        document.querySelector('#via-cli').innerHTML = main_data.viewComp_detal.data.nome.toUpperCase()
         document.querySelector('#via-comp').innerHTML = main_data.viewComp_detal.data.nome_comp.toUpperCase()
         document.querySelector('#via-num').innerHTML = main_data.viewComp_detal.data.id.padStart(6,'0')
         document.querySelector('#via-data').innerHTML = main_data.viewComp_detal.data.saida
         document.querySelector('#via-valor').innerHTML = ''
+        document.querySelector('#via-local').innerHTML = ''
         main_data.viewComp_detal.fillItens()
         
     }
@@ -125,15 +209,17 @@
                 tot.label = 'TOTAL'
                 tot.peso = 0
                 tot.val = 0
+                tot.local = ''
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
             for(let i=0; i<main_data.viewComp_detal.data.itens.length;i++){
                 tbl.plot(main_data.viewComp_detal.data.itens[i],'nome,und|mobHide,qtd_tot,val_unit,total','Upp,Upp,str,R$.,R$.',false,main_data.viewComp_detal.data.itens[i].estorno > 0 ? true : false)
                 tot.val += parseFloat(main_data.viewComp_detal.data.itens[i].total)
                 tot.peso += parseFloat(main_data.viewComp_detal.data.itens[i].qtd_tot)
+                tot.local = main_data.viewComp_detal.data.itens[i].modelo
             }
             tbl.plot(tot,'blank|mobHide,blank,blank,label,val','str,str,str,Upp,R$.')
             document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
-//            document.querySelector('#via-peso').innerHTML = tot.peso.toFixed(2)+' Kg'
+            document.querySelector('#via-local').innerHTML = tot.local.toUpperCase()
         })
     }
 
@@ -145,23 +231,44 @@
             document.querySelector('#btnDel').disabled = false
             document.querySelector('#btnEst').disabled = false
             document.querySelector('#btnAdd').disabled = false
+            document.querySelector('#via-cli').disabled = false
+            document.querySelector('.show_edt').style.display = 'flex'
+            document.querySelector('#btnSaveCli').style.display = 'flex'
+            
             edtData()
         }else{
             document.querySelector('#btnDel').disabled = true
             document.querySelector('#btnEst').disabled = true
             document.querySelector('#btnAdd').disabled = true
             document.querySelector('#via-data').innerHTML = main_data.viewComp_detal.data.saida
+            document.querySelector('#via-cli').disabled = true
+            document.querySelector('.show_edt').style.display = 'none'
+            document.querySelector('#btnSaveCli').style.display = 'none'
         }
     
     
     })
 
     document.querySelector('#btnDel').addEventListener('click',()=>{        
-        if (confirm('Deseja realmente deletar esta compra?')) {            
+        if (confirm('Deseja realmente deletar esta compra?')) {
+
+            for(let i=0; i<main_data.viewComp_detal.data.itens.length; i++){ // ATUALIZA QTD DOS ÍTENS
+                const item = main_data.viewComp_detal.data.itens[i]
+                const qtd = parseFloat(item.qtd) - parseFloat(item.estorno)
+                const params_itens = new Object
+                    params_itens.id_local = item.id_local_origem
+                    params_itens.id_prod = item.id_prod
+                    params_itens.qtd = qtd
+                const myPromisse_itens = queryDB(params_itens,38)
+                myPromisse_itens.then(()=>{
+                    setLog(`COMPRA DELETADA - RETORNANDO ÍTEM AO ESTOQUE: ${item.nome}, QTD:${qtd.toFixed(2)}, LOCAL:${item.modelo}`)
+                })
+            }
+
             const params = new Object;
                 params.id_compra = main_data.viewComp_detal.data.id
                 params.hash = localStorage.getItem('hash')
-            const myPromisse = queryDB(params,50); // DELETA OS ÍTENS
+            const myPromisse = queryDB(params,46); // DELETA OS ÍTENS
             myPromisse.then((resolve)=>{
                 const myPromisse_1 = queryDB(params,49); // DELETA A COMPRA
                 myPromisse_1.then((resolve)=>{

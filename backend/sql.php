@@ -74,7 +74,8 @@ $query_db = array(
         ON PROD.id = ITEM.id_prod
         AND ITEM.id_local="x00"
         AND ITEM.qtd > 0
-        GROUP BY ITEM.id_prod;',
+        GROUP BY ITEM.id_prod
+        ORDER BY PROD.nome;',
     "30" => 'INSERT INTO tb_item_estoque (id_local, id_prod, qtd, und, val_unit) VALUES (x00, "x01", "x02", "x03", "x04") 
         ON DUPLICATE KEY UPDATE  id_local="x00", id_prod="x01", qtd=(qtd+x02), und="x03", val_unit=x04;',
     "31" => 'SELECT * FROM tb_motorista
@@ -120,7 +121,7 @@ $query_db = array(
         ORDER BY nome;',
     "41" => 'INSERT INTO tb_compra (id, id_cliente, id_resp, status, obs, data, id_local) VALUES(x00, "x01", "x02", "x03", "x04", "x05", "x06") 
         ON DUPLICATE KEY UPDATE id_cliente="x01", id_resp="x02", status="x03", obs="x04", data="x05", id_local="x06";',
-    "42" => 'INSERT INTO tb_item_compra (id, id_compra, id_prod, qtd, und, val_unit) VALUES(x00, x01, "x02", "x03", "x04", "x05") 
+    "42" => 'INSERT INTO tb_item_compra (id, id_compra, id_prod, qtd, und, val_unit, id_local_origem) VALUES(x00, x01, "x02", "x03", "x04", "x05", "x06") 
         ON DUPLICATE KEY UPDATE   id_compra="x01", id_prod="x02", qtd="x03", und="x04", val_unit="x05";',
     "43" => 'SELECT  CLI.*, COMP.*, ITEM.valor, USR.user, USR.nome AS nome_comp 
         FROM tb_compra AS COMP 
@@ -135,11 +136,14 @@ $query_db = array(
         AND COMP.data >= "x03"
         AND COMP.data <= "x04"
         ORDER BY COMP.data DESC;',
-    "44" => 'SELECT ITEM.*, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND((ITEM.qtd - ITEM.estorno) * ITEM.val_unit ,2) as total, ROUND(ITEM.qtd - ITEM.estorno ,2) as qtd_tot
+    "44" => 'SELECT ITEM.*, LOCAL.modelo, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND((ITEM.qtd - ITEM.estorno) * ITEM.val_unit ,2) as total, ROUND(ITEM.qtd - ITEM.estorno ,2) as qtd_tot
         FROM tb_item_compra AS ITEM 
         INNER JOIN tb_prod AS PROD
+        INNER JOIN tb_local AS LOCAL
         ON PROD.id = ITEM.id_prod
-        AND ITEM.id_compra="x00";',
+        AND (LOCAL.id = ITEM.id_local_origem OR ITEM.id_local_origem=0)
+        AND ITEM.id_compra="x00"
+        GROUP BY ITEM.id;',
     "45" => 'INSERT INTO tb_item_compra (id, id_compra, id_prod, qtd, und, val_unit) VALUES(x00, x01, x02, "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE   id_compra="x01", id_prod="x02", qtd="x03", und="x04", val_unit="x05", estorno="x06";',
     "46" => 'DELETE FROM tb_item_compra WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
@@ -157,7 +161,7 @@ $query_db = array(
         GROUP BY TOTAL.id;',
     "48" => ' UPDATE tb_item_estoque SET qtd=x02, val_unit=x04 WHERE id_local="x00" AND id_prod="x01";',
     "49" => 'DELETE FROM tb_compra WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-    "50" => 'DELETE FROM tb_item_compra WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
+    "50" => 'UPDATE tb_saldo SET y02=x02 WHERE tb_origem="x00" AND id_origem="x01";',
     "51" => 'UPDATE tb_item_compra SET y01="x01" WHERE id=x00;',
     "52" => 'SELECT ITEM.*, MAT.ncm, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND((ITEM.qtd - ITEM.estorno) * ITEM.val_unit ,2) as total, ROUND(ITEM.qtd - ITEM.estorno ,2) as qtd_tot 
         FROM x00 AS ITEM 

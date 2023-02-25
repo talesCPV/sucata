@@ -136,13 +136,19 @@ CREATE TABLE tb_item_compra(
     und  VARCHAR(10) NOT NULL,
     val_unit double NOT NULL DEFAULT 0,
     estorno double DEFAULT 0,
+    id_local_origem int(11) NOT NULL DEFAULT 0,
     FOREIGN KEY (id_compra) REFERENCES tb_compra(id),
     FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
+    FOREIGN KEY (id_local_origem) REFERENCES tb_local(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 ALTER TABLE tb_item_compra
 MODIFY estorno double DEFAULT 0;
+
+ALTER TABLE tb_item_compra
+ADD COLUMN id_local_origem int(11) DEFAULT 0;
+
 
 /*DROP TABLES tb_local;*/
 CREATE TABLE tb_local(
@@ -246,30 +252,22 @@ CREATE TABLE tb_saldo(
     tipo VARCHAR(7) NOT NULL DEFAULT "PAGAR",
     quitado BOOLEAN DEFAULT FALSE,
     obs VARCHAR(255) NOT NULL DEFAULT "",
+    id_origem int(11) NOT NULL,
+    tb_origem VARCHAR(10) NOT NULL DEFAULT "tb_compra",
 	FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
-CREATE TABLE tb_banco(
-    id INT NOT NULL AUTO_INCREMENT,
-    banco VARCHAR(30) NOT NULL,
-	bco_ag varchar(6) DEFAULT NULL,
-    bco_cc varchar(15) DEFAULT NULL,
-	bco_pix varchar(40) DEFAULT NULL,
-    PRIMARY KEY(id)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+ALTER TABLE tb_saldo
+ADD COLUMN id_origem int(11) NOT NULL DEFAULT 0;
+ALTER TABLE tb_saldo
+ADD tb_origem VARCHAR(10) NOT NULL DEFAULT "tb_compra";
 
-/*drop table tb_lanc_bancario;*/
-CREATE TABLE tb_lanc_bancario(
-    id INT NOT NULL AUTO_INCREMENT,
-    id_banco INT NOT NULL,
-    id_cliente INT NOT NULL,
-    data date NOT NULL, 
-    valor double NOT NULL,
-    forma VARCHAR(10) DEFAULT NULL,
-    ref VARCHAR(40) DEFAULT NULL,
-    obs VARCHAR(255) DEFAULT NULL,
-	FOREIGN KEY (id_banco) REFERENCES tb_banco(id),
-    FOREIGN KEY (id_cliente) REFERENCES tb_clientes(id),
-    PRIMARY KEY(id)
+CREATE TABLE tb_calendario (
+    id_user int(11) NOT NULL,
+    data_agd datetime NOT NULL,
+    obs varchar(300),
+    hint varchar(100),
+    PRIMARY KEY (id_user, data_agd),
+    FOREIGN KEY(id_user) REFERENCES tb_usuario(id)    	
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
