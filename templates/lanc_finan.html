@@ -91,6 +91,42 @@
         }
     }
 
+    main_data.lanc_finan.quitLanc = ()=>{
+
+        if(main_data.lanc_finan.data.mode != 'edit' && main_data.lanc_finan.data.mode != 'fix'){
+            for(let i=0; i<main_data.lanc_finan.data.tbl.length; i++){                    
+                const params_saldo = new Object; 
+                params_saldo.id = main_data.lanc_finan.data.tbl[i].id
+                params_saldo.id_cliente = main_data.lanc_finan.data.tbl[i].id_cliente
+                params_saldo.data = main_data.lanc_finan.data.tbl[i].data
+                params_saldo.valor = main_data.lanc_finan.data.tbl[i].valor
+                params_saldo.tipo = main_data.lanc_finan.data.tbl[i].tipo
+                params_saldo.quitado = 1
+                params_saldo.obs = main_data.lanc_finan.data.tbl[i].obs
+                params_saldo.id_origem = main_data.lanc_finan.data.tbl[i].id_origem
+                params_saldo.tb_origem = main_data.lanc_finan.data.tbl[i].tb_origem                
+                const myPromisse_saldo = queryDB(params_saldo,58);
+                setLog(`${params_saldo.tb_origem == 'tb_compra' ? 'COMPRA ' : 'VENDA ' + main_data.lanc_finan.data.tbl[i].id_origem} - ${document.querySelector('#lblCli').innerHTML} QUITADA:`)
+            }
+        }
+        alert(`Lançamento ${main_data.lanc_finan.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
+        if(main_data.lanc_finan.data.mode == 'edit'){
+            setLog(`EDIÇÃO - LANÇAMENTO BANCÁRIO A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+            main_data.extrato.busca() 
+        }else if(main_data.lanc_finan.data.mode == 'fix'){
+            setLog(`ACERTO DE SALDO PELO USUARIO, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, DATA:, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+            main_data.extrato.busca()
+        }else if(main_data.lanc_finan.data.mode == 'pagar'){
+            setLog(`LANÇAMENTO BANCÁRIO A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+            main_data.cont_pagar.busca()
+        }else{
+            setLog(`LANÇAMENTO BANCÁRIO A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
+            main_data.cont_receber.busca()
+        }
+        closeModal('lanc_finan')
+    }
+
+
     if(main_data.lanc_finan.data.mode == 'edit'){
         main_data.lanc_finan.getCli()
 //        document.querySelector('#lblCli').innerHTML = main_data.lanc_finan.data.id_cliente
@@ -131,49 +167,26 @@
         }
 
         if ((main_data.lanc_finan.data.mode == 'edit' && confirm('Deseja alterar este lançamento?')) || main_data.lanc_finan.data.mode != 'edit' && confirm('Deseja efetuar este lançamento?') ) {
-            const now = new Date()
-            const params = new Object; 
-                params.id = main_data.lanc_finan.data.mode == 'edit' ? main_data.lanc_finan.data.id : 'DEFAULT'
-                params.id_banco = document.querySelector('#cmbBco').value
-                params.id_cliente = main_data.lanc_finan.data.id_cliente
-                params.data = document.querySelector('#edtData').value +' '+ now.getFullHour()
-                params.valor = valor
-                params.forma = main_data.lanc_finan.data.mode == 'fix' ? 'ACERTO' :document.querySelector('#cmbForma').value
-                params.ref = main_data.lanc_finan.data.mode == 'fix' ? 'ACERTO DE SALDO PELO USUARIO' : main_data.lanc_finan.data.mode == 'pagar' ? 'PAGAMENTO AO FORNECEDOR' : 'RECEBIMENTO DE CLIENTE'
-                params.obs = document.querySelector('#edtObs').value
-           
-            const myPromisse = queryDB(params,68);
-            myPromisse.then((resolve)=>{
 
-                if(main_data.lanc_finan.data.mode != 'edit' && main_data.lanc_finan.data.mode != 'fix'){
-                    for(let i=0; i<main_data.lanc_finan.data.tbl.length; i++){                    
-                        const params_saldo = new Object; 
-                        params_saldo.id = main_data.lanc_finan.data.tbl[i].id
-                        params_saldo.id_cliente = main_data.lanc_finan.data.tbl[i].id_cliente
-                        params_saldo.data = main_data.lanc_finan.data.tbl[i].data
-                        params_saldo.valor = main_data.lanc_finan.data.tbl[i].valor
-                        params_saldo.tipo = main_data.lanc_finan.data.tbl[i].tipo
-                        params_saldo.quitado = 1
-                        params_saldo.obs = main_data.lanc_finan.data.tbl[i].obs
-                        params_saldo.id_origem = main_data.lanc_finan.data.tbl[i].id_origem
-                        params_saldo.tb_origem = main_data.lanc_finan.data.tbl[i].tb_origem                
-                        const myPromisse_saldo = queryDB(params_saldo,58);
-                        setLog(`${params_saldo.tb_origem == 'tb_compra' ? 'COMPRA ' : 'VENDA ' + main_data.lanc_finan.data.tbl[i].id_origem} - ${document.querySelector('#lblCli').innerHTML} QUITADA:`)
-                    }
-                }
-                alert(`Lançamento ${main_data.lanc_finan.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
-                if(main_data.lanc_finan.data.mode == 'edit'){
-                    setLog(`EDIÇÃO - LANÇAMENTO BANCÁRIO A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
-                    main_data.extrato.busca() 
-                } else if(main_data.lanc_finan.data.mode == 'fix'){
-                    setLog(`ACERTO DE SALDO PELO USUARIO, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, DATA:, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
-                    main_data.extrato.busca()
-                }else{
-                    setLog(`LANÇAMENTO BANCÁRIO A ${main_data.lanc_finan.data.mode.toUpperCase()} ${main_data.lanc_finan.data.nome}, R$${valor < 0 ?'('+Math.abs(valor).toFixed(2)+')' :valor.toFixed(2)}, VENC.${dataBR(params.data)}, Bco ${document.querySelector('#cmbBco').options[document.querySelector('#cmbBco').selectedIndex].text}`)
-                    main_data.lanc_finan.data.mode == 'pagar' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
-                }
-                closeModal('lanc_finan')
-            })
+            if(valor != 0){                
+                const now = new Date()
+                const params = new Object; 
+                    params.id = main_data.lanc_finan.data.mode == 'edit' ? main_data.lanc_finan.data.id : 'DEFAULT'
+                    params.id_banco = document.querySelector('#cmbBco').value
+                    params.id_cliente = main_data.lanc_finan.data.id_cliente
+                    params.data = document.querySelector('#edtData').value +' '+ now.getFullHour()
+                    params.valor = valor
+                    params.forma = main_data.lanc_finan.data.mode == 'fix' ? 'ACERTO' :document.querySelector('#cmbForma').value
+                    params.ref = main_data.lanc_finan.data.mode == 'fix' ? 'ACERTO DE SALDO PELO USUARIO' : main_data.lanc_finan.data.mode == 'pagar' ? 'PAGAMENTO AO FORNECEDOR' : 'RECEBIMENTO DE CLIENTE'
+                    params.obs = document.querySelector('#edtObs').value
+                
+                const myPromisse = queryDB(params,68);
+                myPromisse.then((resolve)=>{
+                    main_data.lanc_finan.quitLanc()                    
+                })
+            }else{
+                main_data.lanc_finan.quitLanc()
+            }
         }
     })
     

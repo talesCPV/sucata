@@ -17,6 +17,9 @@
             margin: 10px;
         }
 
+        .divBanco{
+            display: none;
+        }
 
     </style>
   
@@ -38,6 +41,20 @@
                 <option value="VALE">ADIANTAMENTO</option>
             </select>
         </div>
+        
+        <div class="inline divBanco">
+            <label for="cmbBanco">Banco</label>
+            <select id="cmbBanco"></select>
+            <label for="cmbForma">Forma Pgto.</label>
+            <select id="cmbForma">
+                <option value="CHEQUE" selected>Cheque</option>
+                <option value="DINHEIRO">Dinheiro</option>
+                <option value="PIX">Pix</option>
+                <option value="DOC">DOC</option>
+                <option value="TED">TED</option>
+            </select>            
+        </div>
+
         <div class="inline">
             <label for="cmbQuit">Estado</label>
             <select id="cmbQuit">
@@ -66,6 +83,22 @@
         fillCombo('cmbCli',params_cli,1,['id','fantasia'], main_data.viewSaldo.data.id_cliente)
     }
 
+    document.querySelector('#cmbTipo').addEventListener('change',()=>{
+
+        if(document.querySelector('#cmbTipo').value == 'VALE'){
+            document.querySelector('.divBanco').style.display = 'flex'
+        }else{
+            document.querySelector('.divBanco').style.display = 'none'
+        }
+
+    })
+
+    main_data.viewSaldo.fillBancos = ()=>{
+        const params_bco = new Object;
+            params_bco.hash = localStorage.getItem('hash')
+        fillCombo('cmbBanco',params_bco,64,['id','banco'])
+    }
+
     if(main_data.viewSaldo.data.mode == 'edit'){
 //        main_data.viewSaldo.fillClientes()
         document.querySelector('#edtData').value = main_data.viewSaldo.data.data.substr(0,10)
@@ -81,6 +114,7 @@
     }
 
     main_data.viewSaldo.fillClientes()
+    main_data.viewSaldo.fillBancos()
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
         if (main_data.viewSaldo.data.mode != 'edit' || confirm('Deseja alterar este pagamento?')) {
@@ -97,6 +131,26 @@
             
             const myPromisse = queryDB(params,58);
             myPromisse.then((resolve)=>{
+                if(document.querySelector('#cmbTipo').value == 'VALE'){
+                    
+                    const now = new Date()
+                    const params = new Object; 
+                        params.id = main_data.viewSaldo.data.mode == 'edit' ? main_data.viewSaldo.data.id : 'DEFAULT'
+                        params.id_banco = document.querySelector('#cmbBanco').value
+                        params.id_cliente = document.querySelector('#cmbCli').value
+                        params.data = document.querySelector('#edtData').value +' '+ now.getFullHour()
+                        params.valor = document.querySelector('#edtVal').value
+                        params.forma = document.querySelector('#cmbForma').value
+                        params.ref = 'PAGAMENTO AO FORNECEDOR (ADTO)'
+                        params.obs = `LANÇAMENTO FINANCEIRO (ADTO) -> BANCO: ${document.querySelector('#cmbBanco').options[document.querySelector('#cmbBanco').selectedIndex].text}, Valor: R$${parseFloat(document.querySelector('#edtVal').value).toFixed(2)} EM (${document.querySelector('#cmbForma').options[document.querySelector('#cmbForma').selectedIndex].text}) PARA ${document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text}`
+                
+                    const myPromisse = queryDB(params,68);
+                    myPromisse.then(()=>{
+                        setLog(`LANÇAMENTO FINANCEIRO (ADTO) -> BANCO: ${document.querySelector('#cmbBanco').options[document.querySelector('#cmbBanco').selectedIndex].text}, Valor: R$${parseFloat(document.querySelector('#edtVal').value).toFixed(2)} EM (${document.querySelector('#cmbForma').options[document.querySelector('#cmbForma').selectedIndex].text}) PARA ${document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text}`)
+                    })
+
+                }
+
                 setLog(`LANÇAMENTO ${main_data.viewSaldo.data.mode == 'edit' ? 'EDITADO' : ''} ${dataBR(params.data)} ${main_data.viewSaldo.data.mode == 'edit' ? main_data.viewSaldo.data.fantasia : document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text}, ${params.tipo}: R$${params.valor.toFixed(2)} Status ${params.quitado == '0' ? 'ABERTO' : 'QUITADO'}`)
                 alert(`Pagamento ${main_data.viewSaldo.data.mode == 'edit' ? 'alterado' : 'incluído'} com sucesso!`)
                 main_data.viewSaldo.data.mode == 'PAGAR' || main_data.viewSaldo.data.origem == 'PAGAR' ? main_data.cont_pagar.busca() : main_data.cont_receber.busca()
