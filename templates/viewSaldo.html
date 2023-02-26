@@ -132,21 +132,21 @@
             const myPromisse = queryDB(params,58);
             myPromisse.then((resolve)=>{
                 if(document.querySelector('#cmbTipo').value == 'VALE'){
-                    
+                    let valor =  parseFloat(document.querySelector('#edtVal').value) * (main_data.viewSaldo.data.tipo == 'PAGAR' ? -1 : 1)
                     const now = new Date()
                     const params = new Object; 
                         params.id = main_data.viewSaldo.data.mode == 'edit' ? main_data.viewSaldo.data.id : 'DEFAULT'
                         params.id_banco = document.querySelector('#cmbBanco').value
                         params.id_cliente = document.querySelector('#cmbCli').value
                         params.data = document.querySelector('#edtData').value +' '+ now.getFullHour()
-                        params.valor = document.querySelector('#edtVal').value
+                        params.valor = valor
                         params.forma = document.querySelector('#cmbForma').value
-                        params.ref = 'PAGAMENTO AO FORNECEDOR (ADTO)'
-                        params.obs = `LANÇAMENTO FINANCEIRO (ADTO) -> BANCO: ${document.querySelector('#cmbBanco').options[document.querySelector('#cmbBanco').selectedIndex].text}, Valor: R$${parseFloat(document.querySelector('#edtVal').value).toFixed(2)} EM (${document.querySelector('#cmbForma').options[document.querySelector('#cmbForma').selectedIndex].text}) PARA ${document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text}`
+                        params.ref = main_data.viewSaldo.data.tipo == 'PAGAR' ? 'PAGAMENTO AO FORNECEDOR (ADTO)' : 'RECEBIMENTO DE CLIENTE'
+                        params.obs = `LANÇAMENTO FINANCEIRO ${main_data.viewSaldo.data.tipo == 'PAGAR' ? 'DEB (ADTO)' : ' CREDITO' } -> BANCO: ${document.querySelector('#cmbBanco').options[document.querySelector('#cmbBanco').selectedIndex].text}, Valor: R$${parseFloat(document.querySelector('#edtVal').value).toFixed(2)} EM (${document.querySelector('#cmbForma').options[document.querySelector('#cmbForma').selectedIndex].text}) PARA ${document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text}`
                 
                     const myPromisse = queryDB(params,68);
                     myPromisse.then(()=>{
-                        setLog(`LANÇAMENTO FINANCEIRO (ADTO) -> BANCO: ${document.querySelector('#cmbBanco').options[document.querySelector('#cmbBanco').selectedIndex].text}, Valor: R$${parseFloat(document.querySelector('#edtVal').value).toFixed(2)} EM (${document.querySelector('#cmbForma').options[document.querySelector('#cmbForma').selectedIndex].text}) PARA ${document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text}`)
+                        setLog(`LANÇAMENTO FINANCEIRO ${main_data.viewSaldo.data.tipo == 'PAGAR' ? 'DEBITO' : 'CREDITO' } -> BANCO: ${document.querySelector('#cmbBanco').options[document.querySelector('#cmbBanco').selectedIndex].text}, Valor: R$${parseFloat(document.querySelector('#edtVal').value).toFixed(2)} EM (${document.querySelector('#cmbForma').options[document.querySelector('#cmbForma').selectedIndex].text}) PARA ${document.querySelector('#cmbCli').options[document.querySelector('#cmbCli').selectedIndex].text}`)
                     })
 
                 }
