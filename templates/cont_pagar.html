@@ -143,7 +143,7 @@
         if(index > 0){
             data = e.target.parentNode.data
             data.mode = 'edit'
-            data.origem = 'PAGAR'
+            data.origem = 'cont_pagar'
             data.saida = dataBR(data.data) + ' ' +horaBR(data.data)
             openHTML('viewSaldo.html','pop-up',data.saida,data)
         }else{            
@@ -158,7 +158,7 @@
     })
 
     document.querySelector('#btnNovo').addEventListener('click',()=>{
-        openHTML('viewSaldo.html','pop-up','Lançamento Financeiro',{tipo : 'PAGAR', mode:"PAGAR"})
+        openHTML('viewSaldo.html','pop-up','Lançamento Financeiro',{origem : 'cont_pagar',tipo : 'PAGAR', mode:"novo"})
     })
 
     document.querySelector('#btnPagar').addEventListener('click',()=>{
