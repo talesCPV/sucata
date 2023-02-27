@@ -121,7 +121,7 @@
                         document.querySelector('#btnPagar').style.display = 'none'
                         hide = true
                     }                    
-                    if(json[i].tipo=='PAGAR'){
+                    if(['PAGAR','PAGO'].includes(json[i].tipo)){
                         json[i].valor = -1 * parseFloat(json[i].valor)
                     }
                     tot.val += json[i].quitado=='0' ? parseFloat(json[i].valor) : 0 // ACUMULA NO TOTAL

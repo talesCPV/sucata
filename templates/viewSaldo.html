@@ -119,7 +119,7 @@
     main_data.viewSaldo.fillClientes()
     main_data.viewSaldo.fillBancos()
     document.querySelector('#lanc-finan').innerHTML = main_data.viewSaldo.data.tipo ==  'PAGAR' ? 'ADIANTAMENTO EFETUADO' : 'PGTO RECEBIDO'
-    document.querySelector('#lanc-finan').value = main_data.viewSaldo.data.tipo ==  'PAGAR' ? 'VALE' : 'RECEBIDO'
+    document.querySelector('#lanc-finan').value = main_data.viewSaldo.data.tipo ==  'PAGAR' ? 'VALE' : 'PAGO'
 
     document.querySelector('#btnSave').addEventListener('click',()=>{
 
