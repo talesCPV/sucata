@@ -207,6 +207,12 @@ $query_db = array(
     "69"  => 'DELETE FROM tb_lanc_bancario WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "70"  => 'SELECT ROUND(SUM(valor),2) AS saldo_ini FROM tb_lanc_bancario 
         WHERE id_banco = "x00" AND data < "x01" ;',
+    "71" => 'SELECT PROD.nome, ROUND((ITEM.qtd - ITEM.estorno),2) AS qtd, ITEM.und, ROUND(ITEM.val_unit,2) AS preco, ROUND(ITEM.val_unit * ITEM.qtd,2) AS total
+        FROM tb_item_compra AS ITEM
+        INNER JOIN tb_prod AS PROD
+        ON ITEM.id_prod = PROD.id
+        AND ITEM.id_compra = "x00";',
+
 
     );
 

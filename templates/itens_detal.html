@@ -1,0 +1,24 @@
+
+<template>
+    <style>
+
+
+    </style>
+
+    <table id="tbl_show"></table>
+
+
+</template>
+<script>
+
+    const tbl = document.querySelector('#tbl_show')
+    const itens = main_data.itens_detal.data
+    tbl.innerHTML=''
+    tbl.head('Ítem,Qtd.,Und.,Preço Unit., Sub. Total') 
+    for(let i=0; i<itens.length; i++){
+        tbl.plot(itens[i],'nome,qtd,und,preco,total','Upp,str,Upp,R$.,R$.')
+    }
+
+
+
+</script>

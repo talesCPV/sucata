@@ -21,6 +21,10 @@
             display: none;
         }
 
+        #btnItens{
+            display: none;
+        }
+
     </style>
   
     <fieldset class="frm">
@@ -69,10 +73,21 @@
 
         <button id="btnSave">Salvar</button>
         <button id="btnDel">Deletar</button>
+        <button id="btnItens">Compra Detalhada</button>
     </fieldset>
 
 </template>
 <script>
+
+    document.querySelector('#btnItens').addEventListener('click',()=>{
+        const params = new Object;
+            params.id_origem = main_data.viewSaldo.data.id_origem
+            const myPromisse = queryDB(params,71);
+                myPromisse.then((resolve)=>{
+                    const json = JSON.parse(resolve)
+                    openHTML('itens_detal.html','pop-up','Compra Detalhada',json)
+                })
+    })
 
     main_data.viewSaldo.fillClientes = ()=>{
         const params_cli = new Object;
@@ -111,7 +126,7 @@
         document.querySelector('#lanc-finan').innerHTML = 'QUITAR TÍTULO'
         document.querySelector('#lanc-finan').value = 'PAGO'
         document.querySelector('#btnSave').disabled = main_data.viewSaldo.data.quitado == '1' ? true : false
-
+        document.querySelector('#btnItens').style.display = main_data.viewSaldo.data.origem == 'cont_pagar' ? 'block' : 'none'
 
     }else{
         document.querySelector('#edtData').value =  today.getFormatDate()
@@ -120,7 +135,6 @@
         document.querySelector('#btnDel').style.display = 'none'
         document.querySelector('#lanc-finan').innerHTML = main_data.viewSaldo.data.tipo ==  'PAGAR' ? 'ADIANTAMENTO EFETUADO' : 'PGTO RECEBIDO'
         document.querySelector('#lanc-finan').value = main_data.viewSaldo.data.tipo ==  'PAGAR' ? 'ADTO' : 'PAGO'
-
     }
 
     main_data.viewSaldo.fillClientes()
