@@ -31,7 +31,7 @@
             <div id="divBusca" class="inline">
                 <label for="edtBusca">por:</label>
                 <select id="cmbBusca">
-                    <option value="SAL.id" signal=">=" val="0" selected>Todos</option>
+                    <option value="CLI.nome" signal="LIKE" selected>Todos</option>
                     <option value="CLI.cnpj_cpf" signal="LIKE">CNPJ/CPF</option>
                     <option value="CLI.fantasia" signal="LIKE">Nome Cliente</option>
                     <option value="SAL.quitado" signal="=" val="1">Pago</option>
@@ -52,7 +52,7 @@
             <table id="tblComp"></table>
             <button id="btnPagar">Baixar</button>
         </fieldset>
-    
+        
     </div>
 
 
@@ -108,7 +108,7 @@
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);                             
                 tbl.innerHTML=''
-                json.length > 0 ? tbl.head('Pg.|ckb-hide,Data,Cliente,Tipo|mobHide,Saldo') : 0
+                json.length > 0 ? tbl.head('ckb-all|ckb-hide,Data,Cliente,Saldo') : 0
                 const tot = new Object
                 tot.blank = ''
                 tot.lblTot = 'TOTAL'
@@ -125,9 +125,9 @@
                         json[i].valor = -1 * parseFloat(json[i].valor)
                     }
                     tot.val += json[i].quitado=='0' ? parseFloat(json[i].valor) : 0 // ACUMULA NO TOTAL
-                    tbl.plot(json[i],'quitado|ckb-hide,data,fantasia,tipo|mobHide,valor','***,date,Upp,Upp,R$.',true, !parseInt(json[i].quitado))
+                    tbl.plot(json[i],'quitado|ckb-hide,data,fantasia,valor','ckb,date,Upp,R$.',true, !parseInt(json[i].quitado))
                 }                
-                tbl.plot(tot,'blank|ckb-hide,blank,blank|mobHide,lblTot,val','str,str,str,Upp,R$.')
+                tbl.plot(tot,'blank|ckb-hide,blank|mobHide,lblTot,val','str,str,Upp,R$.')
                 hideCkb(hide)                
             }        
         })
@@ -169,26 +169,76 @@
             main_data.cont_receber.data.id_cliente = tbl.rows[1].data.id_cliente
             main_data.cont_receber.data.nome = tbl.rows[1].data.fantasia
             main_data.cont_receber.data.tbl = []
-        let total = 0
+//        let total = 0
+        let credito = 0
+        let debito = 0        
         let go = false
         for(let i=1; i<tbl.rows.length-1; i++){
             const check = tbl.rows[i].cells[0].children[0].checked
             const data = tbl.rows[i].data
 
-            if(check){                
-                total += tbl.rows[i].data.quitado == '0' ? parseFloat(tbl.rows[i].data.valor) : 0
+            if(check){ 
+                if(tbl.rows[i].data.quitado == '0'){
+                    const val = parseFloat(tbl.rows[i].data.valor)
+                    if(val < 0){
+                        credito += (-1 * val)
+                    }else{
+                        debito += (-1 * val)
+                    }
+                    go = true
+                }                               
+//                total += tbl.rows[i].data.quitado == '0' ? parseFloat(tbl.rows[i].data.valor) : 0
                 main_data.cont_receber.data.tbl.push(data)
+/*                
                 if(total != 0){
                     go = true
                 }                
+*/                
             }
 
         }
-
-        main_data.cont_receber.data.total = Math.abs(total)
+        main_data.cont_receber.data.credito = credito
+        main_data.cont_receber.data.debito = debito
+        main_data.cont_receber.data.total = Math.abs(credito + debito)
         main_data.cont_receber.data.mode = 'receber'
         if(go){
-            openHTML('lanc_finan.html','pop-up','Lançamento Financeiro',main_data.cont_receber.data)
+            if(credito >= Math.abs(debito)){
+                if (confirm('Deseja quitar estes títulos?')) {
+                    const tbl = main_data.cont_receber.data.tbl
+                    let cliente
+                    for(let i=0; i<tbl.length; i++){
+                        const params_saldo = new Object; 
+                            params_saldo.id = tbl[i].id
+                            params_saldo.quitado = 1              
+                        const myPromisse_saldo = queryDB(params_saldo,50);
+                        myPromisse_saldo.then(()=>{
+                            main_data.cont_receber.busca()
+                        })
+                        cliente = tbl[i]
+                    }
+
+                    const saldo = credito + debito
+                    if(saldo > 0){
+                        const params_vale = new Object; 
+                            params_vale.id = 'DEFAULT'
+                            params_vale.id_cliente = cliente.id_cliente
+                            params_vale.data = today.getFormatDate()
+                            params_vale.valor = saldo
+                            params_vale.tipo = 'PAGAR'
+                            params_vale.quitado = 0
+                            params_vale.obs = 'CREDITO DE BAIXAS EXECUTADAS'
+                            params_vale.id_origem = cliente.id_origem
+                            params_vale.tb_origem = cliente.tb_origem
+                        const myPromisse_vale = queryDB(params_vale,58);
+                        myPromisse_vale.then(()=>{
+                            main_data.cont_receber.busca()
+                        })
+
+                    }
+                }
+            }else{            
+                openHTML('lanc_finan.html','pop-up','Lançamento Financeiro',main_data.cont_receber.data)
+            }
         }else{
             alert('Favor selecionar algum pagamento em aberto para prosseguir')
         }

@@ -181,7 +181,7 @@ HTMLTableElement.prototype.plot = function(obj, fields,type='',file=false, mark=
                         html += j<campo.length-1 ? op[1] : ''
                     }
                     break; 
-                case '***':                            
+                case 'ckb':                            
                     html = `<input type="checkbox" id="tblCkb_${this.rows.length-1}" class="tbl-ckb" ${parseInt(obj[arr[0]])? '' : 'checked'}>`
                     break;                    
                 default:
@@ -211,7 +211,23 @@ HTMLTableElement.prototype.head = function(hd){
         if(arr.length > 1){
             th.classList = arr[1]
         }
-        th.innerHTML = arr[0]
+        if(arr[0] == 'ckb-all'){
+            const all = document.createElement('input')
+            all.type = 'checkbox'
+            all.addEventListener('click',(e)=>{
+                var nodes = Array.prototype.slice.call(e.target.parentNode.parentNode.children);
+                const index = nodes.indexOf(e.target.parentNode)
+                console.log(e.target.parentNode.parentNode.children)
+                for(let i=1; i<this.rows.length; i++){
+                    this.rows[i].cells[index].children[index].checked = all.checked
+                }
+            })
+            th.appendChild(all)
+
+//            th.innerHTML = '<input type="checkbox" id="ckb-all"></input>'
+        }else{
+            th.innerHTML = arr[0]
+        }
         tr.appendChild(th)
     }
     this.appendChild(tr)

@@ -161,7 +161,7 @@ $query_db = array(
         GROUP BY TOTAL.id;',
     "48" => ' UPDATE tb_item_estoque SET qtd=x02, val_unit=x04 WHERE id_local="x00" AND id_prod="x01";',
     "49" => 'DELETE FROM tb_compra WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-    "50" => 'UPDATE tb_saldo SET y02=x02 WHERE tb_origem="x00" AND id_origem="x01";',
+    "50" => 'UPDATE tb_saldo SET y01=x01 WHERE id="x00";',
     "51" => 'UPDATE tb_item_compra SET y01="x01" WHERE id=x00;',
     "52" => 'SELECT ITEM.*, MAT.ncm, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND((ITEM.qtd - ITEM.estorno) * ITEM.val_unit ,2) as total, ROUND(ITEM.qtd - ITEM.estorno ,2) as qtd_tot 
         FROM x00 AS ITEM 

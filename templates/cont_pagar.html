@@ -108,7 +108,7 @@
             if(resolve.trim() != ""){
                 const json = JSON.parse(resolve);
                 tbl.innerHTML=''
-                json.length > 0 ? tbl.head('Pg.|ckb-hide,Data,Cliente,Tipo|mobHide,Status,Saldo') : 0
+                json.length > 0 ? tbl.head('ckb-all|ckb-hide,Data,Cliente,Tipo|mobHide,Status,Saldo') : 0
                 const tot = new Object
                 tot.blank = ''
                 tot.lblTot = 'TOTAL'
@@ -125,7 +125,7 @@
                         json[i].valor = -1 * parseFloat(json[i].valor)
                     }
                     tot.val += json[i].quitado=='0' ? parseFloat(json[i].valor) : 0 // ACUMULA NO TOTAL
-                    tbl.plot(json[i],'quitado|ckb-hide,data,fantasia,tipo|mobHide,quitado,valor','***,date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, !parseInt(json[i].quitado))
+                    tbl.plot(json[i],'quitado|ckb-hide,data,fantasia,tipo|mobHide,quitado,valor','ckb,date,Upp,Upp,cha 0=ABERTO 1=QUITADO,R$.',true, !parseInt(json[i].quitado))
                 }                
                 tbl.plot(tot,'blank|ckb-hide,blank,blank,blank|mobHide,lblTot,val','str,str,str,str,Upp,R$.') 
                 hideCkb(hide)
@@ -168,7 +168,7 @@
             main_data.cont_pagar.data.id_cliente = tbl.rows[1].data.id_cliente
             main_data.cont_pagar.data.nome = tbl.rows[1].data.fantasia
             main_data.cont_pagar.data.tbl = []
-        let total = 0
+//        let total = 0
         let credito = 0
         let debito = 0
         let go = false
@@ -207,8 +207,7 @@
                     let cliente
                     for(let i=0; i<tbl.length; i++){
                         const params_saldo = new Object; 
-                            params_saldo.tb_origem = tbl[i].tb_origem
-                            params_saldo.id_origem = tbl[i].id_origem
+                            params_saldo.id = tbl[i].id
                             params_saldo.quitado = 1              
                         const myPromisse_saldo = queryDB(params_saldo,50);
                         myPromisse_saldo.then(()=>{
