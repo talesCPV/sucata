@@ -56,7 +56,7 @@
     }
 
     document.querySelector('#btnVer').addEventListener('click',()=>{
-        const url = 'config/log/'+document.querySelector('#cmbLog').value.trim()
+        const url = `config/log/${localStorage.getItem('db')}/${document.querySelector('#cmbLog').value.trim()}`
         window.open(url, '_blank')
     })
 
