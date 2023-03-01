@@ -27,7 +27,7 @@
     function getLog(){
 
         const data = new URLSearchParams();        
-            data.append("dir",'config/log/');
+            data.append("dir",`config/log/${localStorage.getItem('db')}/`);
         const myRequest = new Request("backend/lookDir.php",{
             method : "POST",
             body : data

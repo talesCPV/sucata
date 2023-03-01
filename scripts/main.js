@@ -670,6 +670,7 @@ function setLog(line){
     line = `${now.getFullDate()} ${localStorage.getItem('username')} -> ` + line.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     const data = new URLSearchParams();        
         data.append("line",line);
+        data.append("db",localStorage.getItem('db'));
     const myRequest = new Request("backend/setLog.php",{
         method : "POST",
         body : data

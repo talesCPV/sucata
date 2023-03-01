@@ -70,6 +70,7 @@
         document.querySelector('#cmbAccess').value = main_data.viewUser.data.class
         document.querySelector('#btnDel').style.display = main_data.viewUser.data.mode == 'user' ? 'none' : 'block'
         document.querySelector('#cmbAccess').disabled = main_data.viewUser.data.mode == 'user' ? true : false
+        main_data.viewUser.data.hash = main_data.viewUser.data.mode == 'user' ? localStorage.getItem('hash') : main_data.viewUser.data.hash
     }else{
         document.querySelector('#btnDel').style.display = 'none'
     }
@@ -79,7 +80,7 @@
         if(checkField(['edtUser','edtNome']) && checkRepass(['edtPass','edtRepass'])){
             const newusr = main_data.viewUser.data.mode == 'new'
             const pass = document.querySelector('#edtPass').value.trim()
-            const hash =  pass =='' ? main_data.viewUser.data.mode == 'user' ? localStorage.getItem('hash') : main_data.viewUser.data.hash : newusr ? alert('Favor preenche o campo password') : pass.getHash(30)
+            const hash =  pass == '' ? (newusr ? alert('Favor preenche o campo password') : main_data.viewUser.data.hash) :  pass.getHash(30)
             const params = new Object;
                 params.id = newusr ? 'DEFAULT' : main_data.viewUser.data.id
                 params.user = document.querySelector('#edtUser').value.trim()
@@ -88,6 +89,7 @@
                 params.nome = document.querySelector('#edtNome').value.trim()
                 params.email = document.querySelector('#edtEmail').value.trim()
                 params.cel = document.querySelector('#edtCel').value.trim()
+                params.db = localStorage.getItem('db')
             const myPromisse = queryDB(params,16);
 
             myPromisse.then((resolve)=>{
@@ -96,10 +98,8 @@
                     alert('Alterações feitas com sucesso, favor logar novamente.')
                     localStorage.clear();
                     window.location.reload(true);
-                }if(main_data.viewUser.data.mode == 'edit'){
-                    main_data.usuarios.fillUser()
                 }
-                
+                main_data.usuarios.fillUser()
                 closeModal('viewUser')
             })
         }   

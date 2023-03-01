@@ -39,7 +39,7 @@ $query_db = array(
     "14" => 'INSERT INTO tb_item_venda (id, id_venda, id_prod, qtd, und, val_unit) VALUES(x00, x01, "x02", "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE   id_venda="x01", id_prod="x02", qtd="x03", und="x04", val_unit="x05";',
     "15" => 'DELETE FROM tb_item_venda WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-    "16" => 'INSERT INTO tb_usuario (id, user, hash, class, nome, email, cel) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06") 
+    "16" => 'INSERT INTO tb_usuario (id, user, hash, class, nome, email, cel, db) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06", "x07") 
         ON DUPLICATE KEY UPDATE user="x01", hash="x02", class="x03", nome="x04", email="x05", cel="x06";',
     "17" => 'DELETE FROM tb_usuario WHERE id="x00";',
     "18" => 'INSERT INTO tb_local (id, ano, modelo, placa, tipo, tara, local) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06") 
