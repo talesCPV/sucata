@@ -119,9 +119,11 @@
                 tot.val = 0
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
             for(let i=0; i<main_data.viewLocal.data.itens.length;i++){
-                tbl.plot(main_data.viewLocal.data.itens[i],'nome,und|mobHide,qtd_tot,val_unit,total','Upp,Upp,str,R$.,R$.')
-                tot.val += parseFloat(main_data.viewLocal.data.itens[i].total)
-                tot.peso += parseFloat(main_data.viewLocal.data.itens[i].qtd_tot)
+                if(Math.round(parseFloat(main_data.viewLocal.data.itens[i].qtd_tot)) > 0 ){
+                    tbl.plot(main_data.viewLocal.data.itens[i],'nome,und|mobHide,qtd_tot,val_unit,total','Upp,Upp,str,R$.,R$.')
+                    tot.val += parseFloat(main_data.viewLocal.data.itens[i].total)
+                    tot.peso += parseFloat(main_data.viewLocal.data.itens[i].qtd_tot)
+                }
             }
             tbl.plot(tot,'blank,blank|mobHide,blank,label,val','str,str,str,Upp,R$.')
             document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
