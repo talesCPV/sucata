@@ -209,7 +209,13 @@ function print_compra(data){
     let total = 0
     let outfile = `Viagem_${data.id.padStart(6,'0')}.pdf`
     for(let i=0; i<data.itens.length; i++){
-        tbl_body.push([data.itens[i].nome,data.itens[i].und,data.itens[i].qtd,viewMoneyBR(parseFloat(data.itens[i].val_unit).toFixed(2)),viewMoneyBR(data.itens[i].total)])
+        if(Math.round(parseFloat(data.itens[i].qtd))>0){
+            if(data.callby == 'viewLocal'){
+                tbl_body.push([data.itens[i].nome,data.itens[i].und, data.itens[i].qtd_tot ,viewMoneyBR(parseFloat(data.itens[i].val_unit).toFixed(2)),viewMoneyBR(data.itens[i].total)])
+            }else{
+                tbl_body.push([data.itens[i].nome,data.itens[i].und, data.itens[i].qtd,viewMoneyBR(parseFloat(data.itens[i].val_unit).toFixed(2)),viewMoneyBR(data.itens[i].total)])
+            }
+        }
         total += parseFloat(data.itens[i].total)
     }
     tbl_body.push(['','','','TOTAL',viewMoneyBR(total.toFixed(2))])
@@ -259,22 +265,11 @@ function print_compra(data){
             doc.text('Data: '+ data.saida , 10,40);
             outfile = `Boleta_VD_${data.id.padStart(6,'0')}.pdf`
         }
-        doc.text('Cliente: '+ data.nome, 10,45);
-/*        
-        if(data.tipo == 'JUR'){
-            doc.text('CNPJ: '+ data.cnpj_cpf, 10,60);
-        }else{
-            doc.text('CPF: '+ data.cnpj_cpf, 10,60);
-        }
-        doc.text('End.: '+data.endereco+','+data.num, 10,65);
-        doc.text('Bairro: '+data.bairro+' - '+data.cidade+'-'+data.estado, 10,70);
-        doc.text('Fone: '+data.tel + ' CEP:'+data.cep, 10,75);
-        doc.text('Banco: '+data.bco_nome+' AG:'+data.bco_ag+' C/C:'+data.bco_cc, 10,80);
-        doc.text('Chave PIX: '+data.bco_pix, 10,85);
-*/        
+        doc.text('Cliente: '+ data.nome, 10,45);       
         txt.y = 60
     }    
 
+    
     doc.autoTable({
         head: [["Discriminação",'Und.','Qtd.',"Valor Unit.","Total"]],
         body: tbl_body,
