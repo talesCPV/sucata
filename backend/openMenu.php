@@ -1,32 +1,33 @@
 <?php   
 
-  function addItem($access,$obj){
-    $menu = [];
+function addItem($modulos,$obj){
+  $menu = [];
+  $open_mod = explode(',',$modulos);
 
-    for($i = 0; $i< count($obj); $i++){  
+  for($i = 0; $i< count($obj); $i++){  
 
-      if (in_array($access, $obj[$i]->access)) {
+    if (in_array($obj[$i]->access,$open_mod )) {
 
-        $item = new stdClass();
-        $item->modulo = $obj[$i]->modulo;
-        $item->script = $obj[$i]->script;
-        $item->class = $obj[$i]->class;
-        $item->icone = $obj[$i]->icone;
-        $item->itens = [];
+      $item = new stdClass();
+      $item->modulo = $obj[$i]->modulo;
+      $item->script = $obj[$i]->script;
+      $item->class = $obj[$i]->class;
+      $item->icone = $obj[$i]->icone;
+      $item->itens = [];
 
-        if(count($obj[$i]->itens) > 0){
-          $item->itens = addItem($access, $obj[$i]->itens);
+      if(count($obj[$i]->itens) > 0){
+        $item->itens = addItem($modulos, $obj[$i]->itens);
 //          array_push($item->itens, addItem($access, $obj[$i]->itens));          
-        } 
+      } 
 
-        array_push($menu, $item);
+      array_push($menu, $item);
 
-      }       
+    }       
 
-    }
-
-    return $menu;
   }
+
+  return $menu;
+}
 
   $out = [];
 
@@ -37,14 +38,16 @@
     
     include "connect.php";        
 
-    $query = "SELECT class FROM tb_usuario WHERE hash=\"$hash\";";
+    $query = "SELECT modulos FROM tb_usuario WHERE hash=\"$hash\";";
 
     $result = mysqli_query($conexao, $query);
 		$qtd_lin = $result->num_rows;
 
 		if($qtd_lin > 0){
       $row = $result->fetch_assoc();
-      $access = $row["class"];
+//      var_dump($row);
+//      $access = $row["class"];
+      $modulos = $row["modulos"];
 		}
 
 	    $conexao->close();  
@@ -58,7 +61,8 @@
           fclose($fp);
           $json = json_decode($resp);
 
-          $out = addItem($access,$json->menu);
+//          $out = addItem($access,$json->menu);
+          $out = addItem($modulos,$json->menu);
 
       }            
 
