@@ -381,13 +381,11 @@
     })
 
     document.querySelector('#btnWhats').addEventListener('click',()=>{
+        let url = `https://wa.me/55${getNum(main_data.viewComp_detal.data.whatsapp)}?text=COMPRA-${main_data.viewComp_detal.data.id.padStart(6,'0')}, Valor ${document.querySelector('#via-valor').innerHTML}`
         if('ontouchstart' in document.documentElement){
-            const url = `whatsapp://send?phone=55${getNum(main_data.viewComp_detal.data.whatsapp)}`
-        }else{
-            const url = `https://wa.me/55${getNum(main_data.viewComp_detal.data.whatsapp)}?text=COMPRA-${main_data.viewComp_detal.data.id.padStart(6,'0')}, Valor ${document.querySelector('#via-valor').innerHTML}`            
+            url = `whatsapp://send?phone=55${getNum(main_data.viewComp_detal.data.whatsapp)}`
         }
         window.open(url,'_blank');
-
     })
 
 </script>
