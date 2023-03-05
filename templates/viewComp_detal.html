@@ -381,7 +381,7 @@
     })
 
     document.querySelector('#btnWhats').addEventListener('click',()=>{
-        const url = `https://wa.me/55${getNum(main_data.viewComp_detal.data.whatsapp)}?text=sua%20mensagem`
+        const url = `https://api.whatsapp.com/send?phone=55${getNum(main_data.viewComp_detal.data.whatsapp)}?text=sua%20mensagem`
         window.open(url,'_blank');
 
     })
