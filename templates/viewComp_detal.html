@@ -382,9 +382,9 @@
 
     document.querySelector('#btnWhats').addEventListener('click',()=>{
         if('ontouchstart' in document.documentElement){
-            const url = `whatsapp://send?phone=55${getNum(main_data.viewComp_detal.data.whatsapp)}?text=COMPRA`
+            const url = `whatsapp://send?phone=55${getNum(main_data.viewComp_detal.data.whatsapp)}`
         }else{
-            const url = `https://api.whatsapp.com/send?phone=55${getNum(main_data.viewComp_detal.data.whatsapp)}?text=COMPRA`            
+            const url = `https://wa.me/55${getNum(main_data.viewComp_detal.data.whatsapp)}?text=COMPRA-${main_data.viewComp_detal.data.id.padStart(6,'0')}, Valor ${document.querySelector('#via-valor').innerHTML}`            
         }
         window.open(url,'_blank');
 
