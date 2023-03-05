@@ -19,6 +19,15 @@
             display: none;
         }
 
+        #div-whats{
+            display: flex;
+            justify-content: center;
+        }
+        #div-whats img{
+            max-width: 100px;
+            cursor: pointer;
+
+        }
 
     </style>
     
@@ -44,6 +53,7 @@
         <table id="tblItens"></table>
         <button id="btnAdd" disabled>Adicionar Ítens</button>
         <button id="btnImp">Imprimir</button>
+        <div id="div-whats"><img id="btnWhats" src="assets/whatsapp.png"></div>
     </fieldset>
 
 </template>
@@ -174,6 +184,10 @@
             document.querySelector('#btnAdd').style.display = 'none'
         }
         
+        if(main_data.viewComp_detal.data.whatsapp.trim() == ''){
+            document.querySelector('#div-whats').style.display = 'none'
+        }
+
         const params_cli = new Object;
             params_cli.field = 'modal'
             params_cli.signal = '!='
@@ -363,6 +377,12 @@
     document.querySelector('#btnImp').addEventListener('click',()=>{
         main_data.viewComp_detal.data.callby = 'viewComp_detal'
         print_compra(main_data.viewComp_detal.data)
+
+    })
+
+    document.querySelector('#btnWhats').addEventListener('click',()=>{
+        const url = `https://wa.me/55${getNum(main_data.viewComp_detal.data.whatsapp)}?text=sua%20mensagem`
+        window.open(url,'_blank');
 
     })
 

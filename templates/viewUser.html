@@ -90,6 +90,7 @@
                 params.email = document.querySelector('#edtEmail').value.trim()
                 params.cel = document.querySelector('#edtCel').value.trim()
                 params.db = localStorage.getItem('db')
+                params.modulos = document.querySelector('#cmbAccess').value == '10' ? '2,10' : '1,2'
             const myPromisse = queryDB(params,16);
 
             myPromisse.then((resolve)=>{
