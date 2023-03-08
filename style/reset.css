@@ -140,7 +140,7 @@
     }
 
     .tab-item:hover{
-        background-color: #FFF8DC;
+     /*   background-color: #FFF8DC;*/
         cursor: pointer;
     }
 
@@ -148,6 +148,11 @@
         background-color: #3F5954;
         color: ghostwhite;
         font-size: large;
+    }
+
+    .check-tab{
+        background-color: var(--top-bar);
+        color: var(--top-bar-font);
     }
 
     .btnAdd{

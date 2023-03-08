@@ -2,6 +2,7 @@
 
 :root{
     --top-bar : #254441E0;
+	--top-bar-font : #ffffff;
     --top-bar-hover : #000000;
 }
 
@@ -33,6 +34,7 @@ nav {
 	margin:0;
 	padding: 0;
 	background-color: var(--top-bar);
+	color: var(--top-bar-font);
 	z-index: 99;
 }
 
@@ -94,13 +96,14 @@ nav ul li {
 	display:inline-block;
 	float: left;
 	background-color: var(--top-bar);
+	color: var(--top-bar-font);
 	}
 
 /* Styling the links */
 nav a {
 	display:block;
 	padding:14px 20px;	
-	color:#FFF;
+	color:var(--top-bar-font);
 	font-size:14px;
 	text-decoration:none;
 }

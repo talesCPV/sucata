@@ -451,12 +451,14 @@ function pictab(e){
 
         if(content[i].id == tab.split('-')[1]){
             content[i].style.display = "block"
-            sel_tab.style.background = "#3F5954";
-            sel_tab.style.color = "#FFF8DC";
+//            sel_tab.style.background = "#3F5954";
+//            sel_tab.style.color = "#FFF8DC";
+            sel_tab.classList.add("check-tab")
         }else{
             content[i].style.display = "none"
-            sel_tab.style.background = "#FFF8DC";
-            sel_tab.style.color = "#3F5954";
+            sel_tab.classList.remove("check-tab")
+//            sel_tab.style.background = "#00000000";
+//            sel_tab.style.color = "#3F5954";
         }
     }
 }
@@ -698,12 +700,14 @@ function setBarStyle(){
                 const json = JSON.parse(txt)
 
                 document.body.style.setProperty('-top-bar', json.bar_back_color)
+                document.body.style.setProperty('-top-bar-font', json.bar_font_color)
                 document.body.style.setProperty('--top-bar-hover', json.bar_mouse_color)
                 document.body.style.setProperty('--win-back', json.win_back_color);
                 document.body.style.setProperty('--win-font', json.win_font_color);
-
+                
                 document.querySelector('nav').style.backgroundColor = json.bar_back_color
                 document.querySelector('#usr-name').style.color = json.bar_font_color
+
                                 
                 main_data.dashboard.data.bar_back_color = json.bar_back_color
                 main_data.dashboard.data.bar_font_color = json.bar_font_color
