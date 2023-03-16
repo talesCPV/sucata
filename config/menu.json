@@ -133,16 +133,8 @@
 			"icone"  : "fa fa-industry",
 			"itens"  : [
 				{
-					"modulo" : "Contas a Pagar",
-					"script" : "javascript:openHTML('cont_pagar.html','content-screen')",
-					"access" : "10",
-					"class"  : "",
-					"icone"  : "fa fa-industry",
-					"itens"  : []
-				},
-				{
-					"modulo" : "Contas a Receber",
-					"script" : "javascript:openHTML('cont_receber.html','content-screen')",
+					"modulo" : "Lançamentos",
+					"script" : "javascript:openHTML('financeiro.html','content-screen')",
 					"access" : "10",
 					"class"  : "",
 					"icone"  : "fa fa-industry",

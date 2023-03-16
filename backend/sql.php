@@ -31,12 +31,14 @@ $query_db = array(
     "11" => 'INSERT INTO tb_venda (id, id_cliente, id_resp, status, obs, data) VALUES(x00, "x01", "x02", "x03", "x04", "x05") 
         ON DUPLICATE KEY UPDATE id_cliente="x01", id_resp="x02", status="x03", obs="x04", data="x05";',
     "12" => 'DELETE FROM tb_venda WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
-    "13" => 'SELECT ITEM.*, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND(ITEM.qtd * ITEM.val_unit ,2) as total
+    "13" => 'SELECT ITEM.*,  LOCAL.modelo, PROD.nome, PROD.und, PROD.preco, PROD.margem, ROUND(ITEM.qtd * ITEM.val_unit ,2) as total
         FROM tb_item_venda AS ITEM 
         INNER JOIN tb_prod AS PROD
+        INNER JOIN tb_local AS LOCAL
         ON PROD.id = ITEM.id_prod
+        AND (LOCAL.id = ITEM.id_local_origem OR ITEM.id_local_origem=0)
         AND ITEM.id_venda="x00";',
-    "14" => 'INSERT INTO tb_item_venda (id, id_venda, id_prod, qtd, und, val_unit) VALUES(x00, x01, "x02", "x03", "x04", "x05") 
+    "14" => 'INSERT INTO tb_item_venda (id, id_venda, id_prod, qtd, und, val_unit, id_local_origem) VALUES(x00, x01, "x02", "x03", "x04", "x05", "x06") 
         ON DUPLICATE KEY UPDATE   id_venda="x01", id_prod="x02", qtd="x03", und="x04", val_unit="x05";',
     "15" => 'DELETE FROM tb_item_venda WHERE y00="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "16" => 'INSERT INTO tb_usuario (id, user, hash, class, nome, email, cel, db, modulos) VALUES (x00, "x01", "x02", "x03", "x04", "x05", "x06", "x07", "x08") 
@@ -188,10 +190,10 @@ $query_db = array(
         INNER JOIN tb_clientes AS CLI
         ON SAL.id_cliente = CLI.id
         AND x00 x01 x02
-        AND SAL.tb_origem = "x03"
+        AND SAL.tb_origem NOT IN("x03")
         AND data >= "x04"
         AND data <= "x05"
-        ORDER BY SAL.data DESC;',
+        ORDER BY SAL.data DESC, SAL.id DESC;',
     "60" => 'DELETE FROM tb_saldo WHERE id="x00" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
     "61"  => 'SELECT * FROM tb_calendario WHERE y00=x00 AND data_agd>="x01" AND data_agd<="x02";',
     "62"  => 'INSERT INTO tb_calendario (id_user, data_agd, obs) VALUES(x00, "x01", "x02") ON DUPLICATE KEY UPDATE obs="x02";',         
@@ -208,10 +210,10 @@ $query_db = array(
     "70"  => 'SELECT ROUND(SUM(valor),2) AS saldo_ini FROM tb_lanc_bancario 
         WHERE id_banco = "x00" AND data < "x01" ;',
     "71" => 'SELECT PROD.nome, ROUND((ITEM.qtd - ITEM.estorno),2) AS qtd, ITEM.und, ROUND(ITEM.val_unit,2) AS preco, ROUND(ITEM.val_unit * ITEM.qtd,2) AS total
-        FROM tb_item_compra AS ITEM
+        FROM x02 AS ITEM
         INNER JOIN tb_prod AS PROD
         ON ITEM.id_prod = PROD.id
-        AND ITEM.id_compra = "x00";',
+        AND ITEM.x01 = "x00";',
 
 
     );

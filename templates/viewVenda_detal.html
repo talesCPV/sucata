@@ -19,6 +19,7 @@
         <table id="tblViagem">
             <tr><th>Cliente</th><td id="via-cli"></td></tr>
             <tr><th>Vendedor</th><td id="via-vend"></td></tr>
+            <tr><th>Local</th><td id="via-local"></td></tr>
             <tr><th>Venda Num.</th><td id="via-num"></td></tr>
             <tr><th>Data</th><td id="via-data"></td></tr>
             <tr><th>Valor R$</th><td id="via-valor"></td></tr>
@@ -107,6 +108,7 @@
         document.querySelector('#via-num').innerHTML = main_data.viewVenda_detal.data.id.padStart(6,'0')
         document.querySelector('#via-data').innerHTML = main_data.viewVenda_detal.data.saida
         document.querySelector('#via-valor').innerHTML = ''
+        document.querySelector('#via-local').innerHTML = ''
         main_data.viewVenda_detal.fillItens()
         
     }
@@ -123,14 +125,17 @@
                 tot.label = 'TOTAL'
                 tot.peso = 0
                 tot.val = 0
+                tot.local = ''
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço Unit.,Sub Total')            
             for(let i=0; i<main_data.viewVenda_detal.data.itens.length;i++){
                 tbl.plot(main_data.viewVenda_detal.data.itens[i],'nome,und|mobHide,qtd,val_unit,total','Upp,Upp,str,R$.,R$.')
                 tot.val += parseFloat(main_data.viewVenda_detal.data.itens[i].total)
                 tot.peso += parseFloat(main_data.viewVenda_detal.data.itens[i].qtd_tot)
+                tot.local = main_data.viewVenda_detal.data.itens[i].modelo
             }
             tbl.plot(tot,'blank,blank|mobHide,blank,label,val','str,str,str,Upp,R$.')
             document.querySelector('#via-valor').innerHTML = viewMoneyBR(tot.val.toFixed(2))
+            document.querySelector('#via-local').innerHTML = tot.local.toUpperCase()
 //            document.querySelector('#via-peso').innerHTML = tot.peso.toFixed(2)+' Kg'
         })
     }

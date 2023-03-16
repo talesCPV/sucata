@@ -14,10 +14,10 @@ CREATE TABLE tb_usuario (
 
 ALTER TABLE tb_usuario
 ADD COLUMN db varchar(10) DEFAULT NULL;
-ALTER TABLE tb_usuario ALTER column db varchar(10) DEFAULT NULL;
+ALTER TABLE tb_usuario MODIFY COLUMN db varchar(10) DEFAULT NULL;
 
 
-UPDATE tb_usuario SET db="d2soft98_sucata_2" WHERE id=1;
+UPDATE tb_usuario SET db="CALDEIRAO" WHERE id>=1;
 
 INSERT INTO tb_usuario VALUES (DEFAULT,"sassu","$~N~3Z69*~<x6r0l*f$`?Z9T3N-H'B",10,null,null,null);
 
@@ -99,6 +99,9 @@ CREATE TABLE tb_venda(
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
+ALTER TABLE tb_venda
+ADD COLUMN id_local int(11) NOT NULL DEFAULT 3;
+
 /*DROP TABLE tb_item_venda;*/
 CREATE TABLE tb_item_venda(
     id INT NOT NULL AUTO_INCREMENT,
@@ -111,6 +114,12 @@ CREATE TABLE tb_item_venda(
     FOREIGN KEY (id_prod) REFERENCES tb_prod(id),
     PRIMARY KEY(id)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+ALTER TABLE tb_item_venda
+ADD COLUMN estorno double DEFAULT 0;
+
+ALTER TABLE tb_item_venda
+ADD COLUMN id_local_origem double DEFAULT 0;
 
 /*DROP TABLE tb_compra;*/
 CREATE TABLE tb_compra(

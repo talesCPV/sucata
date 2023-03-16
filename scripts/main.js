@@ -217,9 +217,13 @@ HTMLTableElement.prototype.head = function(hd){
             all.addEventListener('click',(e)=>{
                 var nodes = Array.prototype.slice.call(e.target.parentNode.parentNode.children);
                 const index = nodes.indexOf(e.target.parentNode)
-                console.log(e.target.parentNode.parentNode.children)
+//                console.log(e.target.parentNode.parentNode.children)
                 for(let i=1; i<this.rows.length; i++){
-                    this.rows[i].cells[index].children[index].checked = all.checked
+                    try{
+                        this.rows[i].cells[index].children[index].checked = all.checked
+                    }catch{
+                        console.error('Erro controlado, vai ficar assim mesmo!');
+                    }
                 }
             })
             th.appendChild(all)
