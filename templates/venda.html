@@ -50,7 +50,9 @@
             const tbl = document.querySelector('#tbl-itens_etq')
             tbl.head('Descrição,Und.|mobHide,Qtd.,Preço')            
             for(let i=0; i<main_data.venda.data.itens.length;i++){
-                tbl.plot(main_data.venda.data.itens[i],'nome,und|mobHide,qtd_tot,val_venda','Upp,Upp,str,R$.')
+                if(parseFloat(main_data.venda.data.itens[i].qtd_tot) > 0 ){
+                    tbl.plot(main_data.venda.data.itens[i],'nome,und|mobHide,qtd_tot,val_venda','Upp,Upp,str,R$.')
+                }
             }
 
         })

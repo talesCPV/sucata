@@ -45,7 +45,9 @@
             const tbl = document.querySelector('#tbl-itens_etq')
             tbl.head('Descrição,Und.|mobHide,Qtd.')            
             for(let i=0; i<main_data.transf.data.itens.length;i++){
-                tbl.plot(main_data.transf.data.itens[i],'nome,und|mobHide,qtd_tot','Upp,Upp,str')
+                if(parseFloat(main_data.transf.data.itens[i].qtd_tot) > 0.1 ){
+                    tbl.plot(main_data.transf.data.itens[i],'nome,und|mobHide,qtd_tot','Upp,Upp,str')
+                }
             }
 
         })
@@ -214,13 +216,14 @@
                         params.nome = main_data.transf.data.itens[i].nome
                         params.qtd = main_data.transf.data.itens[i].qtd_tot
                         params.und = main_data.transf.data.itens[i].und
-                        params.val_venda = main_data.transf.data.itens[i].val_venda                        
-                    const myPromisse = queryDB(params,36); 
-                    myPromisse.then(()=>{
-                        main_data.transf.fillTemp()
-                    })
-                }
-                
+                        params.val_venda = main_data.transf.data.itens[i].val_venda
+                    if(parseFloat(params.qtd)>0.01){
+                        const myPromisse = queryDB(params,36);
+                        myPromisse.then(()=>{
+                            main_data.transf.fillTemp()
+                        })
+                    } 
+                }                
             })
         }
     })

@@ -214,7 +214,7 @@ $query_db = array(
         INNER JOIN tb_prod AS PROD
         ON ITEM.id_prod = PROD.id
         AND ITEM.x01 = "x00";',
-
+    "72" => 'DELETE FROM tb_saldo WHERE id_origem="x00" AND tb_origem="x02" AND (SELECT U.class FROM tb_usuario AS U WHERE hash="x01") IN (10);',
 
     );
 

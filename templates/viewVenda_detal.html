@@ -162,6 +162,8 @@
             const params = new Object;
                 params.id_venda = main_data.viewVenda_detal.data.id
                 params.hash = localStorage.getItem('hash')
+                params.tb_origem = 'tb_venda'
+                queryDB(params,72) // DELETA LANÇAMENTO FINANCEIRO
             const myPromisse = queryDB(params,15); // DELETA OS ÍTENS
             myPromisse.then((resolve)=>{
                 const myPromisse_1 = queryDB(params,12); // DELETA A VENDA

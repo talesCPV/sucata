@@ -282,7 +282,9 @@
             const params = new Object;
                 params.id_compra = main_data.viewComp_detal.data.id
                 params.hash = localStorage.getItem('hash')
-            const myPromisse = queryDB(params,46); // DELETA OS ÍTENS
+                params.tb_origem = 'tb_compra'
+                queryDB(params,72) // DELETA LANÇAMENTO FINANCEIRO
+            const myPromisse = queryDB(params,46); // DELETA OS ÍTENS            
             myPromisse.then((resolve)=>{
                 const myPromisse_1 = queryDB(params,49); // DELETA A COMPRA
                 myPromisse_1.then((resolve)=>{
